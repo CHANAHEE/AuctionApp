@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/home_tab"
+        android:title="홈"
+        android:icon="@drawable/home"/>
+
+    <item android:id="@+id/community_tab"
+        android:title="커뮤니티"
+        android:icon="@drawable/group_users"/>
+
+    <item android:id="@+id/auction_tab"
+        android:title="경매"
+        android:icon="@drawable/hammer"/>
+
+    <item android:id="@+id/chat_tab"
+        android:title="채팅"
+        android:icon="@drawable/chat"/>
+</menu>

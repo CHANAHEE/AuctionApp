@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpPersonalInfoFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_back"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="두번째, 이름과 생년월일 입력"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/btn_back"/>
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv"
+            android:hint="이름"
+            android:textColorHint="#6A020202"
+            android:layout_marginTop="50dp"/>
+
+        <EditText
+            android:id="@+id/et_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_name"
+            android:hint="생년월일"
+            android:textColorHint="#6A020202"
+            android:layout_marginTop="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_next"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn"
+            android:fontFamily="@font/brandfont"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="다     음"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+</FrameLayout>
