@@ -1,12 +1,12 @@
-package com.example.actionapp
+package com.example.actionapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.View.GONE
-import android.view.View.OnClickListener
 import androidx.fragment.app.FragmentTransaction
+import com.example.actionapp.R
+import com.example.actionapp.fragments.SignUpEmailInputFragment
 import com.example.actionapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnSignup.setOnClickListener {
             binding.loginrootview.visibility = GONE
             var fragmentTransaction:FragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.container_fragment,SignUpEmailInputFragment()).commit()
+            fragmentTransaction.add(R.id.container_fragment, SignUpEmailInputFragment()).commit()
 
         }
     }
