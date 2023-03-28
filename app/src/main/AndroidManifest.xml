@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ActionApp"
         tools:targetApi="31">
+
+        <activity
+            android:name=".activities.ChattingActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.HomeDetailActivity"
             android:exported="false" />
