@@ -99,6 +99,7 @@
                 android:paddingBottom="17dp"
                 android:paddingLeft="5dp"
                 android:hint="글 제목"
+                android:maxEms="15"
                 android:textSize="20sp"
                 android:inputType="text"
                 android:textColorHint="#4A000000"

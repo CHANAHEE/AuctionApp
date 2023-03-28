@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
 import com.example.actionapp.fragments.HomeFragment
 import com.example.actionapp.R
@@ -40,6 +43,19 @@ class MainActivity : AppCompatActivity() {
             return@OnItemSelectedListener true
         })
 
+
+        /*
+        *       NavigationDrawer
+        * */
+        setSupportActionBar(binding.toolbar)
+        var drawerToggle:ActionBarDrawerToggle = ActionBarDrawerToggle(this,binding.drawerLayout,binding.toolbar,R.string.open,R.string.close)
+
+        var actionBar: ActionBar? = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
+        drawerToggle.syncState()
+        actionBar?.title = null
+        binding.drawerLayout.addDrawerListener(drawerToggle)
     }
 
     
@@ -50,10 +66,22 @@ class MainActivity : AppCompatActivity() {
     fun changeFragment(item:MenuItem,tran:FragmentTransaction){
 
         when(item.itemId){
-            R.id.home_tab -> tran.replace(R.id.container_fragment, HomeFragment()).commit()
-            R.id.community_tab -> tran.replace(R.id.container_fragment, CommunityFragment()).commit()
-            R.id.auction_tab -> tran.replace(R.id.container_fragment, AuctionFragment()).commit()
-            R.id.chat_tab -> tran.replace(R.id.container_fragment, ChatFragment()).commit()
+            R.id.home_tab -> {
+                binding.appbar.visibility = View.VISIBLE
+                tran.replace(R.id.container_fragment, HomeFragment()).commit()
+            }
+            R.id.community_tab -> {
+                binding.appbar.visibility = View.GONE
+                tran.replace(R.id.container_fragment, CommunityFragment()).commit()
+            }
+            R.id.auction_tab -> {
+                binding.appbar.visibility = View.GONE
+                tran.replace(R.id.container_fragment, AuctionFragment()).commit()
+            }
+            R.id.chat_tab -> {
+                binding.appbar.visibility = View.GONE
+                tran.replace(R.id.container_fragment, ChatFragment()).commit()
+            }
         }
     }
 }

@@ -12,76 +12,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/white"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.drawerlayout.widget.DrawerLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar">
-
-            <!--
-
-            콘텐츠 부분
-
-            -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"/>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="20dp"
-                    app:backgroundTint="@color/brand"
-                    android:src="@drawable/edit_text"
-                    app:tint="@color/white"
-                    app:fabSize="normal"
-                    />
-
-            </RelativeLayout>
-
-
-
-
-
-
-
-
-
-
-            <!--
-
-            네비게이션 드로어
-
-            -->
-            <com.google.android.material.navigation.NavigationView
-                android:id="@+id/nav"
-                android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="start"/>
-                <!--app:headerLayout=""
-                app:menu    여기는 프로필이 header, 밑에 메뉴구성이 menu-->
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"/>
 
-        </androidx.drawerlayout.widget.DrawerLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"
+                app:backgroundTint="@color/brand"
+                android:src="@drawable/edit_text"
+                app:tint="@color/white"
+                app:fabSize="normal"
+                />
+
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
 
