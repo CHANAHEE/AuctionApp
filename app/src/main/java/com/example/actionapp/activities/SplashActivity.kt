@@ -1,8 +1,9 @@
-package com.example.actionapp
+package com.example.actionapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.actionapp.R
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +12,7 @@ class SplashActivity : AppCompatActivity() {
 
         Thread.sleep(500)
 
-        var intent:Intent = Intent(this,LoginActivity::class.java)
+        var intent:Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
