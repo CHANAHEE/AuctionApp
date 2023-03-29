@@ -1,14 +1,13 @@
-package com.example.actionapp.fragments
+package com.example.auctionapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
-class CommunityFragment : Fragment() {
-
+class ChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -18,7 +17,7 @@ class CommunityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_community, container, false)
+        return inflater.inflate(R.layout.fragment_chat, container, false)
     }
 
 }

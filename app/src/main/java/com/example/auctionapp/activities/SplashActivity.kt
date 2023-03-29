@@ -1,9 +1,9 @@
-package com.example.actionapp.activities
+package com.example.auctionapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

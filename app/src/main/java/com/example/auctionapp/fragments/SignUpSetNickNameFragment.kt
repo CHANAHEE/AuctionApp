@@ -1,13 +1,15 @@
-package com.example.actionapp.fragments
+package com.example.auctionapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
-class SignUpSetUpPlaceFragment : Fragment() {
+
+class SignUpSetNickNameFragment : Fragment() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +21,7 @@ class SignUpSetUpPlaceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up_set_up_place, container, false)
+        return inflater.inflate(R.layout.fragment_sign_up_set_nick_name, container, false)
     }
 
 }

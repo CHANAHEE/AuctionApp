@@ -1,8 +1,8 @@
-package com.example.actionapp.activities
+package com.example.auctionapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
 class SelectPositionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

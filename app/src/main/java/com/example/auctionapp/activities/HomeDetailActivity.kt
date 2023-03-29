@@ -1,8 +1,8 @@
-package com.example.actionapp.activities
+package com.example.auctionapp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
 class HomeDetailActivity : AppCompatActivity() {
 

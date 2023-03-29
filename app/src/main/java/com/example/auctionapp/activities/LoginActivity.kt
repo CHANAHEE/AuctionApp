@@ -1,13 +1,13 @@
-package com.example.actionapp.activities
+package com.example.auctionapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
 import androidx.fragment.app.FragmentTransaction
-import com.example.actionapp.R
-import com.example.actionapp.fragments.SignUpEmailInputFragment
-import com.example.actionapp.databinding.ActivityLoginBinding
+import com.example.auctionapp.R
+import com.example.auctionapp.fragments.SignUpEmailInputFragment
+import com.example.auctionapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 

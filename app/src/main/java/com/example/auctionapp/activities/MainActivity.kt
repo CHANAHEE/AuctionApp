@@ -1,20 +1,18 @@
-package com.example.actionapp.activities
+package com.example.auctionapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
-import com.example.actionapp.fragments.HomeFragment
-import com.example.actionapp.R
-import com.example.actionapp.databinding.ActivityMainBinding
-import com.example.actionapp.fragments.AuctionFragment
-import com.example.actionapp.fragments.ChatFragment
-import com.example.actionapp.fragments.CommunityFragment
+import com.example.auctionapp.fragments.HomeFragment
+import com.example.auctionapp.R
+import com.example.auctionapp.databinding.ActivityMainBinding
+import com.example.auctionapp.fragments.AuctionFragment
+import com.example.auctionapp.fragments.ChatFragment
+import com.example.auctionapp.fragments.CommunityFragment
 import com.google.android.material.navigation.NavigationBarView
 
 class MainActivity : AppCompatActivity() {

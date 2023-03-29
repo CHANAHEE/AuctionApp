@@ -1,4 +1,4 @@
-package com.example.actionapp
+package com.example.auctionapp
 
 import org.junit.Test
 

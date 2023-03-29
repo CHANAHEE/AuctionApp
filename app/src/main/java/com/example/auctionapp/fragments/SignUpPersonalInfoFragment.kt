@@ -1,13 +1,14 @@
-package com.example.actionapp.fragments
+package com.example.auctionapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.actionapp.R
+import com.example.auctionapp.R
 
-class SignUpEmailInputFragment : Fragment() {
+class SignUpPersonalInfoFragment : Fragment() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,8 +18,7 @@ class SignUpEmailInputFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_sign_up_email_input, container, false)
+        return inflater.inflate(R.layout.fragment_sign_up_personal_info, container, false)
     }
-
 
 }
