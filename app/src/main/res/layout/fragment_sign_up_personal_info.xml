@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
             android:hint="이름"
+            android:inputType="text"
             android:textColorHint="#6A020202"
             android:layout_marginTop="50dp"/>
 
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/et_name"
             android:hint="생년월일"
+            android:inputType="date"
             android:textColorHint="#6A020202"
             android:layout_marginTop="10dp"/>
 

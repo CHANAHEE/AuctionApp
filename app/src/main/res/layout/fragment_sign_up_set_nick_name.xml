@@ -42,7 +42,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_next"
+            android:id="@+id/btn_complete"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn"

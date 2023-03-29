@@ -1,16 +1,22 @@
 package com.example.auctionapp.fragments
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
+import com.example.auctionapp.databinding.FragmentSignUpSetNickNameBinding
+import com.google.android.material.snackbar.Snackbar
 
 
 class SignUpSetNickNameFragment : Fragment() {
 
-
+    val binding by lazy { FragmentSignUpSetNickNameBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,7 +27,55 @@ class SignUpSetNickNameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up_set_nick_name, container, false)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        editTextListener()
+        binding.btnBack.setOnClickListener { clickBackBtn() }
+        binding.btnComplete.setOnClickListener { clickCompleteBtn() }
     }
 
+
+    private fun clickBackBtn(){
+        val tran: FragmentTransaction? =
+            activity?.
+            supportFragmentManager?.
+            beginTransaction()?.
+            replace(R.id.container_fragment,SignUpSetUpPlaceFragment())
+        tran?.commit()
+    }
+
+    private fun clickCompleteBtn(){
+        val tran: FragmentTransaction? =
+            activity?.
+            supportFragmentManager?.
+            beginTransaction()?.remove(this)
+
+        tran?.commit()
+
+
+//        tran?.remove(SignUpEmailInputFragment())
+//        tran?.remove(SignUpPersonalInfoFragment())
+//        tran?.remove(SignUpSetUpPlaceFragment())
+
+        val loginRootview = activity?.findViewById<View>(R.id.login_rootview)
+        loginRootview?.visibility = View.VISIBLE
+
+        Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun editTextListener(){
+        binding.etNickname.setOnKeyListener { v , keyCode, event ->
+            if(event.action == KeyEvent.ACTION_DOWN
+                && keyCode == KeyEvent.KEYCODE_ENTER)
+            {
+                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etNickname.windowToken,0)
+                true
+            }
+
+            false
+        }
+    }
 }

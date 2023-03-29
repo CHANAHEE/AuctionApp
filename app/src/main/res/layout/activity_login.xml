@@ -7,19 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/container_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
 
-    </FrameLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/loginrootview">
+        android:id="@+id/login_rootview">
 
 
         <ImageView
@@ -37,10 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_logo"
             android:fontFamily="@font/brandfont"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
             android:textStyle="bold"
             android:padding="10dp"
+            android:inputType="textEmailAddress"
             android:hint="ID"
             />
         <EditText
@@ -49,11 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/et_id"
             android:fontFamily="@font/brandfont"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
             android:textStyle="bold"
             android:padding="10dp"
             android:layout_marginTop="5dp"
+            android:inputType="textPassword"
             android:hint="Password"
             />
 
@@ -108,4 +104,11 @@
 
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </FrameLayout>
 </RelativeLayout>
