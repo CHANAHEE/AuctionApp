@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.HomeDetailActivity">
+    tools:context=".activities.AuctionDetailActivity">
 
     <RelativeLayout
         android:id="@+id/container_pager"
@@ -25,6 +25,19 @@
             android:background="@null"
             android:layout_margin="10dp"
             />
+
+        <TextView
+            android:id="@+id/tv_bid_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="12:00:00"
+            android:gravity="center"
+            android:textColor="#80FFFFFF"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_bid_time"
+            android:padding="10dp"/>
 
     </RelativeLayout>
 
@@ -137,7 +150,7 @@
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:text="채 팅 하 기"
+        android:text="입 찰 하 기"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
