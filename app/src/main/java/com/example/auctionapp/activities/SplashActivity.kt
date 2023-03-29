@@ -3,6 +3,9 @@ package com.example.auctionapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.core.os.postDelayed
 import com.example.auctionapp.R
 
 class SplashActivity : AppCompatActivity() {
@@ -10,10 +13,10 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Thread.sleep(500)
 
-        var intent:Intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
+        },1500)
     }
 }

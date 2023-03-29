@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
+
+            <ImageButton
+                android:id="@+id/ib_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_back"
+                android:background="@null"/>
+
+            <TextView
+                android:id="@+id/tv_appbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="프로필 편집"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="완 료"
+                android:background="@null"
+                android:layout_gravity="right"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/brand"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_profile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/appbar"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/tv_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/civ_profile"
+        android:text="닉네임"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"/>
+
+
+    <EditText
+        android:id="@+id/et_msg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:alpha="0.7"
+        android:layout_below="@id/tv_nick"
+        android:background="@drawable/bg_edit"
+        android:ems="15"/>
+</RelativeLayout>
