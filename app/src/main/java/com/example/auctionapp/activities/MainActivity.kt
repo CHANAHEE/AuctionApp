@@ -3,8 +3,11 @@ package com.example.auctionapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -30,13 +33,12 @@ class MainActivity : AppCompatActivity() {
         AuctionFragment()
         ChatFragment()
 
-        var tran:FragmentTransaction = supportFragmentManager.beginTransaction().add(R.id.container_fragment,HomeFragment())
-        tran.commit()
-
 
         /*
         *       BottomNavigationView 선택
         * */
+        var tran:FragmentTransaction = supportFragmentManager.beginTransaction().add(R.id.container_fragment,HomeFragment())
+        tran.commit()
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
             tran = supportFragmentManager.beginTransaction()
             changeFragment(it,tran)
@@ -45,10 +47,49 @@ class MainActivity : AppCompatActivity() {
 
         setNavigationDrawer()
         binding.btnSelectTown.setOnClickListener { showMyPlaceList() }
+        binding.ibSearch.setOnClickListener { clickEditSearch() }
 
 
 
     }
+
+
+    /*
+    *
+    *
+    *       검색 EditText 설정
+    *
+    */
+    private fun clickEditSearch() {
+        if(binding.etSearch.visibility == View.INVISIBLE){
+            binding.btnSelectTown.visibility = View.INVISIBLE
+            binding.etSearch.visibility = View.VISIBLE
+            binding.etSearch.setOnKeyListener { v , keyCode, event ->
+                if(event.action == KeyEvent.ACTION_DOWN
+                    && keyCode == KeyEvent.KEYCODE_ENTER)
+                {
+                    val imm : InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.etSearch.windowToken,0)
+                    binding.containerFragment.requestFocus()
+                    /*
+                    *
+                    *       검색 결과 처리 작업
+                    *
+                    * */
+                    true
+                }
+
+                false
+            }
+        } else {
+            binding.btnSelectTown.visibility = View.VISIBLE
+            binding.etSearch.visibility = View.INVISIBLE
+            binding.etSearch.setText("")
+        }
+    }
+
+
+
 
     private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
     private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
