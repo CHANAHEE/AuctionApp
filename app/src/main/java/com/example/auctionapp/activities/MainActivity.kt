@@ -40,19 +40,29 @@ class MainActivity : AppCompatActivity() {
         var tran:FragmentTransaction = supportFragmentManager.beginTransaction().add(R.id.container_fragment,HomeFragment())
         tran.commit()
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
+
             tran = supportFragmentManager.beginTransaction()
             changeFragment(it,tran)
             return@OnItemSelectedListener true
         })
 
         setNavigationDrawer()
-        binding.btnSelectTown.setOnClickListener { showMyPlaceList() }
+        binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
-
+        binding.ibCategory.setOnClickListener { clickCategoryBtn() }
 
 
     }
 
+    /*
+    *
+    *       카테고리 버튼 클릭
+    *
+    * */
+    private fun clickCategoryBtn() {
+        startActivity(Intent(this, SelectCategoryActivity::class.java))
+
+    }
 
     /*
     *
@@ -94,7 +104,7 @@ class MainActivity : AppCompatActivity() {
     private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
     private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
     private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
-    private fun showMyPlaceList(){
+    private fun clickMyPlace(){
         val popupMenu:PopupMenu = PopupMenu(this,binding.btnSelectTown)
         popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,"공릉 1동")
         popupMenu.menu.add(0, POPUP_MENU_MY_SECOND_PLACE_ITEM_ID!!,0,"공릉 2동")
@@ -139,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     /*
     *       프래그먼트 전환 함수
     * */
-    fun changeFragment(item:MenuItem,tran:FragmentTransaction){
+    private fun changeFragment(item:MenuItem,tran:FragmentTransaction){
 
         when(item.itemId){
             R.id.home_tab -> {

@@ -3,20 +3,20 @@ package com.example.auctionapp.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.auctionapp.R
-import com.example.auctionapp.databinding.ActivitySelectPositionBinding
+import com.example.auctionapp.databinding.ActivitySetUpMyPlaceListBinding
 
-class SelectPositionActivity : AppCompatActivity() {
-    lateinit var binding : ActivitySelectPositionBinding
+class SetUpMyPlaceListActivity : AppCompatActivity() {
+    lateinit var binding : ActivitySetUpMyPlaceListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySelectPositionBinding.inflate(layoutInflater)
+        binding = ActivitySetUpMyPlaceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.btnComplete.setOnClickListener { clickCompleteBtn() }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -24,12 +24,10 @@ class SelectPositionActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    private fun clickCompleteBtn() {
-        /*
-        *
-        *       선택된 장소를 전 액티비티로 보내주기. startActivityForResult 사용하기!! 
-        *
-        * */
-        finish()
-    }
+    /*
+    *
+    *   리사이클러뷰 아이템 선택 리스너 -> 선택하면 SetUpPlaceActivity 에 버튼의 정보를 바꿔야함. 내 동네 DB 를 만들어야 할듯. 첫번째 동네, 두번째 동네
+    *
+    *
+    * */
 }

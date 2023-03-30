@@ -3,33 +3,22 @@ package com.example.auctionapp.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.auctionapp.R
-import com.example.auctionapp.databinding.ActivitySelectPositionBinding
+import com.example.auctionapp.databinding.ActivitySelectCategoryBinding
 
-class SelectPositionActivity : AppCompatActivity() {
-    lateinit var binding : ActivitySelectPositionBinding
+class SelectCategoryActivity : AppCompatActivity() {
+    lateinit var binding : ActivitySelectCategoryBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySelectPositionBinding.inflate(layoutInflater)
+        binding = ActivitySelectCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        binding.btnComplete.setOnClickListener { clickCompleteBtn() }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()
-    }
-
-    private fun clickCompleteBtn() {
-        /*
-        *
-        *       선택된 장소를 전 액티비티로 보내주기. startActivityForResult 사용하기!! 
-        *
-        * */
-        finish()
     }
 }
