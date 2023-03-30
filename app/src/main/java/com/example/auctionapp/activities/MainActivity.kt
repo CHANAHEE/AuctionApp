@@ -74,6 +74,19 @@ class MainActivity : AppCompatActivity() {
         if(binding.etSearch.visibility == View.INVISIBLE){
             binding.btnSelectTown.visibility = View.INVISIBLE
             binding.etSearch.visibility = View.VISIBLE
+
+            binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+                if(!hasFocus){
+                    val imm: InputMethodManager =
+                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+                    binding.btnSelectTown.visibility = View.VISIBLE
+                    binding.etSearch.visibility = View.INVISIBLE
+                    binding.etSearch.setText("")
+                }
+            }
+
+
             binding.etSearch.setOnKeyListener { v , keyCode, event ->
                 if(event.action == KeyEvent.ACTION_DOWN
                     && keyCode == KeyEvent.KEYCODE_ENTER)
