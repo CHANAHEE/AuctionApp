@@ -35,12 +35,8 @@ class SignUpPersonalInfoFragment : Fragment() {
     }
 
     private fun clickBackBtn(){
-        val tran: FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.
-            replace(R.id.container_fragment,SignUpEmailInputFragment())
-        tran?.commit()
+        val fragment = activity?.supportFragmentManager
+        fragment?.popBackStack()
     }
 
     private fun clickNextBtn(){
@@ -48,7 +44,7 @@ class SignUpPersonalInfoFragment : Fragment() {
             activity?.
             supportFragmentManager?.
             beginTransaction()?.
-            replace(R.id.container_fragment,SignUpSetUpPlaceFragment())
+            replace(R.id.container_fragment,SignUpSetUpPlaceFragment())?.addToBackStack(null)
         tran?.commit()
     }
 

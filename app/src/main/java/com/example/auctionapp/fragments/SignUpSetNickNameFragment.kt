@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
 import com.example.auctionapp.databinding.FragmentSignUpSetNickNameBinding
@@ -38,29 +39,14 @@ class SignUpSetNickNameFragment : Fragment() {
 
 
     private fun clickBackBtn(){
-        val tran: FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.
-            replace(R.id.container_fragment,SignUpSetUpPlaceFragment())
-        tran?.commit()
+        val fragment = activity?.supportFragmentManager
+        fragment?.popBackStack()
     }
 
     private fun clickCompleteBtn(){
-        val tran: FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.remove(this)
 
-        tran?.commit()
-
-
-//        tran?.remove(SignUpEmailInputFragment())
-//        tran?.remove(SignUpPersonalInfoFragment())
-//        tran?.remove(SignUpSetUpPlaceFragment())
-
-        val loginRootview = activity?.findViewById<View>(R.id.login_rootview)
-        loginRootview?.visibility = View.VISIBLE
+        val fragmentManager : FragmentManager? = activity?.supportFragmentManager
+        fragmentManager?.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
     }

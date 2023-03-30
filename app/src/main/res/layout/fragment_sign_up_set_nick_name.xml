@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignUpSetNickNameFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.SignUpSetNickNameFragment"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:padding="16dp">
 
         <ImageButton
@@ -36,10 +40,18 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:layout_below="@id/tv"
+            android:inputType="text"
             android:hint="닉네임"
             android:textColorHint="#6A020202"
             android:layout_marginTop="50dp"/>
+    </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_complete"
@@ -50,10 +62,6 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:text="완     료"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
             android:textStyle="bold"/>
-    </RelativeLayout>
-
-</FrameLayout>
+    </LinearLayout>
+</LinearLayout>
