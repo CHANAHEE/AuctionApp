@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,26 +8,131 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_select_town"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내 동네 이름"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"
+                    android:background="@null"
+                    android:drawableRight="@drawable/ic_action_dropdown"/>
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:layout_toLeftOf="@id/ib_search"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/bg_edit"
+                    android:hint="검색어를 입력하세요"
+                    android:textColorHint="#D5808080"
+                    android:textSize="13sp"
+                    android:paddingLeft="10dp"
+                    android:textCursorDrawable="@drawable/edit_cursor"
+                    android:textColor="@color/black"
+                    android:inputType="text"
+                    android:visibility="invisible"/>
+
+                <ImageButton
+                    android:id="@+id/ib_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/category"
+                    android:background="@null"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"/>
+
+                <ImageButton
+                    android:id="@+id/ib_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/search"
+                    android:background="@null"
+                    android:layout_toLeftOf="@id/ib_category"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"/>
+            </RelativeLayout>
 
 
-    <FrameLayout
-        android:id="@+id/container_fragment"
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_below="@id/appbar">
+
+        <!--
+
+        콘텐츠 부분
+
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <FrameLayout
+                android:id="@+id/container_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+            </FrameLayout>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bnv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menu="@menu/bottom_navigation"
+                app:itemIconTint="@color/bnv_item_color"
+                app:itemTextColor="@color/bnv_item_color"
+                app:labelVisibilityMode="labeled"
+                app:itemPaddingTop="1dp"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
+        <!--
+
+        네비게이션 드로어
+
+        -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/header_layout"
+            app:menu="@menu/navi_menu"/>
+        <!--app:headerLayout=""
+        app:menu    여기는 프로필이 header, 밑에 메뉴구성이 menu-->
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 
-    </FrameLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bnv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_navigation"
-        app:itemIconTint="@color/bnv_item_color"
-        app:itemTextColor="@color/bnv_item_color"
-        app:labelVisibilityMode="labeled"
-        app:itemPaddingTop="1dp"
-        android:padding="10dp"/>
-
-</LinearLayout>
+</RelativeLayout>

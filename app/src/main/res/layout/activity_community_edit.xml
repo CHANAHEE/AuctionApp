@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CommunityEditActivity">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
+
+            <ImageButton
+                android:id="@+id/ib_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_back"
+                android:background="@null"/>
+
+            <TextView
+                android:id="@+id/tv_appbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="커 뮤 니 티   글 쓰 기"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="완 료"
+                android:background="@null"
+                android:layout_gravity="right"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/brand"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar"
+        android:backgroundTint="#61000000"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="17dp"
+        android:paddingLeft="5dp"
+        android:hint="제목"
+        android:maxEms="15"
+        android:textSize="20sp"
+        android:inputType="text"
+        android:textColorHint="#4A000000"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"/>
+
+
+
+    <EditText
+        android:id="@+id/et_decription"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/et_title"
+        android:backgroundTint="#61000000"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="17dp"
+        android:paddingLeft="5dp"
+        android:hint="동네와 관련한 질문이나 이야기를 해보세요"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:maxLines="10"
+        android:textSize="14sp"
+        android:textColorHint="#4A000000"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"/>
+</RelativeLayout>

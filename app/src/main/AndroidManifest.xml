@@ -13,13 +13,56 @@
         android:theme="@style/Theme.ActionApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.MyProfileEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MyPostListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MyFavoriteListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SelectCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SetUpMyPlaceListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AuctionDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CommunityEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CommunityDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SetUpMyPlaceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SearchItemByCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SelectPositionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SellingEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChattingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.HomeDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.SplashActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,9 +70,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:exported="true" />
     </application>
 
 </manifest>
