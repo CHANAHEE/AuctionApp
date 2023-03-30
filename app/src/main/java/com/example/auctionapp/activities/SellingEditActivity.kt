@@ -21,7 +21,20 @@ class SellingEditActivity : AppCompatActivity() {
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.categoryRelative.setOnClickListener { clickCategory() }
         binding.selectPosRelative.setOnClickListener { clickSelectPos() }
+        binding.ibPicture.setOnClickListener { clickPicture() }
     }
+
+    /*
+    *
+    *       사진 선택 버튼
+    *
+    * */
+    private fun clickPicture() {
+        /*
+        *       앨범에서 선택하기
+        * */
+    }
+
 
     /*
     *

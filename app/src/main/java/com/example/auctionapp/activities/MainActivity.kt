@@ -18,6 +18,7 @@ import com.example.auctionapp.databinding.ActivityMainBinding
 import com.example.auctionapp.fragments.AuctionFragment
 import com.example.auctionapp.fragments.ChatFragment
 import com.example.auctionapp.fragments.CommunityFragment
+import com.example.auctionapp.fragments.MyProfileEditFragment
 import com.google.android.material.navigation.NavigationBarView
 
 class MainActivity : AppCompatActivity() {
@@ -144,6 +145,18 @@ class MainActivity : AppCompatActivity() {
         drawerToggle.syncState()
         actionBar?.title = null
         binding.drawerLayout.addDrawerListener(drawerToggle)
+
+        binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
+            var tran :FragmentTransaction = supportFragmentManager.beginTransaction()
+        }
+        binding.nav.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.menu_my_fav_list->{}
+                R.id.menu_my_post_list->{}
+            }
+            binding.drawerLayout.closeDrawer(binding.nav)
+            false
+        }
     }
 
     /*
