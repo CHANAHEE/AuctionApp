@@ -90,16 +90,6 @@
 
         </LinearLayout>
 
-
-
-
-
-
-
-
-
-
-
         <!--
 
         네비게이션 드로어
@@ -109,7 +99,9 @@
             android:id="@+id/nav"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_gravity="start"/>
+            android:layout_gravity="start"
+            app:headerLayout="@layout/header_layout"
+            app:menu="@menu/navi_menu"/>
         <!--app:headerLayout=""
         app:menu    여기는 프로필이 header, 밑에 메뉴구성이 menu-->
 
