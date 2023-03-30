@@ -20,6 +20,7 @@
             android:background="@color/white">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_select_town"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="내 동네 이름"
