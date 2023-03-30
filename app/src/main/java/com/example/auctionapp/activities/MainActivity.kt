@@ -3,12 +3,12 @@ package com.example.auctionapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
@@ -18,7 +18,6 @@ import com.example.auctionapp.databinding.ActivityMainBinding
 import com.example.auctionapp.fragments.AuctionFragment
 import com.example.auctionapp.fragments.ChatFragment
 import com.example.auctionapp.fragments.CommunityFragment
-import com.example.auctionapp.fragments.MyProfileEditFragment
 import com.google.android.material.navigation.NavigationBarView
 
 class MainActivity : AppCompatActivity() {
@@ -147,12 +146,21 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(drawerToggle)
 
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
-            var tran :FragmentTransaction = supportFragmentManager.beginTransaction()
+            when(it.id){
+                R.id.btn_edit_profile->{
+                    startActivity(Intent(this,MyProfileEditActivity::class.java))
+                }
+            } 
+            
         }
         binding.nav.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.menu_my_fav_list->{}
-                R.id.menu_my_post_list->{}
+                R.id.menu_my_fav_list->{
+                    startActivity(Intent(this,MyFavoriteListActivity::class.java))
+                }
+                R.id.menu_my_post_list->{
+                    startActivity(Intent(this,MyPostListActivity::class.java))
+                }
             }
             binding.drawerLayout.closeDrawer(binding.nav)
             false
