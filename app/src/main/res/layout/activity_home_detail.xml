@@ -21,29 +21,29 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_back"
             android:background="@null"
+            android:src="@drawable/ic_action_back"
             android:layout_margin="10dp"
             />
-
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dotsColor="#248513"
+            app:selectedDotColor="@color/brand"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="8dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:progressMode="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"
+            />
     </RelativeLayout>
 
 
-    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/dots_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dotsColor="#248513"
-        app:selectedDotColor="@color/brand"
-        app:dotsCornerRadius="8dp"
-        app:dotsSize="8dp"
-        app:dotsSpacing="4dp"
-        app:dotsWidthFactor="2.5"
-        app:progressMode="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/container_pager"
-        android:padding="20dp"
-        />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_profile"
