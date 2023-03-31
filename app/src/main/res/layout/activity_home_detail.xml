@@ -158,13 +158,13 @@
 
     <ImageButton
         android:id="@+id/ib_fav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bg_fav"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_fav"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
-        android:background="@null"/>
+        />
 
     <TextView
         android:id="@+id/tv_price"

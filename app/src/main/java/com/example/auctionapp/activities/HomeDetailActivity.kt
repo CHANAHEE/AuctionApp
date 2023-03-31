@@ -1,13 +1,32 @@
 package com.example.auctionapp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.auctionapp.R
+import com.example.auctionapp.databinding.ActivityHomeDetailBinding
 
 class HomeDetailActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityHomeDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_detail)
+        binding = ActivityHomeDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnBack.setOnClickListener { finish() }
+        binding.ibFav.setOnClickListener { clickFavoriteBtn() }
+        binding.btnChat.setOnClickListener { clickChatBtn() }
+
     }
+
+    private fun clickChatBtn() {
+        startActivity(Intent(this,ChattingActivity::class.java))
+    }
+
+    private fun clickFavoriteBtn() { binding.ibFav.isSelected = !binding.ibFav.isSelected }
+
+
+
 }
