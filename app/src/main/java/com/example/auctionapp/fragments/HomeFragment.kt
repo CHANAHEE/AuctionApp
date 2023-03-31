@@ -6,42 +6,40 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.auctionapp.R
 import com.example.auctionapp.activities.SellingEditActivity
 import com.example.auctionapp.adapters.ProductAdapter
 import com.example.auctionapp.databinding.FragmentHomeBinding
-import com.example.auctionapp.model.Item
-import java.util.ArrayList
+import com.example.auctionapp.model.MainItem
 
 
 class HomeFragment : Fragment() {
 
     lateinit var binding : FragmentHomeBinding
-    lateinit var items : MutableList<Item>
+    lateinit var mainItems : MutableList<MainItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        items = mutableListOf()
-        items.add(Item("Item 1",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
-        items.add(Item("Item 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems = mutableListOf()
+        mainItems.add(MainItem("MainItem 1",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
+        mainItems.add(MainItem("MainItem 2",R.drawable.bg_one05,"공릉동","34000원"))
 
     }
 
@@ -59,7 +57,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.fabEdit.setOnClickListener { startActivity(Intent(context,SellingEditActivity::class.java)) }
 
-        binding.recycler.adapter = ProductAdapter(requireContext(),items)
+        binding.recycler.adapter = ProductAdapter(requireContext(),mainItems)
     }
 
 
