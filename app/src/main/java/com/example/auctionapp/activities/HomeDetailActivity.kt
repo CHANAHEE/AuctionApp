@@ -27,7 +27,9 @@ class HomeDetailActivity : AppCompatActivity() {
         items.add(PagerItem(R.drawable.bg_one05))
         items.add(PagerItem(R.drawable.bg_one05))
         items.add(PagerItem(R.drawable.bg_one05))
+
         binding.pager.adapter = PagerAdapter(this,items)
+        binding.dotsIndicator.attachTo(binding.pager)
     }
 
     private fun clickChatBtn() {
