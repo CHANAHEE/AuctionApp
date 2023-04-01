@@ -23,7 +23,10 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:src="@drawable/ic_action_back"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="25dp"
             />
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/dots_indicator"

@@ -71,5 +71,7 @@
         android:alpha="0.7"
         android:layout_below="@id/tv_nick"
         android:background="@drawable/bg_edit"
+        android:inputType="text"
+        android:paddingLeft="10dp"
         android:ems="15"/>
 </RelativeLayout>
