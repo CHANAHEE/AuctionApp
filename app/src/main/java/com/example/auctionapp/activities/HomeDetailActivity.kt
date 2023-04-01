@@ -1,7 +1,14 @@
 package com.example.auctionapp.activities
 
+import android.app.ActionBar.LayoutParams
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.auctionapp.R
 import com.example.auctionapp.adapters.PagerAdapter
@@ -14,6 +21,7 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeDetailBinding
     lateinit var items: MutableList<PagerItem>
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeDetailBinding.inflate(layoutInflater)
@@ -30,7 +38,14 @@ class HomeDetailActivity : AppCompatActivity() {
 
         binding.pager.adapter = PagerAdapter(this,items)
         binding.dotsIndicator.attachTo(binding.pager)
+
+        // status bar 투명으로 만들기
+        window.setDecorFitsSystemWindows(false)
+
+
     }
+
+
 
     private fun clickChatBtn() {
         startActivity(Intent(this,ChattingActivity::class.java))

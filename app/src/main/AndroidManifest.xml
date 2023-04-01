@@ -53,6 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.HomeDetailActivity"
+            android:theme="@style/InvisibleStatusBar"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"
