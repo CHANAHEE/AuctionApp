@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp">
 
     <TextView
         android:id="@+id/tv_title"
@@ -94,12 +96,11 @@
 
     <ImageView
         android:id="@+id/iv_image"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/tv_title"
+        android:layout_centerVertical="true"
         android:scaleType="fitXY"
-        android:layout_above="@id/view"
         android:src="@drawable/_0"/>
     <View
         android:id="@+id/view"
@@ -107,5 +108,5 @@
         android:layout_height="1dp"
         android:background="#CFCFCF"
         android:layout_below="@id/linear"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="10dp"/>
 </RelativeLayout>

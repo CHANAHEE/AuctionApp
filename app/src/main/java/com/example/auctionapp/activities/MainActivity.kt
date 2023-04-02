@@ -24,6 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     val binding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     lateinit var popupMenu:PopupMenu
+
+
+    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
+    private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
+    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -133,9 +139,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
-    private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
-    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
 
     private fun clickMyPlace(){
 
