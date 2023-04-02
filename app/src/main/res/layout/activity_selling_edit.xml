@@ -21,7 +21,7 @@
                 android:id="@+id/tv_appbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="판매글 쓰기"
+                android:text="@string/selling_edit_title"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:fontFamily="@font/brandfont"
@@ -31,7 +31,7 @@
                 android:id="@+id/btn_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="완 료"
+                android:text="@string/complete"
                 android:background="@null"
                 android:layout_gravity="right"
                 android:fontFamily="@font/brandfont"
@@ -52,31 +52,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/linear"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal" />
 
-                <ImageButton
-                    android:id="@+id/ib_picture"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/camera"
-                    android:background="@drawable/bg_selectimage_sellingedit"
-                    />
-            </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_image"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@drawable/bg_selectimage_sellingedit"
+                android:backgroundTint="#4B000000"
+                android:drawableStart="@drawable/camera"
+                android:layout_below="@id/scrollview"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:text="@string/image_count" />
 
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#997A7A7A"
-                android:layout_below="@id/linear"
+                android:layout_below="@id/btn_image"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"/>
 
@@ -92,7 +102,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:padding="8dp"
-                android:hint="글 제목"
+                android:hint="@string/selling_edit_title_hint"
                 android:maxEms="15"
                 android:textSize="16sp"
                 android:inputType="text"
@@ -109,7 +119,7 @@
                     android:id="@+id/tv_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="카테고리"
+                    android:text="@string/selling_edit_category"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="20dp"
                     android:textSize="16sp"
@@ -140,7 +150,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
                 android:padding="8dp"
-                android:hint="가  격"
+                android:hint="@string/selling_edit_price_hint"
                 android:inputType="text"
                 android:textSize="16sp"
                 android:textColorHint="#4A000000"
@@ -157,7 +167,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
-                android:hint="상품 설명"
+                android:hint="@string/selling_edit_description_hint"
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:lines="8"
@@ -176,7 +186,7 @@
                     android:id="@+id/tv_select_pos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="거래 희망 장소"
+                    android:text="@string/selling_edit_select_place"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="20dp"
                     android:textSize="16sp"
@@ -220,7 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/brandfont"
-                    android:text="즉시 판매"
+                    android:text="@string/selling_immediate"
                     android:textStyle="bold"
                     android:checked="true"
                     android:textSize="15sp"/>
@@ -234,7 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/brandfont"
-                    android:text="경매로 올리기"
+                    android:text="@string/selling_edit_bid"
                     android:textStyle="bold"
                     android:textSize="15sp"/>
 

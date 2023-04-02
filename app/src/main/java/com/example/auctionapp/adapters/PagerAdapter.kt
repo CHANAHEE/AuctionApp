@@ -20,5 +20,7 @@ class PagerAdapter(var context:Context,var items:MutableList<PagerItem>) : Adapt
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         Glide.with(context).load(items[position].image).into(holder.binding.pagerItem)
+
+
     }
 }
