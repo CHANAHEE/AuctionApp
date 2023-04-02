@@ -46,7 +46,15 @@ class CommunityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*
+        *       fab 누르면
+        *       CommunityEditActivity 로 이동
+        *
+        * */
+        binding.fab.setOnClickListener{
+            startActivity(Intent(context,CommunityEditActivity::class.java))
 
+        }
 
 
         /*
