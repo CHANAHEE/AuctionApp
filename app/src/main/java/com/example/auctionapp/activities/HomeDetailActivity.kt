@@ -1,5 +1,6 @@
 package com.example.auctionapp.activities
 
+import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.content.Intent
 import android.graphics.Color
@@ -7,9 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.auctionapp.R
 import com.example.auctionapp.adapters.PagerAdapter
 import com.example.auctionapp.databinding.ActivityHomeDetailBinding
@@ -21,6 +25,7 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeDetailBinding
     lateinit var items: MutableList<PagerItem>
 
+    @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +45,11 @@ class HomeDetailActivity : AppCompatActivity() {
         binding.dotsIndicator.attachTo(binding.pager)
 
         // status bar 투명으로 만들기
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
+        /*
+        *       theme.xml , manifest 파일
+        * */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        else window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
 
     }

@@ -20,11 +20,10 @@
     <!-- 투명 상태바 설정하기 -->
     <style name="InvisibleStatusBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Status bar color. -->
-        <item name="android:windowLightStatusBar">false</item>
+        <!--<item name="android:windowLightStatusBar">false</item>-->
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+
+
     </style>
 
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog">
