@@ -106,6 +106,7 @@
                 android:maxEms="15"
                 android:textSize="16sp"
                 android:inputType="text"
+                android:textCursorDrawable="@drawable/edit_cursor"
                 android:textColorHint="#4A000000"
                 android:fontFamily="@font/brandfont"
                 android:textStyle="bold"/>
@@ -114,14 +115,14 @@
                 android:id="@+id/category_relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_below="@id/et_title">
                 <TextView
                     android:id="@+id/tv_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/selling_edit_category"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginTop="20dp"
                     android:textSize="16sp"
                     android:textColor="#61000000"
                     android:fontFamily="@font/brandfont"
@@ -135,33 +136,47 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@id/tv_category"
                     android:background="@null"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="30dp"/>
             </RelativeLayout>
 
-
-            <EditText
-                android:id="@+id/et_price"
+            <RelativeLayout
+                android:id="@+id/price_relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/category_relative"
-                android:background="@drawable/bg_edit"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
-                android:padding="8dp"
-                android:hint="@string/selling_edit_price_hint"
-                android:inputType="text"
-                android:textSize="16sp"
-                android:textColorHint="#4A000000"
-                android:fontFamily="@font/brandfont"
-                android:textStyle="bold"/>
+                android:layout_marginTop="20dp"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_won"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/won_featured"
+                    android:layout_marginLeft="20dp"
+                    app:tint="#4A000000"/>
+
+                <EditText
+                    android:id="@+id/et_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_toRightOf="@id/iv_won"
+                    android:layout_marginLeft="10dp"
+                    android:hint="@string/selling_edit_price_hint"
+                    android:inputType="text"
+                    android:textCursorDrawable="@drawable/edit_cursor"
+                    android:textSize="16sp"
+                    android:textColorHint="#4A000000"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/et_decription"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_below="@id/et_price"
+                android:layout_below="@id/price_relative"
                 android:background="@drawable/bg_edit"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
@@ -172,6 +187,7 @@
                 android:inputType="textMultiLine"
                 android:lines="8"
                 android:maxLines="10"
+                android:textCursorDrawable="@drawable/edit_cursor"
                 android:textSize="16sp"
                 android:textColorHint="#4A000000"
                 android:fontFamily="@font/brandfont"

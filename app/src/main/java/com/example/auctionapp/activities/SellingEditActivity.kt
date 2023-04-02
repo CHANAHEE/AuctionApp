@@ -1,16 +1,22 @@
 package com.example.auctionapp.activities
 
 import android.content.ClipData
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import com.example.auctionapp.R
 import com.example.auctionapp.adapters.PagerAdapter
 import com.example.auctionapp.adapters.PictureAdapter
@@ -37,10 +43,16 @@ class SellingEditActivity : AppCompatActivity() {
         binding.selectPosRelative.setOnClickListener { clickSelectPos() }
         binding.btnImage.setOnClickListener { clickPicture() }
 
+        binding.etPrice.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus) binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF000000"))
+            else binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#4A000000"))
+        }
+
         items = mutableListOf()
         Log.i("Hello2","${items.size}")
         binding.recycler.adapter = PictureAdapter(this, items,binding)
     }
+
 
 
 
@@ -84,7 +96,12 @@ class SellingEditActivity : AppCompatActivity() {
         /*
         *       카테고리 관련 정보 넣어서 다이얼로그 띄우기
         * */
-        AlertDialog.Builder(this).setMessage("카테고리 선택 리스트").show()
+        AlertDialog.Builder(this).setTitle("카테고리 선택").setItems(resources.getStringArray(R.array.category_item),
+            DialogInterface.OnClickListener { dialog, which ->
+                Log.i("dialogClicked","$dialog $which")
+                binding.tvCategory.text = resources.getStringArray(R.array.category_item)[which]
+                binding.tvCategory.setTextColor(resources.getColor(R.color.black,theme))
+            }).create().show()
     }
 
 
