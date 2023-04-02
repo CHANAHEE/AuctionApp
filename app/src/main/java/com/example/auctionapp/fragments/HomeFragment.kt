@@ -18,11 +18,22 @@ class HomeFragment : Fragment() {
     lateinit var binding : FragmentHomeBinding
     lateinit var mainItems : MutableList<MainItem>
 
+    /*
+    *
+    *       원래 서버에 저장된, 동네 이름을 기반으로 기본값을 정해주어야 함.
+    *       그리고 나서, 동네를 바꿀 때는 Activity->Fragment 로 정보전달이 이루어져야함.
+    *       그래서 다른 Fragment 에서 HomeFragment 로 넘어올 때 기본 동네 설정이 안되어있어 에러가 남.
+    * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var placeInfo = arguments?.getString("place")
 
-        setLocation(placeInfo!!)
+        if(placeInfo == null){
+            setLocation("공릉 1동")
+        }else{
+            setLocation(placeInfo)
+        }
+
     }
 
     fun setLocation(placeInfo: String) {

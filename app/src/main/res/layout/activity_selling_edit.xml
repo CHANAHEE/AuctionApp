@@ -163,7 +163,7 @@
                     android:layout_toRightOf="@id/iv_won"
                     android:layout_marginLeft="10dp"
                     android:hint="@string/selling_edit_price_hint"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:textCursorDrawable="@drawable/edit_cursor"
                     android:textSize="16sp"
                     android:textColorHint="#4A000000"
