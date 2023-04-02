@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.example.auctionapp.R
+import com.example.auctionapp.activities.CommunityEditActivity
 import com.example.auctionapp.activities.SetUpMyPlaceActivity
 import com.example.auctionapp.adapters.MyPostListAdapter
 import com.example.auctionapp.databinding.FragmentCommunityBinding
@@ -45,6 +46,33 @@ class CommunityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+
+        /*
+        *
+        *       검색 기능
+        *
+        * */
+        binding.ibSearch.setOnClickListener {
+            if(it.isSelected){
+                it.isSelected = false
+                binding.etSearch.visibility = View.VISIBLE
+                binding.tvTitle.visibility = View.GONE
+                binding.btnSelectTown.visibility = View.GONE
+            } else {
+                it.isSelected = true
+                binding.etSearch.visibility = View.GONE
+                binding.tvTitle.visibility = View.VISIBLE
+                binding.btnSelectTown.visibility = View.VISIBLE
+            }
+        }
+
+        /*
+        *
+        *       팝업메뉴 설정
+        *
+        * */
         popupMenu = PopupMenu(context,binding.btnSelectTown)
         popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,"공릉 1동")
         popupMenu.menu.add(0, POPUP_MENU_MY_SECOND_PLACE_ITEM_ID!!,0,"공릉 2동")
@@ -55,6 +83,11 @@ class CommunityFragment : Fragment() {
 
 
 
+        /*
+        *
+        *       recyclerview 데이터 설정 및 동네 선택 및 동네별 데이터
+        *
+        * */
         communityItems = mutableListOf()
 
         communityItems.add(CommunityPostItem(R.drawable._0,"안녕하세요~~~","이번에 묵동 구길 쪽으로 이사를 가는데 집사님들 혹시 아시나요?","공릉 1동",10,5))
