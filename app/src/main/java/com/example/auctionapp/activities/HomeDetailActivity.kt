@@ -32,9 +32,9 @@ class HomeDetailActivity : AppCompatActivity() {
         binding.btnChat.setOnClickListener { clickChatBtn() }
 
         items = mutableListOf()
-        items.add(PagerItem(R.drawable.bg_one05))
-        items.add(PagerItem(R.drawable.bg_one05))
-        items.add(PagerItem(R.drawable.bg_one05))
+        items.add(PagerItem(R.drawable._0))
+        items.add(PagerItem(R.drawable._1))
+        items.add(PagerItem(R.drawable._2))
 
         binding.pager.adapter = PagerAdapter(this,items)
         binding.dotsIndicator.attachTo(binding.pager)
