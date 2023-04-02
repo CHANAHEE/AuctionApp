@@ -26,4 +26,9 @@
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
     </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/brand</item>
+        <item name="fontFamily">@font/brandfont</item>
+    </style>
 </resources>
