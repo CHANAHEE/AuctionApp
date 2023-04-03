@@ -19,6 +19,7 @@
         android:layout_marginTop="20dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cancel"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/cancel"
@@ -75,7 +76,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_btn"
         android:backgroundTint="#AABD93"
-        android:layout_above="@id/btn_bid"
+        android:layout_above="@id/btn_bid_bottomsheet1"
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -86,7 +87,7 @@
         android:textStyle="bold"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_bid"
+        android:id="@+id/btn_bid_bottomsheet1"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_btn"
@@ -97,5 +98,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
+        android:enabled="false"
+        android:backgroundTint="@color/unable"
         android:textStyle="bold"/>
 </RelativeLayout>
