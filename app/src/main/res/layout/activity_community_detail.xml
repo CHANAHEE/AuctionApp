@@ -17,13 +17,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white">
 
-            <ImageButton
-                android:id="@+id/ib_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_back"
-                android:background="@null"/>
-
             <TextView
                 android:id="@+id/tv_appbar_title"
                 android:layout_width="wrap_content"
@@ -42,6 +35,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/chat_linear"
         android:layout_below="@id/appbar">
 
         <RelativeLayout
@@ -108,7 +102,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tv_main_description"
+                android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_main_title"
@@ -122,12 +116,62 @@
                 android:fontFamily="@font/brandfont"
                 android:textStyle="bold"/>
 
+            <RelativeLayout
+                android:id="@+id/relative_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_description"
+                android:background="@drawable/bg_location_select"
+                android:layout_marginTop="10dp"
+                android:layout_alignLeft="@id/tv_description"
+                android:layout_alignRight="@id/tv_description"
+                android:visibility="gone"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_location"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/map_location"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="장소 이름"
+                    android:layout_toRightOf="@id/iv_location"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/ic_action_close"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relative_location"
+                android:layout_alignLeft="@id/relative_location"
+                android:layout_alignRight="@id/relative_location"
+                android:layout_marginTop="20dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal" />
+
+            </androidx.core.widget.NestedScrollView>
             <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#61000000"
-                android:layout_below="@id/tv_main_description"
+                android:layout_below="@id/scrollview"
                 android:layout_marginTop="10dp"/>
 
             <LinearLayout
@@ -161,55 +205,12 @@
                 android:background="#61000000"
                 android:layout_below="@id/linear"/>
 
-<!--            댓글 리사이클러뷰 아이템 뷰!!  -->
-<!--            <RelativeLayout-->
-<!--                android:id="@+id/other_relative"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/view3"-->
-<!--                android:padding="16dp">-->
 
-<!--                <de.hdodenhof.circleimageview.CircleImageView-->
-<!--                    android:id="@+id/civ_other_profile"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:src="@mipmap/ic_launcher_round"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_other_id"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_toRightOf="@id/civ_other_profile"-->
-<!--                    android:layout_marginLeft="20dp"-->
-<!--                    android:fontFamily="@font/brandfont"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textSize="12sp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:text="ID"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_other_town_name"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignLeft="@id/tv_other_id"-->
-<!--                    android:layout_below="@id/tv_other_id"-->
-<!--                    android:textSize="10sp"-->
-<!--                    android:text="동네 이름"/>-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignLeft="@id/tv_other_id"-->
-<!--                    android:layout_below="@id/tv_other_town_name"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:textSize="10sp"-->
-<!--                    android:text="댓글 내용"/>-->
-
-<!--            </RelativeLayout>-->
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_below="@id/view3"
                 android:orientation="vertical"/>
@@ -226,38 +227,85 @@
         android:background="#61000000"
         android:layout_above="@id/chat_linear"/>
 
+    <RelativeLayout
+        android:id="@+id/relative_location_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_linear"
+        android:background="@drawable/bg_location_select"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="10dp"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_location_comments"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/map_location"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장소 이름"
+            android:layout_toRightOf="@id/iv_location_comments"
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_action_close"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/chat_linear"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="4dp">
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_location"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/location"
             android:layout_margin="10dp"
-            android:background="@null"/>
+            android:background="@drawable/location"/>
 
         <EditText
             android:id="@+id/et_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/bg_edit"/>
+            android:background="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:paddingLeft="10dp"
+            android:textSize="13sp"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textColorHint="#878787"
+            android:isScrollContainer="true"
+            android:maxLines="4"
+            android:inputType="textMultiLine|textCapSentences"
+            android:hint="댓 글   입 력 . . ."/>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_send"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/send"
             android:layout_margin="10dp"
-            android:background="@null"/>
+            android:background="@drawable/send"/>
     </LinearLayout>
 </RelativeLayout>

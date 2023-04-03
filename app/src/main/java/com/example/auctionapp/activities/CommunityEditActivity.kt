@@ -5,15 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.example.auctionapp.R
 import com.example.auctionapp.adapters.PictureAdapter
-import com.example.auctionapp.adapters.PictureAdapter2
 import com.example.auctionapp.databinding.ActivityCommunityEditBinding
 import com.example.auctionapp.model.PictureItem
 
@@ -35,7 +32,7 @@ class CommunityEditActivity : AppCompatActivity() {
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.linear1.setOnClickListener { clickPicture() }
         binding.linear2.setOnClickListener { clickLocation() }
-        binding.recycler.adapter = PictureAdapter2(this, items)
+        binding.recycler.adapter = PictureAdapter(this, items)
     }
 
     private fun clickCompleteBtn(){

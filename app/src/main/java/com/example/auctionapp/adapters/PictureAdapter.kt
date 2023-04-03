@@ -36,9 +36,9 @@ class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) 
             items.removeAt(position)
             Log.i("removePicture","${position} removePicture")
 
-            var activity = context as SellingEditActivity
-            activity.binding.btnImage.text = "${items.size} / 10"
-
+            if(context is SellingEditActivity){
+                (context as SellingEditActivity).binding.btnImage.text = "${items.size} / 10"
+            }
             this.notifyDataSetChanged()
 
         }

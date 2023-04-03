@@ -1,11 +1,13 @@
 package com.example.auctionapp.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.auctionapp.activities.CommunityDetailActivity
 import com.example.auctionapp.databinding.RecyclerCommunityItemBinding
 import com.example.auctionapp.model.CommunityPostItem
 
@@ -30,5 +32,12 @@ class MyPostListAdapter(var context:Context, var items:MutableList<CommunityPost
         *       CommunityDetail 로 이동
         *
         * */
+        holder.itemView.setOnClickListener {
+            /*
+            *       Intent 에게 position 값을 넘겨줘야 할듯.
+            *       넘겨준 position 값을 토대로, Detail 액티비티에서 서버에 저장된 커뮤니티 작성글을 불러오자.
+            * */
+            context.startActivity(Intent(context,CommunityDetailActivity::class.java))
+        }
     }
 }

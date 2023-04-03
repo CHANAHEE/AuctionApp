@@ -13,3 +13,5 @@ data class CommunityPostItem(var image:Int , var title:String,var contents:Strin
 data class PagerItem(var image:Int)
 
 data class PictureItem(var uri:Uri)
+
+data class CommentsItem(var image: Int, var id: String, var town: String, var description: String, var location: String?)
