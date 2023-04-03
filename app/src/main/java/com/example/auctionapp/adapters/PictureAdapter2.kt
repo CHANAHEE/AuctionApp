@@ -17,7 +17,7 @@ import com.example.auctionapp.databinding.ViewpagerItemBinding
 import com.example.auctionapp.model.PagerItem
 import com.example.auctionapp.model.PictureItem
 
-class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) : Adapter<PictureAdapter.VH>() {
+class PictureAdapter2(var context: Context, var items: MutableList<PictureItem>) : Adapter<PictureAdapter2.VH>() {
 
     inner class VH(var binding: RecyclerPictureItemBinding) : ViewHolder(binding.root)
 
@@ -34,11 +34,6 @@ class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) 
         holder.binding.btnCancel.setOnClickListener {
 
             items.removeAt(position)
-            Log.i("removePicture","${position} removePicture")
-
-            var activity = context as SellingEditActivity
-            activity.binding.btnImage.text = "${items.size} / 10"
-
             this.notifyDataSetChanged()
 
         }

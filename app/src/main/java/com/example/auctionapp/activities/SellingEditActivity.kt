@@ -12,10 +12,12 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import com.example.auctionapp.R
 import com.example.auctionapp.adapters.PagerAdapter
@@ -50,7 +52,7 @@ class SellingEditActivity : AppCompatActivity() {
 
         items = mutableListOf()
         Log.i("Hello2","${items.size}")
-        binding.recycler.adapter = PictureAdapter(this, items,binding)
+        binding.recycler.adapter = PictureAdapter(this, items)
     }
 
 
@@ -68,6 +70,7 @@ class SellingEditActivity : AppCompatActivity() {
                 }
                 binding.recycler.adapter?.notifyDataSetChanged()
                 binding.btnImage.text = "${items.size} / 10"
+
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
@@ -83,7 +86,6 @@ class SellingEditActivity : AppCompatActivity() {
 
         var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
         launcher.launch(intent)
-
     }
 
 
