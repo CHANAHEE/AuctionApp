@@ -43,6 +43,7 @@
             android:inputType="text"
             android:hint="동 이름으로 검색"
             android:textColorHint="#6A020202"
+            android:textCursorDrawable="@drawable/bg_edit"
             android:layout_marginTop="50dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
