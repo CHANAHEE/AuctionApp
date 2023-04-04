@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
@@ -23,6 +24,7 @@ class SignUpPersonalInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return binding.root
     }
 
@@ -39,14 +41,6 @@ class SignUpPersonalInfoFragment : Fragment() {
         fragment?.popBackStack()
     }
 
-    private fun clickNextBtn(){
-        val tran: FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.
-            replace(R.id.container_fragment,SignUpSetUpPlaceFragment())?.addToBackStack(null)
-        tran?.commit()
-    }
 
     private fun editTextListener(){
         binding.etBirth.setOnKeyListener { v , keyCode, event ->
@@ -60,6 +54,22 @@ class SignUpPersonalInfoFragment : Fragment() {
 
             false
         }
+    }
+    private fun clickNextBtn(){
+        var fragment = SignUpSetUpPlaceFragment()
+        var bundle = Bundle()
+        bundle.putString("name",binding.etName.text.toString())
+        bundle.putString("birth",binding.etBirth.text.toString())
+        bundle.putString("email",arguments?.getString("email"))
+        bundle.putString("password",arguments?.getString("password"))
+        fragment.arguments = bundle
+        val tran:FragmentTransaction? =
+            activity?.
+            supportFragmentManager?.
+            beginTransaction()?.
+            replace(R.id.container_fragment,fragment)?.addToBackStack(null)
+
+        tran?.commit()
     }
 
 }

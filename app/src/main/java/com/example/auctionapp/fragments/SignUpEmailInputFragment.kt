@@ -8,12 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
 import com.example.auctionapp.activities.LoginActivity
+import com.example.auctionapp.activities.MainActivity
 import com.example.auctionapp.databinding.FragmentSignUpEmailInputBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpEmailInputFragment : Fragment() {
 
@@ -37,15 +41,6 @@ class SignUpEmailInputFragment : Fragment() {
         binding.btnBack.setOnClickListener { clickBackBtn() }
     }
 
-    private fun clickNextBtn(){
-        val tran:FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.
-            replace(R.id.container_fragment,SignUpPersonalInfoFragment())?.addToBackStack(null)
-        tran?.commit()
-
-    }
     private fun clickBackBtn(){
         val fragment = activity?.supportFragmentManager
         fragment?.popBackStack()
@@ -63,5 +58,56 @@ class SignUpEmailInputFragment : Fragment() {
 
             false
         }
+    }
+    private fun clickNextBtn(){
+        /*
+  *
+  *       이메일 중복체크 및 유효성 검사
+  *
+  * */
+
+        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firebase.collection("user")
+
+        if(binding.etEmail.text.toString() == ""){
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "이메일을 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+            binding.etEmail.requestFocus()
+        } else if(binding.etPass.text.toString() == ""){
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "비밀번호를 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+            binding.etPass.requestFocus()
+        }
+
+        userRef.whereEqualTo("email",binding.etEmail.text.toString())
+            .addSnapshotListener { value, error ->
+                if (value != null) {
+                    for (snapshot in value) {
+                        if (binding.etEmail.text.toString() == snapshot.data["email"].toString()) {
+                            Snackbar.make(
+                                activity?.findViewById(android.R.id.content)!!,
+                                "이미 가입된 이메일 입니다.", Snackbar.LENGTH_SHORT).show()
+                            binding.etEmail.requestFocus()
+                            return@addSnapshotListener
+                        }
+                    }
+
+                    var fragment = SignUpPersonalInfoFragment()
+                    var bundle = Bundle()
+                    bundle.putString("email",binding.etEmail.text.toString())
+                    bundle.putString("password",binding.etPass.text.toString())
+                    fragment.arguments = bundle
+                    val tran:FragmentTransaction? =
+                        activity?.
+                        supportFragmentManager?.
+                        beginTransaction()?.
+                        replace(R.id.container_fragment,fragment)?.addToBackStack(null)
+
+                    tran?.commit()
+
+                }
+            }
     }
 }

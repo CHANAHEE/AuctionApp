@@ -46,11 +46,25 @@
             android:textCursorDrawable="@drawable/bg_edit"
             android:layout_marginTop="50dp"/>
 
+        <TextView
+            android:id="@+id/tv_location_set_up_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="공릉 1동"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/et_address"
+            android:layout_centerHorizontal="true"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/et_address"
+            android:layout_below="@id/tv_location_set_up_place"
             android:layout_marginTop="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"/>

@@ -3,19 +3,23 @@ package com.example.auctionapp.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
 import com.example.auctionapp.activities.LoginActivity
 import com.example.auctionapp.activities.MainActivity
 import com.example.auctionapp.databinding.FragmentLoginMainBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 
 class LoginMainFragment : Fragment() {
 
@@ -38,7 +42,6 @@ class LoginMainFragment : Fragment() {
         editTextListener()
         binding.btnSignup.setOnClickListener {clickSignUp()}
         binding.btnLogin.setOnClickListener { clickLogin() }
-        binding.btnKakao.setOnClickListener { clickKakao() }
     }
 
     private fun clickKakao(){
@@ -50,18 +53,30 @@ class LoginMainFragment : Fragment() {
 
     private fun clickLogin(){
         /*
-        *       가입된 회원 정보를 userId 와 userPass 에 넣기
+        *       firebase 에서 유저 정보 가져와서 비교 후 로그인
         * */
-        var userId = "aaa"
-        var userPass = "1234"
+        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firebase.collection("user")
 
-        if(userId.equals(binding.etId.text.toString()) && userPass.equals(binding.etPass.text.toString())){
-            var intent: Intent = Intent(context, MainActivity::class.java)
-            startActivity(intent)
-            LoginActivity().finish()
-        } else {
-            Snackbar.make(binding.root,"아이디 혹은 비밀번호가 틀렸습니다.", Snackbar.LENGTH_SHORT).show()
-        }
+
+        userRef.whereEqualTo("email",binding.etId.text.toString())
+            .whereEqualTo("password",binding.etPass.text.toString())
+            .addSnapshotListener { value, error ->
+                if (value != null) {
+                    for (snapshot in value) {
+                        if (binding.etId.text.toString() == snapshot.data["email"].toString()
+                            && binding.etPass.text.toString() == snapshot.data["password"].toString()
+                        ) {
+                            var intent: Intent = Intent(context, MainActivity::class.java)
+                            startActivity(intent)
+                            LoginActivity().finish()
+                        }
+                    }
+                    Snackbar.make(
+                        activity?.findViewById(android.R.id.content)!!,
+                        "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", Snackbar.LENGTH_LONG).show()
+                }
+            }
     }
     private fun clickSignUp(){
         var tran: FragmentTransaction? = activity?.supportFragmentManager

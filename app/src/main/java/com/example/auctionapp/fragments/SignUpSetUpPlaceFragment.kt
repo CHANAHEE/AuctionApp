@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
@@ -41,14 +42,7 @@ class SignUpSetUpPlaceFragment : Fragment() {
         fragment?.popBackStack()
     }
 
-    private fun clickNextBtn(){
-        val tran: FragmentTransaction? =
-            activity?.
-            supportFragmentManager?.
-            beginTransaction()?.
-            replace(R.id.container_fragment,SignUpSetNickNameFragment())?.addToBackStack(null)
-        tran?.commit()
-    }
+
 
     private fun editTextListener(){
         binding.etAddress.setOnKeyListener { v , keyCode, event ->
@@ -62,5 +56,23 @@ class SignUpSetUpPlaceFragment : Fragment() {
 
             false
         }
+    }
+
+    private fun clickNextBtn(){
+        var fragment = SignUpSetNickNameFragment()
+        var bundle = Bundle()
+        bundle.putString("location",binding.tvLocationSetUpPlace.text.toString())
+        bundle.putString("name",arguments?.getString("name"))
+        bundle.putString("birth",arguments?.getString("birth"))
+        bundle.putString("email",arguments?.getString("email"))
+        bundle.putString("password",arguments?.getString("password"))
+        fragment.arguments = bundle
+        val tran:FragmentTransaction? =
+            activity?.
+            supportFragmentManager?.
+            beginTransaction()?.
+            replace(R.id.container_fragment,fragment)?.addToBackStack(null)
+
+        tran?.commit()
     }
 }
