@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,30 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     override fun onBindViewHolder(holder: VH, position: Int) {
         var item: AuctionPagerItem = items[position]
 
+        object : CountDownTimer(43200000,1000) {
+
+            /*
+            *
+            *       게시글을 올린 시간을 기준으로 해야할듯. (12시간 - 게시글 올린 시간) -> 요게 남은 시간
+            *       올린 시간을 기준으로 12시간 후에는 게시글을 삭제시키기.
+            *
+            * */
+            override fun onTick(millisUntilFinished: Long) {
+                var hour    = (millisUntilFinished/1000/3600)
+                var min     = (millisUntilFinished/1000/60%60)
+                var second  = (millisUntilFinished/1000%60)
+
+                var time = String.format("%02d : %02d : %02d",hour,min,second)
+                holder.binding.tvBidTime.text = time
+            }
+
+            override fun onFinish() {
+                /*
+                *       게시글 삭제
+                * */
+            }
+
+        }.start()
         holder.binding.tvId.text = item.id
         holder.binding.tvDescription.text = item.description
         Glide.with(context).load(item.image).into(holder.binding.civProfile)
@@ -53,7 +78,6 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         *       BottomSheet 1번 구현
         * */
         holder.binding.btnBid.setOnClickListener { clickBidBtn(holder) }
-
 
         /*
         *      Exoplayer 구현
