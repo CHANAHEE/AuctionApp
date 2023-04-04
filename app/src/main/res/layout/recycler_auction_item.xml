@@ -4,11 +4,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.exoplayer2.ui.StyledPlayerView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:controller_layout_id="@layout/exo_player_control_view"/>
+        app:controller_layout_id="@layout/exo_player_control_view"
+        app:show_buffering="when_playing"
+        app:buffered_color="@color/black"
+        app:show_shuffle_button="true"
+        app:show_timeout="100"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_profile"
@@ -71,4 +75,11 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/bg_bid_time"
         android:padding="10dp"/>
+
+    <FrameLayout
+        android:id="@+id/container_bottomsheet"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
