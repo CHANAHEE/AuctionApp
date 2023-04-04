@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_launcher_round"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="nick name"
+        android:textColor="@color/black"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/civ_profile"
+        android:layout_marginLeft="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello message"
+        android:layout_alignLeft="@id/tv_name"
+        android:layout_below="@id/tv_name"
+        android:background="@drawable/bg_messagebox"
+        android:backgroundTint="#D1D1D1"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:maxWidth="200dp"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14:54"
+        android:layout_toRightOf="@id/tv_msg"
+        android:layout_alignBottom="@id/tv_msg"
+        android:layout_marginLeft="6dp"
+        android:textSize="10dp"/>
+</RelativeLayout>

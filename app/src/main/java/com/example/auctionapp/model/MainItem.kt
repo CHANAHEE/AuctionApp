@@ -17,3 +17,5 @@ data class PictureItem(var uri:Uri)
 data class CommentsItem(var image: Int, var id: String, var town: String, var description: String, var location: String?)
 
 data class AuctionPagerItem(var video: Uri, var image: Int, var id: String, var description: String)
+
+data class MessageItem(var image: Int, var id: String, var message: String, var time: String)

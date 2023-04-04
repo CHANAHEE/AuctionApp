@@ -6,10 +6,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.auctionapp.R
+import com.example.auctionapp.adapters.ChatListAdapter
+import com.example.auctionapp.databinding.FragmentChatBinding
+import com.example.auctionapp.model.MessageItem
 
 class ChatFragment : Fragment() {
+
+    lateinit var binding: FragmentChatBinding
+    lateinit var chatItem: MutableList<MessageItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        chatItem = mutableListOf()
+        chatItem.add(MessageItem(R.drawable._0,"0번","0번 입니다.","오후 14:12"))
+        chatItem.add(MessageItem(R.drawable._1,"1번","1번 입니다.","오후 13:57"))
+        chatItem.add(MessageItem(R.drawable._2,"2번","2번 입니다.","오후 12:12"))
+        chatItem.add(MessageItem(R.drawable._3,"3번","3번 입니다.","오전 11:23"))
+        chatItem.add(MessageItem(R.drawable._4,"4번","4번 입니다.","4월 1일"))
+        chatItem.add(MessageItem(R.drawable._5,"5번","5번 입니다.","4월 1일"))
+        chatItem.add(MessageItem(R.drawable._6,"6번","6번 입니다.","4월 1일"))
+        chatItem.add(MessageItem(R.drawable._7,"7번","7번 입니다.","3월 29일"))
+        chatItem.add(MessageItem(R.drawable._8,"8번","8번 입니다.","3월 29일"))
+        chatItem.add(MessageItem(R.drawable._9,"9번","9번 입니다.","3월 29일"))
     }
 
     override fun onCreateView(
@@ -17,7 +35,13 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+        binding = FragmentChatBinding.inflate(inflater,container,false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.recycler.adapter = ChatListAdapter(requireContext(),chatItem)
     }
 
 }

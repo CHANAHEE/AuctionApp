@@ -25,13 +25,6 @@
                 android:textSize="20sp"
                 android:text="판매자 ID"/>
 
-            <ImageButton
-                android:id="@+id/back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_action_back"
-                android:background="@null"/>
-
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
