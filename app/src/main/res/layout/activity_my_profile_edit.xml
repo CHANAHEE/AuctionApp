@@ -73,6 +73,7 @@
         android:background="@drawable/bg_edit"
         android:inputType="text"
         android:paddingLeft="10dp"
+        android:fontFamily="@font/brandfont"
         android:textCursorDrawable="@drawable/edit_cursor"
         android:ems="15"/>
 </RelativeLayout>

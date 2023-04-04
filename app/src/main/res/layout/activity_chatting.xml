@@ -39,32 +39,33 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="#6BC8C8C8"
         android:layout_alignTop="@id/linear"/>
 
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp">
+        android:gravity="center">
 
         <ImageButton
             android:id="@+id/btn_location"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:src="@drawable/location"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
             android:background="@null"/>
 
         <ImageButton
             android:id="@+id/btn_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:src="@drawable/image"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
             android:background="@null"/>
 
 
@@ -72,17 +73,29 @@
             android:id="@+id/et_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/bg_edit"/>
+            android:background="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:paddingLeft="10dp"
+            android:textSize="13sp"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:isScrollContainer="true"
+            android:maxLines="4"
+            android:inputType="textMultiLine|textCapSentences"/>
 
         <ImageButton
             android:id="@+id/btn_send"
             android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_height="40dp"
             android:src="@drawable/send"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:background="@null"/>
     </LinearLayout>
 </RelativeLayout>

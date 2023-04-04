@@ -14,5 +14,25 @@ class ChattingActivity : AppCompatActivity() {
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnSend.setOnClickListener { clickSendBtn() }
+        binding.btnLocation.setOnClickListener { clickLocationBtn() }
+        binding.btnImage.setOnClickListener { clickImageBtn() }
+    }
+
+    private fun clickImageBtn(){
+        /*
+        *       사진 선택 기능
+        * */
+    }
+
+    private fun clickLocationBtn(){
+
+    }
+
+    private fun clickSendBtn(){
+        /*
+        *       서버에 메시지 저장.
+        *       사진 정보는 어떻게 할지 생각해보자..
+        * */
     }
 }

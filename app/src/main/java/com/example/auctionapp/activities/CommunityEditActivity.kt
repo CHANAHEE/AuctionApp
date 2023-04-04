@@ -101,4 +101,16 @@ class CommunityEditActivity : AppCompatActivity() {
 
         return super.onSupportNavigateUp()
     }
+
+    override fun onBackPressed() {
+        var dialog = AlertDialog.Builder(this).setMessage("작성 중인 글이 있습니다. 종료하시겠습니까?").setPositiveButton("확인",
+            DialogInterface.OnClickListener { dialog, which ->
+
+                finish()
+            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  }).create()
+
+        dialog.show()
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.brand,theme))
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.brand,theme))
+    }
 }
