@@ -92,10 +92,9 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             binding.btnBidBottomsheet1.isEnabled = false
             binding.btnBidBottomsheet1.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#A1A0A0"))
             dialog1.dismiss()
-            clickBtnBidBottomSheet1(holder)
+            clickBtnBidBottomSheet1(holder,binding.tvPrice.text.toString())
         }
     }
-
     private fun changeBtnEnable(binding: FragmentAuctionDetailBottomSheetBinding){
         binding.btnBidBottomsheet1.isEnabled = true
         binding.btnBidBottomsheet1.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FF96DB8A"))
@@ -121,7 +120,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             }
         }
     }
-    private fun clickBtnBidBottomSheet1(holder: VH){
+    private fun clickBtnBidBottomSheet1(holder: VH, resultPrice: String){
         var binding = FragmentAuctionDetailBottomSheet2Binding.inflate(LayoutInflater.from(context),holder.binding.containerBottomsheet,false)
         /*
         *       경고문구를 알려줄 수 있는 다이얼로그 하나를 띄우자.
@@ -138,6 +137,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
                 dialog2.setContentView(binding.root)
                 dialog2.show()
 
+                binding.tvPrice.text = resultPrice
                 binding.btnComplete.setOnClickListener {
                     dialog1.dismiss()
                     dialog2.dismiss()
@@ -165,32 +165,31 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
 
     private fun exoPlayer(item: AuctionPagerItem,holder: VH){
-
+        Log.i("pagerExo","${holder.layoutPosition} 번 뷰홀더")
         var mediaItem: MediaItem = MediaItem.fromUri(item.video)
         holder.binding.videoview.player = holder.exoPlayer
-
-        holder.exoPlayer.setMediaItem(mediaItem)
         holder.exoPlayer.prepare()
-        holder.exoPlayer.play()
+        holder.exoPlayer.setMediaItem(mediaItem)
         holder.exoPlayer.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+    }
 
+
+    override fun onViewDetachedFromWindow(holder: VH) {
+        super.onViewDetachedFromWindow(holder)
+        Log.i("pagerExo","${holder.layoutPosition} 번 뷰홀더 Detached")
+        holder.exoPlayer.pause()
+    }
+
+    override fun onViewAttachedToWindow(holder: VH) {
+        super.onViewAttachedToWindow(holder)
+        Log.i("pagerExo","${holder.layoutPosition} 번 뷰홀더 Attached")
+        holder.exoPlayer.play()
         holder.binding.videoview.setOnClickListener {
             when(holder.exoPlayer.isPlaying){
                 true->holder.exoPlayer.pause()
                 false->holder.exoPlayer.play()
             }
         }
-    }
-
-
-    override fun onViewDetachedFromWindow(holder: VH) {
-        super.onViewDetachedFromWindow(holder)
-        holder.exoPlayer.pause()
-    }
-
-    override fun onViewAttachedToWindow(holder: VH) {
-        super.onViewAttachedToWindow(holder)
-        holder.exoPlayer.play()
     }
 }
 
