@@ -22,9 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 class SignUpEmailInputFragment : Fragment() {
 
     val binding:FragmentSignUpEmailInputBinding by lazy { FragmentSignUpEmailInputBinding.inflate(layoutInflater) }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +36,8 @@ class SignUpEmailInputFragment : Fragment() {
         editTextListener()
         binding.btnNext.setOnClickListener { clickNextBtn() }
         binding.btnBack.setOnClickListener { clickBackBtn() }
+        binding.btnCertifyEmail.tag = 0
+        binding.btnCertifyEmail.setOnClickListener { clickCertifyBtn() }
     }
 
     private fun clickBackBtn(){
@@ -59,27 +58,49 @@ class SignUpEmailInputFragment : Fragment() {
             false
         }
     }
-    private fun clickNextBtn(){
-        /*
-  *
-  *       이메일 중복체크 및 유효성 검사
-  *
-  * */
 
+
+
+    private fun clickNextBtn(){
+
+        /*
+        *       입력 안된 영역 걸러내기, 비밀번호 확인 체크
+        * */
+        if(dataCheck()) return
+
+        /*
+        *       이메일 중복체크 및 유효성 검사
+        * */
+
+        if(binding.btnCertifyEmail.tag == 0) {
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "이메일 중복체크를 해주세요.", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        /*
+        *       두번째 프래그먼트 실행
+        * */
+        var fragment = SignUpPersonalInfoFragment()
+        var bundle = Bundle()
+        bundle.putString("email",binding.etEmail.text.toString())
+        bundle.putString("password",binding.etPass.text.toString())
+        fragment.arguments = bundle
+        val tran:FragmentTransaction? =
+            activity?.
+            supportFragmentManager?.
+            beginTransaction()?.
+            replace(R.id.container_fragment,fragment)?.addToBackStack(null)
+
+        tran?.commit()
+    }
+
+    val EXIST_EMAIL = 0
+    val NOT_EXIST_EMAIL = 1
+    private fun clickCertifyBtn() {
         var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firebase.collection("user")
-
-        if(binding.etEmail.text.toString() == ""){
-            Snackbar.make(
-                activity?.findViewById(android.R.id.content)!!,
-                "이메일을 입력해주세요.", Snackbar.LENGTH_SHORT).show()
-            binding.etEmail.requestFocus()
-        } else if(binding.etPass.text.toString() == ""){
-            Snackbar.make(
-                activity?.findViewById(android.R.id.content)!!,
-                "비밀번호를 입력해주세요.", Snackbar.LENGTH_SHORT).show()
-            binding.etPass.requestFocus()
-        }
 
         userRef.whereEqualTo("email",binding.etEmail.text.toString())
             .addSnapshotListener { value, error ->
@@ -90,24 +111,43 @@ class SignUpEmailInputFragment : Fragment() {
                                 activity?.findViewById(android.R.id.content)!!,
                                 "이미 가입된 이메일 입니다.", Snackbar.LENGTH_SHORT).show()
                             binding.etEmail.requestFocus()
+                            binding.btnCertifyEmail.tag = EXIST_EMAIL
                             return@addSnapshotListener
                         }
                     }
 
-                    var fragment = SignUpPersonalInfoFragment()
-                    var bundle = Bundle()
-                    bundle.putString("email",binding.etEmail.text.toString())
-                    bundle.putString("password",binding.etPass.text.toString())
-                    fragment.arguments = bundle
-                    val tran:FragmentTransaction? =
-                        activity?.
-                        supportFragmentManager?.
-                        beginTransaction()?.
-                        replace(R.id.container_fragment,fragment)?.addToBackStack(null)
-
-                    tran?.commit()
+                    Snackbar.make(
+                        activity?.findViewById(android.R.id.content)!!,
+                        "사용 가능한 이메일 입니다.", Snackbar.LENGTH_SHORT).show()
+                    binding.btnCertifyEmail.tag = NOT_EXIST_EMAIL
 
                 }
             }
+
+    }
+
+    private fun dataCheck() : Boolean{
+
+        if(binding.etEmail.text.toString() == ""){
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "이메일을 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+            binding.etEmail.requestFocus()
+            return true
+        } else if(binding.etPass.text.toString() == ""){
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "비밀번호를 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+            binding.etPass.requestFocus()
+            return true
+        } else if(binding.etPassCertify.text.toString() != binding.etPass.text.toString()){
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "비밀번호가 동일하지 않습니다.", Snackbar.LENGTH_SHORT).show()
+            binding.etPassCertify.requestFocus()
+            return true
+        }
+
+        return false
     }
 }

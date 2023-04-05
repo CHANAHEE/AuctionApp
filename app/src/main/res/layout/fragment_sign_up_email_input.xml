@@ -31,29 +31,63 @@
             android:layout_marginLeft="10dp"
             android:layout_below="@id/btn_back"/>
 
-        <EditText
-            android:id="@+id/et_email"
+        <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/tv">
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="이메일"
+                android:inputType="textEmailAddress"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:textColorHint="#6A020202"
+                android:layout_weight="1"
+                android:textCursorDrawable="@drawable/bg_edit"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_certify_email"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@id/et_email"
+                android:text="중 복 체 크"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_btn"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_email"
-            android:hint="Password"
+            android:layout_below="@id/linear"
+            android:hint="비밀번호"
             android:inputType="textPassword"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
             android:textColorHint="#6A020202"
             android:textCursorDrawable="@drawable/bg_edit"
             android:layout_marginTop="10dp"/>
 
-
+        <EditText
+            android:id="@+id/et_pass_certify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_pass"
+            android:hint="비밀번호 확인"
+            android:inputType="textPassword"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textColorHint="#6A020202"
+            android:textCursorDrawable="@drawable/bg_edit"
+            android:layout_marginTop="10dp"/>
     </RelativeLayout>
 
     <LinearLayout

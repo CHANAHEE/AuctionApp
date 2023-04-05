@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/et_name"
-            android:hint="생년월일"
+            android:hint="생년월일 (ex : 20010101)"
             android:inputType="date"
             android:textColorHint="#6A020202"
             android:textCursorDrawable="@drawable/bg_edit"

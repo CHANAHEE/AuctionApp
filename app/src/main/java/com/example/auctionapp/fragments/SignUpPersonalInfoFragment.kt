@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.auctionapp.R
 import com.example.auctionapp.databinding.FragmentSignUpPersonalInfoBinding
+import com.google.android.material.snackbar.Snackbar
 
 class SignUpPersonalInfoFragment : Fragment() {
 
@@ -56,6 +57,23 @@ class SignUpPersonalInfoFragment : Fragment() {
         }
     }
     private fun clickNextBtn(){
+
+        if(binding.etName.text.toString()== "") {
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "이름을 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+
+            binding.etName.requestFocus()
+            return
+        } else if(binding.etBirth.text.toString() == "") {
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "생년월일을 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+
+            binding.etBirth.requestFocus()
+            return
+        }
+
         var fragment = SignUpSetUpPlaceFragment()
         var bundle = Bundle()
         bundle.putString("name",binding.etName.text.toString())
