@@ -83,6 +83,22 @@
             android:exported="false">
 
         </activity>
+
+        <!-- 카카오 로그인 Redirect URI 설정 -->
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data android:host="oauth"
+                    android:scheme="kakao765a2135074ce236d9efb6feab40215a" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

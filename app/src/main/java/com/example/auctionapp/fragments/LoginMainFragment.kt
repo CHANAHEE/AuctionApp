@@ -2,6 +2,7 @@ package com.example.auctionapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,9 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 
 
 class LoginMainFragment : Fragment() {
@@ -56,7 +60,8 @@ class LoginMainFragment : Fragment() {
         binding.ivLoginKakao.setOnClickListener { kakaoLogin() }
         binding.ivLoginNaver.setOnClickListener { naverLogin() }
 
-
+        val keyHash:String = Utility.getKeyHash(requireContext())
+        Log.i("keyhash",keyHash)
     }
 
 
@@ -108,6 +113,12 @@ class LoginMainFragment : Fragment() {
     }
 
 
+    /*
+    *
+    *       구글 로그인 기능
+    *
+    * */
+
     private fun googleLogin() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -134,10 +145,57 @@ class LoginMainFragment : Fragment() {
             startActivity(Intent(requireContext(),MainActivity::class.java))
         })
 
-    private fun kakaoLogin() {
 
+    /*
+    *
+    *       카카오 로그인 기능
+    *
+    * */
+    private fun kakaoLogin() {
+        val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+            Log.i("kakaoLogin","${token} : ${error}")
+            if (error != null) {
+                Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT)
+            } else if (token != null) {
+                Log.i("kakaoLogin","4")
+                UserApiClient.instance.me { user, error ->
+                    if(user != null){
+                        var id: String = user.id.toString()
+                        var email: String = user.kakaoAccount?.email ?: ""
+
+                        G.userAccount = UserAccount(id,email)
+
+                        startActivity(Intent(requireContext(),MainActivity::class.java))
+                        (activity as LoginActivity).finish()
+                    }else{
+                        Log.i("kakaoLogin","5")
+                    }
+                }
+            }
+        }
+
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
+            UserApiClient.instance.loginWithKakaoTalk(requireContext()) { token, error ->
+                if (error != null) {
+                    Log.i("kakaoLogin","1")
+                    UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
+                } else if (token != null) {
+                    Log.i("kakaoLogin","2")
+                    UserApiClient.instance.loginWithKakaoTalk(requireContext(),callback = callback)
+                }
+            }
+        } else {
+            Log.i("kakaoLogin","3")
+            UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
+        }
     }
 
+
+    /*
+    *
+    *        네이버 로그인 기능
+    *
+    * */
     private fun naverLogin() {
 
     }
