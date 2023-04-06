@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
+import com.example.auctionapp.G
 import com.example.auctionapp.fragments.HomeFragment
 import com.example.auctionapp.R
 import com.example.auctionapp.databinding.ActivityMainBinding
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        Toast.makeText(this, "${G.userAccount?.id} : ${G.userAccount?.email}", Toast.LENGTH_SHORT).show()
 
         HomeFragment()
         CommunityFragment()

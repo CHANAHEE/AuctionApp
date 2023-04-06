@@ -2,25 +2,33 @@ package com.example.auctionapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnKeyListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.auctionapp.G
 import com.example.auctionapp.R
 import com.example.auctionapp.activities.LoginActivity
 import com.example.auctionapp.activities.MainActivity
 import com.example.auctionapp.databinding.FragmentLoginMainBinding
+import com.example.auctionapp.model.UserAccount
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+
 
 class LoginMainFragment : Fragment() {
 
@@ -40,15 +48,15 @@ class LoginMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editTextListener()
-        binding.btnSignup.setOnClickListener {clickSignUp()}
+        binding.btnSignup.setOnClickListener { clickSignUp() }
         binding.btnLogin.setOnClickListener { clickLogin() }
-    }
+        binding.etPass.setOnKeyListener(listener)
 
-    private fun clickKakao(){
-        /*
-        *       kakao 로그인 API 활용
-        * */
+        binding.ivLoginGoogle.setOnClickListener { googleLogin() }
+        binding.ivLoginKakao.setOnClickListener { kakaoLogin() }
+        binding.ivLoginNaver.setOnClickListener { naverLogin() }
+
+
     }
 
 
@@ -87,18 +95,50 @@ class LoginMainFragment : Fragment() {
         tran?.commit()
 
     }
-    private fun editTextListener(){
-        binding.etPass.setOnKeyListener { v , keyCode, event ->
-            if(event.action == KeyEvent.ACTION_DOWN
-                && keyCode == KeyEvent.KEYCODE_ENTER)
-            {
-                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.etPass.windowToken,0)
-                true
-            }
 
-            false
+    val listener = OnKeyListener { v, keyCode, event ->
+        if(event.action == KeyEvent.ACTION_DOWN
+            && keyCode == KeyEvent.KEYCODE_ENTER)
+        {
+            val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.etPass.windowToken,0)
+            true
         }
+        false
     }
 
+
+    private fun googleLogin() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        var client: GoogleSignInClient = GoogleSignIn.getClient(requireContext(),gso)
+
+        val signInIntent: Intent = client.signInIntent
+        launcher.launch(signInIntent)
+
+    }
+
+    val launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+        , ActivityResultCallback {
+
+            var intent: Intent? = it.data
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
+            val account: GoogleSignInAccount = task.result
+
+            var id: String = account.id ?: ""
+            var email: String = account.email ?: ""
+            G.userAccount = UserAccount(id, email)
+
+            startActivity(Intent(requireContext(),MainActivity::class.java))
+        })
+
+    private fun kakaoLogin() {
+
+    }
+
+    private fun naverLogin() {
+
+    }
 }

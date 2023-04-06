@@ -67,7 +67,7 @@ dependencies {
     implementation "com.kakao.sdk:v2-user:2.13.0"
 
     // google login sdk
-    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
 
     // naver login login sdk
     implementation 'com.navercorp.nid:oauth:5.4.0' // jdk 11
