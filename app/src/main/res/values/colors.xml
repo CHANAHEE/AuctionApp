@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="brand">#FF96DB8A</color>
     <color name="unable">#A1A0A0</color>
+    <color name="edit_fail">#DF5151</color>
+    <color name="edit_success">#4CAF50</color>
 </resources>

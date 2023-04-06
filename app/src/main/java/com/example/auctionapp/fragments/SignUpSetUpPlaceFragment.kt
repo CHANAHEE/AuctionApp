@@ -22,7 +22,6 @@ import com.example.auctionapp.R
 import com.example.auctionapp.adapters.LocationListRecyclerAdapter
 import com.example.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.example.auctionapp.model.KakaoSearchItemByAddress
-import com.example.auctionapp.model.KakaoSearchItemByResionCode
 import com.example.auctionapp.network.RetrofitHelper
 import com.example.auctionapp.network.RetrofitService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -41,9 +40,6 @@ import retrofit2.Retrofit
 class SignUpSetUpPlaceFragment : Fragment() {
 
     val binding by lazy { FragmentSignUpSetUpPlaceBinding.inflate(layoutInflater) }
-    val providerClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(requireActivity()) }
-    var myLocation: Location? = null
-    var searchPlaceByResionCodeResponse: KakaoSearchItemByResionCode? = null
     var searchPlaceByAddressResponse: KakaoSearchItemByAddress? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

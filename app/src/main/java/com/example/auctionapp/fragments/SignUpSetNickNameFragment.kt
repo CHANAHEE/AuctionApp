@@ -59,6 +59,10 @@ class SignUpSetNickNameFragment : Fragment() {
 
     private fun clickCompleteBtn(){
 
+        if(binding.etNickname.text.length < 3){
+            Snackbar.make(binding.root,"닉네임은 3글자 이상으로 설정해주세요",Snackbar.LENGTH_SHORT).show()
+            return
+        }
         val fragmentManager : FragmentManager? = activity?.supportFragmentManager
         fragmentManager?.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
@@ -88,6 +92,7 @@ class SignUpSetNickNameFragment : Fragment() {
         user.put("birth",birth)
         user.put("location",location)
         user.put("nickname",nickname)
+
 
         userRef.document().set(user)
 

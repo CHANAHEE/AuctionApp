@@ -10,8 +10,7 @@ import com.example.auctionapp.activities.LoginActivity
 import com.example.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.example.auctionapp.databinding.RecyclerLocationListBinding
 import com.example.auctionapp.model.Location
-import com.example.auctionapp.model.KakaoSearchItemByResionCode
-import com.example.auctionapp.model.Place
+
 
 class LocationListRecyclerAdapter(var context: Context, var documents: MutableList<Location>,var bindingFrag: FragmentSignUpSetUpPlaceBinding) : Adapter<LocationListRecyclerAdapter.VH>(){
 
