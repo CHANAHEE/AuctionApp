@@ -120,8 +120,16 @@ class SignUpEmailInputFragment : Fragment() {
         var userRef: CollectionReference = firebase.collection("user")
 
         userRef.whereEqualTo("email",binding.etEmail.text.toString()).get().addOnSuccessListener {
-            Toast.makeText(requireContext(), "${it.documents.size}", Toast.LENGTH_SHORT).show()
-            binding.btnCertifyEmail.tag = if(it.documents.size > 0) EXIST_EMAIL else NOT_EXIST_EMAIL
+            //binding.btnCertifyEmail.tag = if(it.documents.size > 0) EXIST_EMAIL else NOT_EXIST_EMAIL
+
+            if(it.documents.size > 0) {
+                Snackbar.make(binding.root,"이미 가입된 이메일 입니다.", Snackbar.LENGTH_SHORT).show()
+                binding.etEmail.requestFocus()
+                binding.btnCertifyEmail.tag = EXIST_EMAIL
+            } else {
+                Snackbar.make(binding.root,"사용 가능한 이메일 입니다.", Snackbar.LENGTH_SHORT).show()
+                binding.btnCertifyEmail.tag = NOT_EXIST_EMAIL
+            }
         }
 
 

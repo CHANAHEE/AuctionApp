@@ -33,18 +33,41 @@
             android:layout_marginLeft="10dp"
             android:layout_below="@id/btn_back"/>
 
-        <EditText
-            android:id="@+id/et_nickname"
+        <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+            android:orientation="horizontal"
             android:layout_below="@id/tv"
-            android:inputType="text"
-            android:hint="닉네임"
-            android:textCursorDrawable="@drawable/bg_edit"
-            android:textColorHint="#6A020202"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="50dp">
+            <EditText
+                android:id="@+id/et_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:inputType="text"
+                android:hint="닉네임"
+                android:textCursorDrawable="@drawable/bg_edit"
+                android:layout_weight="1"
+                android:textColorHint="#6A020202"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_certify_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="중 복 체 크"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:backgroundTint= "@color/unable"
+                android:background="@drawable/bg_btn"
+                android:enabled="false"/>
+
+        </LinearLayout>
+
+
+
     </RelativeLayout>
 
     <LinearLayout

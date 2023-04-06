@@ -1,6 +1,9 @@
 package com.example.auctionapp.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,7 +38,8 @@ class SignUpSetNickNameFragment : Fragment() {
         editTextListener()
         binding.btnBack.setOnClickListener { clickBackBtn() }
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
-
+        binding.btnCertifyNickname.setOnClickListener { clickCertifyBtn() }
+        binding.etNickname.addTextChangedListener(watcher)
     }
 
     private fun clickBackBtn(){
@@ -63,14 +67,36 @@ class SignUpSetNickNameFragment : Fragment() {
             Snackbar.make(binding.root,"닉네임은 3글자 이상으로 설정해주세요",Snackbar.LENGTH_SHORT).show()
             return
         }
-        val fragmentManager : FragmentManager? = activity?.supportFragmentManager
-        fragmentManager?.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-        saveUserInfo()
-        Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
+        if(isExistNickname){
+            Snackbar.make(binding.root,"닉네임 중복체크를 해주세요",Snackbar.LENGTH_SHORT).show()
+            return
+        }else{
+            val fragmentManager : FragmentManager? = activity?.supportFragmentManager
+            fragmentManager?.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+            saveUserInfo()
+            Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
+        }
+
 
     }
 
+    var isExistNickname = false
+    private fun clickCertifyBtn(){
+        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firebase.collection("user")
+
+        userRef.whereEqualTo("nickname",binding.etNickname.text.toString()).get().addOnSuccessListener {
+            if(it.documents.size > 0) {
+                Snackbar.make(binding.root,"이미 있는 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
+                isExistNickname = true
+            } else {
+                Snackbar.make(binding.root,"사용 가능한 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
+                isExistNickname = false
+            }
+        }
+    }
     /*
     *       유저 정보 firestore 에 저장
     * */
@@ -96,6 +122,24 @@ class SignUpSetNickNameFragment : Fragment() {
 
         userRef.document().set(user)
 
+
+    }
+
+    val watcher: TextWatcher = object : TextWatcher{
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if(s?.length!! > 3) {
+                binding.btnCertifyNickname.isEnabled = true
+                binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.brand,requireContext().theme))
+            }
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+
+        }
 
     }
 }

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.cardview.CircularRevealCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="16dp"
+    android:layout_margin="2dp">
 
     <TextView
         android:id="@+id/tv_location_name"
@@ -11,5 +16,6 @@
         android:textSize="20sp"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
-        android:layout_margin="10dp"/>
-</RelativeLayout>
+        android:layout_marginLeft="10dp"
+        />
+</com.google.android.material.circularreveal.cardview.CircularRevealCardView>
