@@ -8,4 +8,8 @@ data class Place(var region_3depth_name: String)
 
 data class KakaoSearchItemByAddress(var documents: MutableList<Location>)
 
-data class Location(var x: String, var y: String)
+data class Location(var address: Address)
+
+data class Address(var address_name: String)
+
+

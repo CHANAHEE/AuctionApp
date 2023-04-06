@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -89,8 +90,9 @@ class SignUpSetUpPlaceFragment : Fragment() {
     *      검색어 기반으로 내 위치 찾아오기
     *
     * */
+
     private fun requestMyLocation(){
-        val retrofit: Retrofit = RetrofitHelper.getRetrofitInstance("http://dapi.kakao.com")
+        val retrofit: Retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         retrofitService.getSearchPlaceByAddress(binding.etAddress.text.toString())
             .enqueue(object : Callback<KakaoSearchItemByAddress>{
@@ -98,50 +100,19 @@ class SignUpSetUpPlaceFragment : Fragment() {
                     call: Call<KakaoSearchItemByAddress>,
                     response: Response<KakaoSearchItemByAddress>
                 ) {
-                    searchPlaceByAddressResponse = response.body()
-                    myLocation?.longitude = searchPlaceByAddressResponse?.documents?.get(0)?.x?.toDouble()!!
-                    myLocation?.latitude = searchPlaceByAddressResponse?.documents?.get(0)?.y?.toDouble()!!
 
-                    getLocationList()
+                    searchPlaceByAddressResponse = response.body()
+
+                    binding.recycler.adapter = LocationListRecyclerAdapter(requireContext(),
+                        searchPlaceByAddressResponse?.documents!!,binding)
+                    //getLocationList()
                 }
 
                 override fun onFailure(call: Call<KakaoSearchItemByAddress>, t: Throwable) {
-
+                    Log.i("errorRetrofit",t?.message ?: "")
                 }
-
             })
     }
-
-
-    /*
-    *
-    *       동네 관할구역 정보 리스트 가져오기 - Retrofit
-    *
-    * */
-    private fun getLocationList() {
-        val retrofit: Retrofit = RetrofitHelper.getRetrofitInstance("http://dapi.kakao.com")
-        val retrofitService = retrofit.create(RetrofitService::class.java)
-        retrofitService.getSearchPlaceByResionCode(myLocation?.longitude.toString(),myLocation?.latitude.toString())
-            .enqueue(object : Callback<KakaoSearchItemByResionCode> {
-                override fun onResponse(
-                    call: Call<KakaoSearchItemByResionCode>,
-                    response: Response<KakaoSearchItemByResionCode>
-                ) {
-                    searchPlaceByResionCodeResponse = response.body()
-                    binding.recycler.adapter = LocationListRecyclerAdapter(requireContext(),
-                        searchPlaceByResionCodeResponse!!.documents)
-                }
-
-                override fun onFailure(call: Call<KakaoSearchItemByResionCode>, t: Throwable) {
-
-                }
-
-            })
-    }
-
-
-
-
 
 
 
@@ -171,6 +142,14 @@ class SignUpSetUpPlaceFragment : Fragment() {
     }
 
     private fun clickNextBtn(){
+        
+        if(binding.tvLocationSetUpPlace.text == "") {
+            Snackbar.make(
+                activity?.findViewById(android.R.id.content)!!,
+                "동네를 선택 해주세요", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+        
         var fragment = SignUpSetNickNameFragment()
         var bundle = Bundle()
         bundle.putString("location",binding.tvLocationSetUpPlace.text.toString())
