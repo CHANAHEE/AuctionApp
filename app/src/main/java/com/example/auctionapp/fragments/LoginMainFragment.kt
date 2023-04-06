@@ -20,7 +20,10 @@ import com.example.auctionapp.R
 import com.example.auctionapp.activities.LoginActivity
 import com.example.auctionapp.activities.MainActivity
 import com.example.auctionapp.databinding.FragmentLoginMainBinding
+import com.example.auctionapp.model.NidUserInfoResponse
 import com.example.auctionapp.model.UserAccount
+import com.example.auctionapp.network.RetrofitHelper
+import com.example.auctionapp.network.RetrofitService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -32,6 +35,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
+import com.navercorp.nid.oauth.OAuthLoginCallback
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginMainFragment : Fragment() {
@@ -143,6 +151,7 @@ class LoginMainFragment : Fragment() {
             G.userAccount = UserAccount(id, email)
 
             startActivity(Intent(requireContext(),MainActivity::class.java))
+            activity?.finish()
         })
 
 
@@ -166,7 +175,7 @@ class LoginMainFragment : Fragment() {
                         G.userAccount = UserAccount(id,email)
 
                         startActivity(Intent(requireContext(),MainActivity::class.java))
-                        (activity as LoginActivity).finish()
+                        activity?.finish()
                     }else{
                         Log.i("kakaoLogin","5")
                     }
@@ -197,6 +206,46 @@ class LoginMainFragment : Fragment() {
     *
     * */
     private fun naverLogin() {
+        NaverIdLoginSDK.initialize(requireContext(), "6Sq_GSOmgCFqeqaJVNtm", "tTZx8fr_jR", "근방")
 
+        NaverIdLoginSDK.authenticate(requireContext(),object : OAuthLoginCallback{
+            override fun onError(errorCode: Int, message: String) {
+                Snackbar.make(binding.root,"네이버 로그인 에러 : ${message}",Snackbar.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(httpStatus: Int, message: String) {
+                Snackbar.make(binding.root,"네이버 로그인 실패 : ${message}",Snackbar.LENGTH_SHORT).show()
+            }
+
+            override fun onSuccess() {
+                val accessToken: String? = NaverIdLoginSDK.getAccessToken()
+
+                val retrofit = RetrofitHelper.getRetrofitInstance("https://openapi.naver.com")
+                retrofit
+                    .create(RetrofitService::class.java)
+                    .getNaverUserInfo("Bearer ${accessToken}")
+                    .enqueue(object : Callback<NidUserInfoResponse>{
+                        override fun onResponse(
+                            call: Call<NidUserInfoResponse>,
+                            response: Response<NidUserInfoResponse>
+                        ) {
+                            val userInfoResponse = response.body()
+                            val id: String = userInfoResponse?.response?.id ?: ""
+                            val email: String = userInfoResponse?.response?.email ?: ""
+
+                            G.userAccount = UserAccount(id,email)
+
+                            startActivity(Intent(requireContext(),MainActivity::class.java))
+                            activity?.finish()
+                        }
+
+                        override fun onFailure(call: Call<NidUserInfoResponse>, t: Throwable) {
+                            Snackbar.make(binding.root,"네이버 회원정보 로드 실패 : ${t.message}",Snackbar.LENGTH_SHORT).show()
+                        }
+
+                    })
+            }
+
+        })
     }
 }
