@@ -79,10 +79,5 @@
         android:background="@drawable/bg_bid_time"
         android:padding="10dp"/>
 
-    <FrameLayout
-        android:id="@+id/container_bottomsheet"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

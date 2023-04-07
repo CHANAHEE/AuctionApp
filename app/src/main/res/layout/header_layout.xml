@@ -38,7 +38,7 @@
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
         android:textSize="17sp"
-        android:text="프 로 필   편 집"
+        android:text="프 로 필   설 정"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"

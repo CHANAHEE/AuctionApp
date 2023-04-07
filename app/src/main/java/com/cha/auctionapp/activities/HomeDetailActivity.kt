@@ -57,7 +57,7 @@ class HomeDetailActivity : AppCompatActivity() {
 
 
     private fun clickChatBtn() {
-        startActivity(Intent(this, com.cha.auctionapp.activities.ChattingActivity::class.java))
+        startActivity(Intent(this, ChattingActivity::class.java))
     }
 
     private fun clickFavoriteBtn() { binding.ibFav.isSelected = !binding.ibFav.isSelected }
