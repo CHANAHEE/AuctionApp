@@ -1,4 +1,4 @@
-package com.cha.auctionapp.activities
+package com.cha.auctionapp
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -13,19 +13,19 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import com.cha.auctionapp.R
+import com.cha.auctionapp.activities.SelectPositionActivity
 import com.cha.auctionapp.adapters.PictureAdapter
-import com.cha.auctionapp.databinding.ActivitySellingEditBinding
+import com.cha.auctionapp.databinding.ActivityAuctionEditBinding
 import com.cha.auctionapp.model.PictureItem
 
-class SellingEditActivity : AppCompatActivity() {
+class AuctionEditActivity : AppCompatActivity() {
 
-    lateinit var binding:ActivitySellingEditBinding
+    lateinit var binding: ActivityAuctionEditBinding
     lateinit var items: MutableList<PictureItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySellingEditBinding.inflate(layoutInflater)
+        binding = ActivityAuctionEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -43,21 +43,22 @@ class SellingEditActivity : AppCompatActivity() {
         }
 
         items = mutableListOf()
-        Log.i("Hello2","${items.size}")
         binding.recycler.adapter = PictureAdapter(this, items)
     }
 
 
 
 
-    var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+
+
+    var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
 
                 for(i in 0 until size){
-                    Log.i("Hello2","$i")
                     items.add(PictureItem(clipData.getItemAt(i).uri))
                 }
                 binding.recycler.adapter?.notifyDataSetChanged()
@@ -105,7 +106,7 @@ class SellingEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickSelectPos() {
-        startActivity(Intent(this,SelectPositionActivity::class.java))
+        startActivity(Intent(this, SelectPositionActivity::class.java))
     }
 
 

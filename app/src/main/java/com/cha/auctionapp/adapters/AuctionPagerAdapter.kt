@@ -1,33 +1,21 @@
 package com.cha.auctionapp.adapters
 
 import android.content.Context
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.R
+import com.cha.auctionapp.AuctionEditActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
-import com.cha.auctionapp.activities.MainActivity
-import com.cha.auctionapp.databinding.FragmentAuctionBinding
-import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheet2Binding
-import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheetBinding
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPagerItem>) : Adapter<AuctionPagerAdapter.VH>() {
 
@@ -52,7 +40,15 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         holder.binding.tvId.text = item.id
         holder.binding.tvDescription.text = item.description
         Glide.with(context).load(item.image).into(holder.binding.civProfile)
+        holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
+
+
+
+        /*
+        *       경매 남은 시간 타이머
+        * */
+        countDown(holder)
 
         /*
         *       BottomSheet 1번 구현
@@ -75,7 +71,32 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
 
 
+    private fun countDown(holder: VH){
+        object : CountDownTimer(43200000,1000) {
 
+            /*
+            *
+            *       게시글을 올린 시간을 기준으로 해야할듯. (12시간 - 게시글 올린 시간) -> 요게 남은 시간
+            *       올린 시간을 기준으로 12시간 후에는 게시글을 삭제시키기.
+            *
+            * */
+            override fun onTick(millisUntilFinished: Long) {
+                var hour    = (millisUntilFinished/1000/3600)
+                var min     = (millisUntilFinished/1000/60%60)
+                var second  = (millisUntilFinished/1000%60)
+
+                var time = String.format("%02d : %02d : %02d",hour,min,second)
+
+                holder.binding.btnBid.text = "입 찰 하 기   |   ${time}"
+            }
+
+            override fun onFinish() {
+                /*
+                *       게시글 삭제
+                * */
+            }
+        }.start()
+    }
 
 
 

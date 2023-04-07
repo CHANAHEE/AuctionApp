@@ -2,6 +2,7 @@ package com.cha.auctionapp.fragments
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,9 @@ class AuctionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+
         items = mutableListOf()
         items.add(AuctionPagerItem(videoUri,R.drawable._0,"1번","안녕하세요 1번 입니다."))
         items.add(AuctionPagerItem(videoUri,R.drawable._1,"2번","안녕하세요 2번 입니다."))
@@ -43,5 +47,7 @@ class AuctionFragment : Fragment() {
         items.add(AuctionPagerItem(videoUri,R.drawable._5,"6번","안녕하세요 6번 입니다."))
         items.add(AuctionPagerItem(videoUri,R.drawable._6,"7번","안녕하세요 7번 입니다."))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
+
+
     }
 }

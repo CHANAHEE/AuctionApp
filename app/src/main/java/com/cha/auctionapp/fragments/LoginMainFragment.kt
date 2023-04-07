@@ -15,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.activities.MainActivity

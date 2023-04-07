@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.activities.ChattingActivity
 import com.cha.auctionapp.databinding.RecyclerChatListItemBinding
 import com.cha.auctionapp.model.MessageItem
 

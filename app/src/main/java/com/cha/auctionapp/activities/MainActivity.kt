@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
-import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMainBinding

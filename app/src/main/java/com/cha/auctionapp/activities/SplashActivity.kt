@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
-import androidx.core.os.postDelayed
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.R
-import com.cha.auctionapp.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
 

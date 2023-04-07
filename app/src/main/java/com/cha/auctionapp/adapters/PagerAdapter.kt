@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.databinding.ActivityHomeDetailBinding
 import com.cha.auctionapp.databinding.ViewpagerItemBinding
 import com.cha.auctionapp.model.PagerItem
 

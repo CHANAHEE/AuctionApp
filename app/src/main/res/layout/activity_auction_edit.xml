@@ -21,7 +21,7 @@
                 android:id="@+id/tv_appbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/selling_edit_title"
+                android:text="@string/auction_edit_title"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:fontFamily="@font/brandfont"
@@ -57,12 +57,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:orientation="horizontal" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal" />
 
             </androidx.core.widget.NestedScrollView>
 
@@ -162,7 +162,7 @@
                     android:background="@null"
                     android:layout_toRightOf="@id/iv_won"
                     android:layout_marginLeft="10dp"
-                    android:hint="@string/selling_edit_price_hint"
+                    android:hint="시작 가격"
                     android:inputType="number"
                     android:textCursorDrawable="@drawable/edit_cursor"
                     android:textSize="16sp"

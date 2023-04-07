@@ -1,23 +1,15 @@
 package com.cha.auctionapp.activities
 
 import android.annotation.SuppressLint
-import android.app.ActionBar.LayoutParams
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PagerAdapter
 import com.cha.auctionapp.databinding.ActivityHomeDetailBinding
-import com.cha.auctionapp.model.MainItem
 import com.cha.auctionapp.model.PagerItem
 
 class HomeDetailActivity : AppCompatActivity() {

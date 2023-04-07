@@ -3,18 +3,12 @@ package com.cha.auctionapp.adapters
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.activities.CommunityEditActivity
 import com.cha.auctionapp.activities.SellingEditActivity
-import com.cha.auctionapp.databinding.ActivityHomeDetailBinding
-import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.databinding.RecyclerPictureItemBinding
-import com.cha.auctionapp.databinding.ViewpagerItemBinding
-import com.cha.auctionapp.model.PagerItem
 import com.cha.auctionapp.model.PictureItem
 
 class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) : Adapter<PictureAdapter.VH>() {

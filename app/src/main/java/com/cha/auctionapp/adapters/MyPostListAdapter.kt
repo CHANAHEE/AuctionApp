@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.activities.CommunityDetailActivity
 import com.cha.auctionapp.databinding.RecyclerCommunityItemBinding
 import com.cha.auctionapp.model.CommunityPostItem
 

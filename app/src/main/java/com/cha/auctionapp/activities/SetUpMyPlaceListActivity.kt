@@ -2,7 +2,6 @@ package com.cha.auctionapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivitySetUpMyPlaceListBinding
 
 class SetUpMyPlaceListActivity : AppCompatActivity() {

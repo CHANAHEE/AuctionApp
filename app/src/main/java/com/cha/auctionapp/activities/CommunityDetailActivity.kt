@@ -3,8 +3,6 @@ package com.cha.auctionapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.CommentsAdapter

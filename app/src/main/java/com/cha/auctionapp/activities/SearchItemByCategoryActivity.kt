@@ -7,7 +7,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.CategorySearchAdapter
-import com.cha.auctionapp.adapters.ProductAdapter
 import com.cha.auctionapp.databinding.ActivitySearchItemByCategoryBinding
 import com.cha.auctionapp.model.MainItem
 

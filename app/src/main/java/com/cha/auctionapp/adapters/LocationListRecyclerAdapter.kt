@@ -3,10 +3,8 @@ package com.cha.auctionapp.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location

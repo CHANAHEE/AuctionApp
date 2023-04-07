@@ -6,7 +6,6 @@ import android.view.View
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.MyPostListAdapter
 import com.cha.auctionapp.databinding.ActivityMyPostListBinding
-import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
 import com.cha.auctionapp.model.CommunityPostItem
 
 class MyPostListActivity : AppCompatActivity() {

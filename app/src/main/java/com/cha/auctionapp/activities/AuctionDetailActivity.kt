@@ -2,19 +2,16 @@ package com.cha.auctionapp.activities
 
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.cha.auctionapp.R
-import com.cha.auctionapp.adapters.AuctionPagerAdapter
 import com.cha.auctionapp.adapters.PagerAdapter
 import com.cha.auctionapp.databinding.ActivityAuctionDetailBinding
 import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheet2Binding

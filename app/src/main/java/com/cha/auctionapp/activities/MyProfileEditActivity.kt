@@ -6,12 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
 

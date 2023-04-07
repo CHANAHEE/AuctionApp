@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.MyFavoriteAdapter
-import com.cha.auctionapp.adapters.ProductAdapter
 import com.cha.auctionapp.databinding.ActivityMyFavoriteListBinding
-import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
 import com.cha.auctionapp.model.MainItem
 
 class MyFavoriteListActivity : AppCompatActivity() {
