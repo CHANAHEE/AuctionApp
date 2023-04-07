@@ -16,8 +16,8 @@
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_action_back"
             android:background="@color/white"/>
 
@@ -43,13 +43,28 @@
             android:inputType="text"
             android:hint="동 이름으로 검색"
             android:textColorHint="#6A020202"
+            android:textCursorDrawable="@drawable/bg_edit"
             android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/tv_location_set_up_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/et_address"
+            android:layout_centerHorizontal="true"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/et_address"
+            android:layout_below="@id/tv_location_set_up_place"
             android:layout_marginTop="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"/>

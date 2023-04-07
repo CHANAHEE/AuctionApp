@@ -38,7 +38,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="33dp"
                     android:layout_toLeftOf="@id/ib_search"
-                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/bg_edit"

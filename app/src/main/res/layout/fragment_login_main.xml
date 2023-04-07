@@ -14,22 +14,70 @@
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:src="@drawable/logoimage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         />
 
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="간편하게 로그인 하기"
+        android:layout_below="@id/iv_logo"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/tv"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/iv_login_kakao"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_kakako"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <ImageView
+            android:id="@+id/iv_login_google"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_google"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <ImageView
+            android:id="@+id/iv_login_naver"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_naver"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+    </LinearLayout>
+
     <EditText
         android:id="@+id/et_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_logo"
+        android:layout_below="@id/layout_login_btn"
         android:fontFamily="@font/brandfont"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
         android:textStyle="bold"
         android:padding="10dp"
+        android:textCursorDrawable="@drawable/bg_edit"
+        android:background="@drawable/bg_edit"
         android:inputType="textEmailAddress"
         android:hint="ID"
         />
@@ -43,7 +91,9 @@
         android:layout_marginLeft="40dp"
         android:textStyle="bold"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:textCursorDrawable="@drawable/bg_edit"
+        android:background="@drawable/bg_edit"
         android:inputType="textPassword"
         android:hint="Password"
         />
@@ -62,36 +112,22 @@
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_kakao"
-        android:layout_width="270dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FCDB3F"
-        android:background="@drawable/bg_btn"
-        android:fontFamily="@font/brandfont"
-        android:textColor="#191600"
-        android:textSize="17sp"
-        android:drawableStart="@drawable/kakaologo"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:gravity="center"
-        android:text="카카오톡 로그인"
-        android:layout_below="@id/btn_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:textStyle="bold"/>
+
+
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_signup"
         android:layout_width="170dp"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:background="@drawable/bg_btn"
+        android:backgroundTint="#A9E860"
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:text="가 입 하 기"
-        android:layout_below="@id/btn_kakao"
-        android:layout_marginTop="50dp"
+        android:layout_below="@id/btn_login"
+        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"/>
 

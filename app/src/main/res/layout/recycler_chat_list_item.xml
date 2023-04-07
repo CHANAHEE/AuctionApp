@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_profile_chat_list"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"/>
+
+    <TextView
+        android:id="@+id/tv_nickname_chat_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="닉네임"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_toRightOf="@id/civ_profile_chat_list"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_msg_chat_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="메시지 내용"
+        android:layout_below="@id/tv_nickname_chat_list"
+        android:layout_alignLeft="@id/tv_nickname_chat_list"
+        android:textSize="13sp"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_time_chat_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오후 14:32"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:layout_alignTop="@id/tv_nickname_chat_list"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#5CBFBFBF"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"/>
+
+
+</RelativeLayout>

@@ -4,4 +4,34 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">열렸음</string>
     <string name="close">닫혔음</string>
+    <string name="image_count">0 / 10</string>
+    <string name="complete">완 료</string>
+    <string name="selling_edit_title">판매글 쓰기</string>
+    <string name="selling_edit_title_hint">글 제목</string>
+    <string name="selling_edit_category">카테고리</string>
+    <string name="selling_edit_price_hint">가 격</string>
+    <string name="selling_edit_description_hint">상품 설명</string>
+    <string name="selling_edit_select_place">거래 희망 장소</string>
+    <string name="selling_immediate">즉시 판매</string>
+    <string name="selling_edit_bid">경매로 올리기</string>
+
+
+    <string-array name="category_item">
+        <item>디지털 기기</item>
+        <item>가구</item>
+        <item>남성의류</item>
+        <item>여성의류</item>
+        <item>스포츠/레저</item>
+        <item>뷰티/미용</item>
+        <item>취미/게임</item>
+        <item>티켓/교환권</item>
+        <item>도서</item>
+        <item>생활가전</item>
+        <item>식물</item>
+        <item>식품</item>
+        <item>반려동물</item>
+        <item>유아</item>
+        <item>생활/주방</item>
+        <item>기타</item>
+    </string-array>
 </resources>

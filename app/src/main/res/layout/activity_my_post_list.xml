@@ -31,7 +31,19 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <TextView
+        android:id="@+id/tv_none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="게시글이 없어요."
+        android:fontFamily="@font/brandfont"
+        android:textSize="20sp"
+        android:layout_below="@id/appbar"
+        android:gravity="center"
+        android:paddingBottom="100dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"

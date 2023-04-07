@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "344450460221",
+    "project_id": "auctionapp-cha",
+    "storage_bucket": "auctionapp-cha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344450460221:android:137184d39722a721bdd854",
+        "android_client_info": {
+          "package_name": "com.cha.auctionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344450460221-jb8i959vj3qo8vejptqq95t1e6ouebak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_W6Ir9HL8Tc0BuuY7745rRJQ0vqfP9pc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344450460221-jb8i959vj3qo8vejptqq95t1e6ouebak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
