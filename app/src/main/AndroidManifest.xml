@@ -96,6 +96,14 @@
                     android:scheme="kakao765a2135074ce236d9efb6feab40215a" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA8qcHzueKSBPYsZ-t5Fo7sEeUA7BlseRE" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>
