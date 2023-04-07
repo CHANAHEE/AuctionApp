@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
-        android:name=".GlobalApplication"
+        android:name="com.cha.auctionapp.GlobalApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -37,14 +37,14 @@
             android:name=".activities.SetUpMyPlaceListActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AuctionDetailActivity"
+            android:name="com.cha.auctionapp.activities.AuctionDetailActivity"
             android:theme="@style/InvisibleStatusBar"
             android:exported="false" />
         <activity
             android:name=".activities.CommunityEditActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CommunityDetailActivity"
+            android:name="com.cha.auctionapp.activities.CommunityDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SetUpMyPlaceActivity"
@@ -59,7 +59,7 @@
             android:name=".activities.SellingEditActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ChattingActivity"
+            android:name="com.cha.auctionapp.activities.ChattingActivity"
             android:exported="false" />
         <activity
             android:name=".activities.HomeDetailActivity"

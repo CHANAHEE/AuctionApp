@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.auctionapp'
+    namespace 'com.cha.auctionapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.auctionapp"
+        applicationId "com.cha.auctionapp"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -58,7 +58,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // Exoplayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.5'
 
     // dotsIndicator
     implementation("com.tbuonomo:dotsindicator:4.3")
