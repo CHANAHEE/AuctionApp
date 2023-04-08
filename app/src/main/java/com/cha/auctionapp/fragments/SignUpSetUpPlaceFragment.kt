@@ -73,7 +73,7 @@ class SignUpSetUpPlaceFragment : Fragment() {
 
     /*
     *
-    *      검색어 기반으로 내 위치 찾아오기
+    *      검색어 기반으로 위치 찾아오기
     *
     * */
 
@@ -91,7 +91,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
 
                     binding.recycler.adapter = LocationListRecyclerAdapter(requireContext(),
                         searchPlaceByAddressResponse?.documents!!,binding)
-                    //getLocationList()
                 }
 
                 override fun onFailure(call: Call<KakaoSearchItemByAddress>, t: Throwable) {
@@ -122,7 +121,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
                 requestMyLocation()
                 true
             }
-
             false
         }
     }

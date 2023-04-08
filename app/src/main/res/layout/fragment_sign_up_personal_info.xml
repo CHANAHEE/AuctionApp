@@ -38,7 +38,8 @@
             android:hint="이름"
             android:inputType="text"
             android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:backgroundTint="@color/brand"
             android:layout_marginTop="50dp"/>
 
         <EditText
@@ -49,7 +50,8 @@
             android:hint="생년월일 (ex : 20010101)"
             android:inputType="date"
             android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:backgroundTint="@color/brand"
             android:layout_marginTop="10dp"/>
 
 

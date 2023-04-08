@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
+import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMainBinding
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        Toast.makeText(this, "${com.cha.auctionapp.G.userAccount?.id} : ${com.cha.auctionapp.G.userAccount?.email}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
 
         HomeFragment()
         CommunityFragment()
@@ -106,6 +107,7 @@ class MainActivity : AppCompatActivity() {
                     val imm: InputMethodManager =
                         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+
                     binding.btnSelectTown.visibility = View.VISIBLE
                     binding.etSearch.visibility = View.INVISIBLE
                     binding.etSearch.setText("")

@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,7 +52,18 @@ class SellingEditActivity : AppCompatActivity() {
 
 
 
-    var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+
+    /*
+    *
+    *       사진 선택 버튼 : 앨범에서 선택
+    *
+    * */
+    private fun clickPicture() {
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
+        launcherPictureSelect.launch(intent)
+    }
+
+    var launcherPictureSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
@@ -66,30 +79,14 @@ class SellingEditActivity : AppCompatActivity() {
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
-    /*
-    *
-    *       사진 선택 버튼
-    *
-    * */
-    private fun clickPicture() {
-        /*
-        *       앨범에서 선택하기
-        * */
-
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
-        launcher.launch(intent)
-    }
 
 
     /*
     *
-    *       카테고리 선택 버튼
+    *       카테고리 선택 버튼 : 카테고리 관련 정보 넣어서 다이얼로그 띄우기
     *
     * */
     private fun clickCategory() {
-        /*
-        *       카테고리 관련 정보 넣어서 다이얼로그 띄우기
-        * */
         AlertDialog.Builder(this).setTitle("카테고리 선택").setItems(resources.getStringArray(R.array.category_item),
             DialogInterface.OnClickListener { dialog, which ->
                 Log.i("dialogClicked","$dialog $which")
@@ -105,25 +102,56 @@ class SellingEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickSelectPos() {
-        startActivity(Intent(this,SelectPositionActivity::class.java))
+        var intent = Intent(this,SelectPositionActivity::class.java)
+        launcherLocationSelect.launch(intent)
     }
 
+    lateinit var latitude: String
+    lateinit var longitude: String
 
+    var launcherLocationSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()
+    ) {
+        when(it.resultCode){
+            RESULT_OK->{
+                Log.i("cha1","${it.data?.getStringExtra("position")}")
+                
+                latitude = it.data?.getStringExtra("latitude")!!
+                longitude = it.data?.getStringExtra("longitude")!!
+
+                binding.tvPositionName.text = it.data?.getStringExtra("position")
+
+            }
+        }
+    }
 
 
     /*
     *
-    *       완료 버튼
+    *       완료 버튼 : DB 에 글 저장
     *
     * */
     private fun clickCompleteBtn() {
-        /*
-        *
-        *       DB 에 글 저장하기
-        *
-        * */
+
+        // 보낼 데이터
+        var title = binding.etTitle.text.toString()
+        var category = binding.tvCategory.text.toString()
+        var price = binding.etPrice.text.toString()
+        var description = binding.etDecription.text.toString()
+        var location = binding.tvPositionName.text.toString()
+
+
+
+
         finish()
     }
+
+
+    /*
+    *
+    *       앱 바의 뒤로가기 버튼
+    *
+    * */
     override fun onSupportNavigateUp(): Boolean {
         /*
         *
@@ -142,6 +170,12 @@ class SellingEditActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
+
+    /*
+    *
+    *       네비게이션 바의 뒤로가기 버튼
+    *
+    * */
     override fun onBackPressed() {
         var dialog = AlertDialog.Builder(this).setMessage("작성 중인 글이 있습니다. 종료하시겠습니까?").setPositiveButton("확인",
             DialogInterface.OnClickListener { dialog, which ->

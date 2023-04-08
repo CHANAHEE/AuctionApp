@@ -209,5 +209,6 @@
         android:id="@+id/container_bottomsheet"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/black"/>
 </RelativeLayout>

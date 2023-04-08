@@ -15,9 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.activities.MainActivity
+import com.cha.auctionapp.activities.MyProfileEditActivity
 import com.cha.auctionapp.databinding.FragmentLoginMainBinding
 import com.cha.auctionapp.model.NidUserInfoResponse
 import com.cha.auctionapp.model.UserAccount
@@ -147,10 +149,9 @@ class LoginMainFragment : Fragment() {
 
             var id: String = account.id ?: ""
             var email: String = account.email ?: ""
-            com.cha.auctionapp.G.userAccount = UserAccount(id, email)
+            G.userAccount = UserAccount(id, email)
 
-            startActivity(Intent(requireContext(),MainActivity::class.java))
-            activity?.finish()
+            launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java))
         })
 
 
@@ -171,10 +172,9 @@ class LoginMainFragment : Fragment() {
                         var id: String = user.id.toString()
                         var email: String = user.kakaoAccount?.email ?: ""
 
-                        com.cha.auctionapp.G.userAccount = UserAccount(id,email)
+                        G.userAccount = UserAccount(id,email)
 
-                        startActivity(Intent(requireContext(),MainActivity::class.java))
-                        activity?.finish()
+                        launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java))
                     }else{
                         Log.i("kakaoLogin","5")
                     }
@@ -232,10 +232,9 @@ class LoginMainFragment : Fragment() {
                             val id: String = userInfoResponse?.response?.id ?: ""
                             val email: String = userInfoResponse?.response?.email ?: ""
 
-                            com.cha.auctionapp.G.userAccount = UserAccount(id,email)
+                            G.userAccount = UserAccount(id,email)
 
-                            startActivity(Intent(requireContext(),MainActivity::class.java))
-                            activity?.finish()
+                            launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java))
                         }
 
                         override fun onFailure(call: Call<NidUserInfoResponse>, t: Throwable) {
@@ -247,4 +246,9 @@ class LoginMainFragment : Fragment() {
 
         })
     }
+
+    val launcherActivity: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback {
+            if(it.resultCode == AppCompatActivity.RESULT_OK) (context as LoginActivity).finish()
+        })
 }

@@ -30,4 +30,11 @@
         <item name="android:colorAccent">@color/brand</item>
         <item name="fontFamily">@font/brandfont</item>
     </style>
+
+    <!-- For Bottomsheet EditText issue-->
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
 </resources>
