@@ -16,6 +16,9 @@ import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MyProfileEditActivity : AppCompatActivity() {
@@ -44,7 +47,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     ) {
         if(it.resultCode == RESULT_OK) {
             Glide.with(this).load(it.data?.data).into(binding.civProfile)
-            G.profileImage = it.data?.data!!
+            G.profile = it.data?.data!!
             binding.civProfile.tag = CHANGED_PROFILE
         }
     }
@@ -61,6 +64,12 @@ class MyProfileEditActivity : AppCompatActivity() {
     * */
     private fun clickCompleteBtn() {
         /*
+        *       닉네임 중복체크
+        * */
+        certifyNickname()
+        if(isExistNickname) return
+
+        /*
         *       변경된 프로필 정보 DB 에 저장.
         *       G 클래스의 profileImage 를 DB 에 저장하자.
         * */
@@ -72,16 +81,18 @@ class MyProfileEditActivity : AppCompatActivity() {
         }else {
             Log.i("alertdl","다이얼로그 띄우기3")
             var dialog = AlertDialog.Builder(this).setMessage("프로필을 설정 하시겠습니까?").setPositiveButton("확인",
-                DialogInterface.OnClickListener { dialog, which ->  
-                    
+                DialogInterface.OnClickListener { dialog, which ->
                     /*
                     *       변경된 프로필 정보 G 클래스 저장
                     * */
                     G.nickName = binding.etNickname.text.toString()
-                    if(binding.civProfile.tag == DEFAULT_PROFILE) G.profileImage = getURLForResource(R.drawable.default_profile)
+                    if(binding.civProfile.tag == DEFAULT_PROFILE) G.profile = getURLForResource(R.drawable.default_profile)
 
-                    setResult(RESULT_OK,getIntent())
-                    startActivity(Intent(this,SetUpMyPlaceListActivity::class.java))
+                    if(intent.getStringExtra("Login") == "Login"){
+                        setResult(RESULT_OK,getIntent())
+                        launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java))
+                    }
+
                     finish()
                 }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  }).create()
 
@@ -94,6 +105,34 @@ class MyProfileEditActivity : AppCompatActivity() {
 
     }
 
+    /*
+    *
+    *       닉네임 중복체크
+    *
+    * */
+    var isExistNickname = true
+    private fun certifyNickname(){
+        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firebase.collection("user")
+
+        userRef.whereEqualTo("nickname",binding.etNickname.text.toString()).get().addOnSuccessListener {
+            if(it.documents.size > 0) {
+                Snackbar.make(binding.root,"이미 있는 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
+                isExistNickname = true
+            } else isExistNickname = false
+        }
+    }
+
+
+    /*
+    *
+    *       동네 설정 후 종료 시킬 런처
+    *
+    * */
+    val launcherActivity: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback {
+            if(it.resultCode == AppCompatActivity.RESULT_OK) finish()
+        })
     /*
     *
     *       기본 프로필 이미지 : drawable -> Uri

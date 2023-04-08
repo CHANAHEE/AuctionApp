@@ -86,7 +86,7 @@ class SignUpEmailInputFragment : Fragment() {
         /*
         *       두번째 프래그먼트 실행
         * */
-        var fragment = SignUpPersonalInfoFragment()
+        var fragment = SignUpSetUpPlaceFragment()
         var bundle = Bundle()
         bundle.putString("email",binding.etEmail.text.toString())
         bundle.putString("password",binding.etPass.text.toString())

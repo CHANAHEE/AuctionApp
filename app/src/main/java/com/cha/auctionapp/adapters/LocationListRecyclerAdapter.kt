@@ -15,6 +15,8 @@ import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
@@ -51,6 +53,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         else{
             holder.binding.root.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
+                saveUserInfo()
                 context.startActivity(Intent(context,MainActivity::class.java))
                 (context as SetUpMyPlaceListActivity).finish()
             }
@@ -58,5 +61,16 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
     }
 
+    private fun saveUserInfo(){
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
 
+        var user: MutableMap<String,String> = mutableMapOf<String,String>()
+        user.put("id",G.userAccount?.id!!)
+        user.put("email",G.userAccount?.email!!)
+        user.put("location",G.location)
+        user.put("nickname",G.nickName)
+
+        userRef.document().set(user)
+    }
 }

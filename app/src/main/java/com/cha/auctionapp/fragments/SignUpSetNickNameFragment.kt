@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.FragmentSignUpSetNickNameBinding
 import com.google.android.material.snackbar.Snackbar
@@ -101,8 +102,6 @@ class SignUpSetNickNameFragment : Fragment() {
     private fun saveUserInfo(){
         var email = arguments?.getString("email")!!
         var password = arguments?.getString("password")!!
-        var name = arguments?.getString("name")!!
-        var birth = arguments?.getString("birth")!!
         var location = arguments?.getString("location")!!
         var nickname = binding.etNickname.text.toString()
 
@@ -112,15 +111,13 @@ class SignUpSetNickNameFragment : Fragment() {
         var user: MutableMap<String,String> = mutableMapOf<String,String>()
         user.put("email",email)
         user.put("password",password)
-        user.put("name",name)
-        user.put("birth",birth)
         user.put("location",location)
         user.put("nickname",nickname)
 
-
         userRef.document().set(user)
 
-
+        G.nickName = nickname
+        G.location = location
     }
 
     val watcher: TextWatcher = object : TextWatcher{
@@ -129,7 +126,7 @@ class SignUpSetNickNameFragment : Fragment() {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s?.length!! > 3) {
+            if(s?.length!! >= 3) {
                 binding.btnCertifyNickname.isEnabled = true
                 binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.brand,requireContext().theme))
             }

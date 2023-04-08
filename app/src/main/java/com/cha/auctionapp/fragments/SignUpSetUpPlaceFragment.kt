@@ -137,8 +137,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
         var fragment = SignUpSetNickNameFragment()
         var bundle = Bundle()
         bundle.putString("location",binding.tvLocationSetUpPlace.text.toString())
-        bundle.putString("name",arguments?.getString("name"))
-        bundle.putString("birth",arguments?.getString("birth"))
         bundle.putString("email",arguments?.getString("email"))
         bundle.putString("password",arguments?.getString("password"))
         fragment.arguments = bundle

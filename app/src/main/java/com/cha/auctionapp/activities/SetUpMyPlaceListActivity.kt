@@ -37,6 +37,7 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
 
         checkPermissionLocation()
         editTextListener()
+
     }
 
     /*
@@ -105,6 +106,8 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
             false
         }
     }
+
+
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()
