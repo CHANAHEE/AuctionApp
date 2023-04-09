@@ -1,7 +1,9 @@
 package com.cha.auctionapp.activities
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
@@ -9,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toFile
 import androidx.loader.content.CursorLoader
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -23,13 +27,17 @@ import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
+import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.create
+import retrofit2.http.Multipart
 import java.io.File
 
 class SellingEditActivity : AppCompatActivity() {
@@ -152,7 +160,7 @@ class SellingEditActivity : AppCompatActivity() {
         var description = binding.etDecription.text.toString()
         var location = binding.tvPositionName.text.toString()
 
-        var dataPart: MutableMap<String,String> = mutableMapOf()
+        var dataPart: HashMap<String,String> = hashMapOf()
         dataPart.put("title",title)
         dataPart.put("category",category)
         dataPart.put("price",price)
@@ -160,48 +168,38 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
-
-        Log.i("dataPart",title)
-        Log.i("dataPart",category)
-        Log.i("dataPart",price)
-        Log.i("dataPart",description)
-        Log.i("dataPart",location)
-        Log.i("dataPart",G.nickName)
-        Log.i("dataPart",G.location)
-
+        dataPart.put("profile",G.profile.toString())
 
         // 보낼 이미지 데이터들
-        var profilePath = File(G.profile.toString())
-        var fileProfilePart: MultipartBody.Part? = null
-
-        if (profilePath != null) {
-            val body = profilePath.asRequestBody("image/*".toMediaTypeOrNull())
-            fileProfilePart = MultipartBody.Part.createFormData("profile", profilePath.name, body)
-        }
-        Log.i("dataPart",fileProfilePart.toString())
-        var fileImagePart: MutableMap<String,MultipartBody.Part> = mutableMapOf()
+        var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){
             var imagePath = getFilePathFromUri(items[i].uri)
             val file: File = File(imagePath)
             val body = file.asRequestBody("image/*".toMediaTypeOrNull())
-            fileImagePart.put("${i}image",MultipartBody.Part.createFormData("image",file.name,body))
-            Log.i("dataPart",fileImagePart["${i}image"].toString())
+            fileImagePart.add(i,MultipartBody.Part.createFormData("image${i}",file.name,body))
+            Log.i("test0", fileImagePart.toString())
         }
 
-        Log.i("dataPart",fileProfilePart.toString())
 
         /*
         *       Retrofit 작업 시작
         * */
-//        var retrofit = RetrofitHelper.getRetrofitInstance()
-//        var retrofitService = retrofit.create(RetrofitService::class.java)
-//        var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart ?: ,fileProfilePart)
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        //var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart,fileProfilePart)
+        var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart)
+        Log.i("test2",call.toString())
+        call.enqueue(object : Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("test2",call.toString())
+                Log.i("phpLog",response.body().toString())
+                finish()
+            }
 
-
-
-
-
-        finish()
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
+            }
+        })
     }
 
     /*

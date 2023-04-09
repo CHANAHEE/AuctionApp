@@ -8,6 +8,8 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
+import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Query
@@ -21,6 +23,12 @@ interface RetrofitService {
     @GET("v1/nid/me")
     fun getNaverUserInfo(@Header("Authorization") authorization: String) : Call<NidUserInfoResponse>
 
-    @GET()
-    fun postDataToServer(@PartMap dataPart: MutableMap<String,String> ,@PartMap imagePart: MutableMap<String, Uri>, @Part profile: MultipartBody.Part) : Call<String>
+
+//    @Multipart
+//    @POST("Server/insertDB.php")
+//    fun postDataToServer(@PartMap dataPart: HashMap<String,String> , @Part profile: MultipartBody.Part) : Call<String>
+    @Multipart
+    @POST("Server/insertDB.php")
+    fun postDataToServer(@PartMap dataPart: HashMap<String,String> , @Part image: MutableList<MultipartBody.Part>) : Call<String>
+
 }

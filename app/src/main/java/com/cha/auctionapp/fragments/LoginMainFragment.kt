@@ -177,7 +177,9 @@ class LoginMainFragment : Fragment() {
                         if(id == user.get("id")){
                             G.nickName = user.get("nickname").toString()
                             G.profile = Uri.parse(user.get("profile").toString())
-                            G.location = user.get("location").toString()
+
+                            var list =  user.get("location").toString().split(" ")
+                            G.location = list[list.lastIndex - 1]
 
                             startActivity(Intent(context,MainActivity::class.java))
                             activity?.finish()
@@ -229,7 +231,9 @@ class LoginMainFragment : Fragment() {
                                     if(id == user.get("id")){
                                         G.nickName = user.get("nickname").toString()
                                         G.profile = Uri.parse(user.get("profile").toString())
-                                        G.location = user.get("location").toString()
+
+                                        var list = user.get("location").toString().split(" ")
+                                        G.location = list[list.lastIndex - 1]
 
                                         Log.i("kakaoLogin","${G.nickName} : ${G.profile} : ${G.location}")
                                         startActivity(Intent(context,MainActivity::class.java))
@@ -299,7 +303,9 @@ class LoginMainFragment : Fragment() {
                                     G.nickName = user.get("nickname").toString()
                                     G.profile = Uri.parse(user.get("profile").toString())
                                     Log.i("naverprofile",user.get("profile").toString())
-                                    G.location = user.get("location").toString()
+
+                                    var list = user.get("location").toString().split(" ")
+                                    G.location = list[list.lastIndex - 1]
 
                                     startActivity(Intent(context, MainActivity::class.java))
                                     activity?.finish()

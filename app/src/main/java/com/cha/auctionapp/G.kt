@@ -8,8 +8,8 @@ class G{
     companion object{
         // 프로필 이미지
         lateinit var profile: Uri
-        lateinit var nickName: String
-        lateinit var location: String
+        var nickName: String = ""
+        var location: String = ""
         var userAccount: UserAccount? = null
     }
 }

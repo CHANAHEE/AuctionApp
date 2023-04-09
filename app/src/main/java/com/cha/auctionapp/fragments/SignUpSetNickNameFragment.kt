@@ -118,7 +118,10 @@ class SignUpSetNickNameFragment : Fragment() {
         userRef.document().set(user)
 
         G.nickName = nickname
-        G.location = location
+
+        var list = location.split(" ")
+        G.location = list[list.lastIndex - 1]
+
         G.profile = getURLForResource(R.drawable.default_profile)
     }
 

@@ -3,6 +3,7 @@ package com.cha.auctionapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -28,10 +29,10 @@ class MainActivity : AppCompatActivity() {
     val binding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     lateinit var popupMenu:PopupMenu
 
-
     private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
     private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
     private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +43,6 @@ class MainActivity : AppCompatActivity() {
         CommunityFragment()
         AuctionFragment()
         ChatFragment()
-
-
-        // 로그인 시 설정된 동네를 기본 동네로 설정. 단, 시와 구는 뺴고 동만 설정되게끔...
-        var list = G.location.split(" ")
-        Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
-        G.location = list.get(list.size-2)
 
         // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
         Toast.makeText(this, G.location, Toast.LENGTH_SHORT).show()
