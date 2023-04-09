@@ -4,21 +4,33 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toFile
+import androidx.loader.content.CursorLoader
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
 import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.Call
+import retrofit2.create
+import java.io.File
 
 class SellingEditActivity : AppCompatActivity() {
 
@@ -133,12 +145,58 @@ class SellingEditActivity : AppCompatActivity() {
     * */
     private fun clickCompleteBtn() {
 
-        // 보낼 데이터
+        // 보낼 일반 String 데이터
         var title = binding.etTitle.text.toString()
         var category = binding.tvCategory.text.toString()
         var price = binding.etPrice.text.toString()
         var description = binding.etDecription.text.toString()
         var location = binding.tvPositionName.text.toString()
+
+        var dataPart: MutableMap<String,String> = mutableMapOf()
+        dataPart.put("title",title)
+        dataPart.put("category",category)
+        dataPart.put("price",price)
+        dataPart.put("description",description)
+        dataPart.put("tradingplace",location)
+        dataPart.put("nickname",G.nickName)
+        dataPart.put("location",G.location)
+
+        Log.i("dataPart",title)
+        Log.i("dataPart",category)
+        Log.i("dataPart",price)
+        Log.i("dataPart",description)
+        Log.i("dataPart",location)
+        Log.i("dataPart",G.nickName)
+        Log.i("dataPart",G.location)
+
+
+        // 보낼 이미지 데이터들
+        var profilePath = File(G.profile.toString())
+        var fileProfilePart: MultipartBody.Part? = null
+
+        if (profilePath != null) {
+            val body = profilePath.asRequestBody("image/*".toMediaTypeOrNull())
+            fileProfilePart = MultipartBody.Part.createFormData("profile", profilePath.name, body)
+        }
+        Log.i("dataPart",fileProfilePart.toString())
+        var fileImagePart: MutableMap<String,MultipartBody.Part> = mutableMapOf()
+        for(i in 0 until items.size){
+            var imagePath = getFilePathFromUri(items[i].uri)
+            val file: File = File(imagePath)
+            val body = file.asRequestBody("image/*".toMediaTypeOrNull())
+            fileImagePart.put("${i}image",MultipartBody.Part.createFormData("image",file.name,body))
+            Log.i("dataPart",fileImagePart["${i}image"].toString())
+        }
+
+        Log.i("dataPart",fileProfilePart.toString())
+
+        /*
+        *       Retrofit 작업 시작
+        * */
+//        var retrofit = RetrofitHelper.getRetrofitInstance()
+//        var retrofitService = retrofit.create(RetrofitService::class.java)
+//        var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart ?: ,fileProfilePart)
+
 
 
 
@@ -146,6 +204,28 @@ class SellingEditActivity : AppCompatActivity() {
         finish()
     }
 
+    /*
+    *
+    *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
+    *
+    * */
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        Log.i("dataPath",MediaStore.Images.Media.DATA)
+        Log.i("dataPath",proj.toString())
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        Log.i("dataPath",cursor.toString())
+
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
+    }
 
     /*
     *

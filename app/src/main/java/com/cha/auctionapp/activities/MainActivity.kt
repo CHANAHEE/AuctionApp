@@ -20,6 +20,8 @@ import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
 import com.google.android.material.navigation.NavigationBarView
+import java.util.Calendar
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,17 +37,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
-
+        //Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
         HomeFragment()
         CommunityFragment()
         AuctionFragment()
         ChatFragment()
 
+
+        // 로그인 시 설정된 동네를 기본 동네로 설정. 단, 시와 구는 뺴고 동만 설정되게끔...
+        var list = G.location.split(" ")
+        Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
+        G.location = list.get(list.size-2)
+
         // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
+        Toast.makeText(this, G.location, Toast.LENGTH_SHORT).show()
         popupMenu = PopupMenu(this,binding.btnSelectTown)
-        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,"공릉 1동")
-        popupMenu.menu.add(0, POPUP_MENU_MY_SECOND_PLACE_ITEM_ID!!,0,"공릉 2동")
+        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,G.location)
         popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
         binding.btnSelectTown.text = popupMenu
             .menu

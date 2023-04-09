@@ -70,6 +70,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
+        user.put("profile",G.profile.toString())
 
         userRef.document().set(user)
     }

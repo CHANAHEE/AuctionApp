@@ -1,6 +1,7 @@
 package com.cha.auctionapp.fragments
 
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -118,6 +119,7 @@ class SignUpSetNickNameFragment : Fragment() {
 
         G.nickName = nickname
         G.location = location
+        G.profile = getURLForResource(R.drawable.default_profile)
     }
 
     val watcher: TextWatcher = object : TextWatcher{
@@ -136,6 +138,10 @@ class SignUpSetNickNameFragment : Fragment() {
 
         }
 
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 }
 

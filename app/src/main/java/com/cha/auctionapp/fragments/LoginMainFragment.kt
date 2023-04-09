@@ -298,6 +298,7 @@ class LoginMainFragment : Fragment() {
                                 if (id == user.get("id")) {
                                     G.nickName = user.get("nickname").toString()
                                     G.profile = Uri.parse(user.get("profile").toString())
+                                    Log.i("naverprofile",user.get("profile").toString())
                                     G.location = user.get("location").toString()
 
                                     startActivity(Intent(context, MainActivity::class.java))
