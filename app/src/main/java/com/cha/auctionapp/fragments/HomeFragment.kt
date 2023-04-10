@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.SellingEditActivity
 import com.cha.auctionapp.adapters.ProductAdapter
@@ -50,26 +51,17 @@ class HomeFragment : Fragment() {
         itemsFromServer = mutableListOf()
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        val call: Call<MutableList<LoadMainProductItem>> = retrofitService.getDataFromServer()
-        call.enqueue(object : Callback<MutableList<LoadMainProductItem>>{
+        val call: Call<MutableList<MainItem>> = retrofitService.getDataFromServer(G.location)
+        call.enqueue(object : Callback<MutableList<MainItem>>{
             override fun onResponse(
-                call: Call<MutableList<LoadMainProductItem>>,
-                response: Response<MutableList<LoadMainProductItem>>
+                call: Call<MutableList<MainItem>>,
+                response: Response<MutableList<MainItem>>
             ) {
-                itemsFromServer = response.body()!!
-
-                for(i in 0 until itemsFromServer.size){
-                    mainItem.add(MainItem(itemsFromServer[i].title,
-                        itemsFromServer[i].image.split(",").get(0),
-                        itemsFromServer[i].location,
-                        itemsFromServer[i].price
-                        ))
-                }
-
+                mainItem = response.body()!!
                 binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
             }
 
-            override fun onFailure(call: Call<MutableList<LoadMainProductItem>>, t: Throwable) {
+            override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
                 Log.i("test01","${t.message}")
             }
 

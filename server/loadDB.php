@@ -1,10 +1,11 @@
 <?php
     header('Content-Type:application/json; charset=utf-8');
+    $location = $_GET['location'];
 
     $db = mysqli_connect('localhost','tjdrjs0803','dkssud109!','tjdrjs0803');
     mysqli_query($db,"set names utf8");
 
-    $sql = "SELECT * FROM post_product";
+    $sql = "SELECT title,price,location,image FROM post_product WHERE location='$location'";
     $result = mysqli_query($db,$sql);
 
     // 결과표로 부터 총 레코드 수를 알아내자.

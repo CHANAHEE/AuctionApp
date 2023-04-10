@@ -34,6 +34,6 @@ interface RetrofitService {
     // 서버에서 데이터 받아오기
 
     @GET("Server/loadDB.php")
-    fun getDataFromServer() : Call<MutableList<LoadMainProductItem>>
+    fun getDataFromServer(@Query("location") query: String) : Call<MutableList<MainItem>>
 
 }
