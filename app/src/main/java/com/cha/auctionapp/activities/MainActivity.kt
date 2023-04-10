@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         ChatFragment()
 
         // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
-        Toast.makeText(this, G.location, Toast.LENGTH_SHORT).show()
         popupMenu = PopupMenu(this,binding.btnSelectTown)
         popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,G.location)
         popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
@@ -182,37 +181,51 @@ class MainActivity : AppCompatActivity() {
         // 그러니, 기본설정값 만들 때, 주의할것.
         popupMenu.setOnMenuItemClickListener {
             var id:Int = it.itemId
-            if(id == POPUP_MENU_MY_FIRST_PLACE_ITEM_ID){
+            when(id) {
                 // G 클래스에 내 동네 데이터 넣는 코드 작성
-                binding.btnSelectTown.text = popupMenu
-                    .menu
-                    .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
 
-                var tran:FragmentTransaction = supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container_fragment,HomeFragment().apply {
+                POPUP_MENU_MY_FIRST_PLACE_ITEM_ID -> {
+                    binding.btnSelectTown.text = popupMenu
+                        .menu
+                        .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
 
-                        arguments = Bundle().apply {
-                            putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                        }
-                    })
-                tran.commit()
-            }else if(id == POPUP_MENU_MY_SECOND_PLACE_ITEM_ID){
-                // G 클래스에 내 동네 데이터 넣는 코드 작성
-                binding.btnSelectTown.text = popupMenu
-                    .menu
-                    .getItem(POPUP_MENU_MY_SECOND_PLACE_ITEM_ID).toString()
-                var tran:FragmentTransaction = supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container_fragment,HomeFragment().apply {
+                    var tran: FragmentTransaction = supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container_fragment, HomeFragment().apply {
 
-                        arguments = Bundle().apply {
-                            putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                        }
-                    })
-                tran.commit()
-            }else if(id == POPUP_MENU_SET_PLACE_ITEM_ID){
-                startActivity(Intent(this,SetUpMyPlaceActivity::class.java))
+                            arguments = Bundle().apply {
+                                putString(
+                                    "place",
+                                    this@MainActivity.binding.btnSelectTown.text.toString()
+                                )
+                            }
+                        })
+                    tran.commit()
+                }
+
+                POPUP_MENU_MY_SECOND_PLACE_ITEM_ID -> {
+                    // G 클래스에 내 동네 데이터 넣는 코드 작성
+                    binding.btnSelectTown.text = popupMenu
+                        .menu
+                        .getItem(POPUP_MENU_MY_SECOND_PLACE_ITEM_ID).toString()
+                    var tran: FragmentTransaction = supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container_fragment, HomeFragment().apply {
+
+                            arguments = Bundle().apply {
+                                putString(
+                                    "place",
+                                    this@MainActivity.binding.btnSelectTown.text.toString()
+                                )
+                            }
+                        })
+                    tran.commit()
+                }
+
+                POPUP_MENU_SET_PLACE_ITEM_ID -> {
+                    startActivity(Intent(this, SetUpMyPlaceListActivity::class.java))
+                }
+
             }
             false
         }
