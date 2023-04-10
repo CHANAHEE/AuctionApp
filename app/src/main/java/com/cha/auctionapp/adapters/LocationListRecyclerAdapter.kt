@@ -54,10 +54,11 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         else{
             holder.binding.root.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
-                saveUserInfo()
+
 
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
+                saveUserInfo()
 
                 context.startActivity(Intent(context,MainActivity::class.java))
                 (context as SetUpMyPlaceListActivity).finish()
@@ -71,12 +72,12 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         var userRef: CollectionReference = firestore.collection("user")
 
         var user: MutableMap<String,String> = mutableMapOf<String,String>()
-        user.put("id",G.userAccount?.id!!)
+        user.put("id",G.userAccount.id)
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
         user.put("profile",G.profile.toString())
 
-        userRef.document().set(user)
+        userRef.document(G.userAccount?.id!!).set(user)
     }
 }

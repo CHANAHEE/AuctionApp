@@ -19,6 +19,7 @@ import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 
 class MyProfileEditActivity : AppCompatActivity() {
@@ -89,10 +90,23 @@ class MyProfileEditActivity : AppCompatActivity() {
                     if(binding.civProfile.tag == DEFAULT_PROFILE) G.profile = getURLForResource(R.drawable.default_profile)
 
                     if(intent.getStringExtra("Login") == "Login"){
+                        Log.i("test13","Login 에서 온것")
                         setResult(RESULT_OK,getIntent())
                         launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                     }
+                    else if(intent.getStringExtra("Edit") == "Edit"){
+                        Log.i("test13","Edit 에서 온것")
+                        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                        var userRef: CollectionReference = firestore.collection("user")
 
+                        var user = mutableMapOf<String,String>()
+                        user.put("id",G.userAccount.id)
+                        user.put("profile",G.profile.toString())
+                        user.put("nickname",G.nickName)
+                        user.put("email",G.userAccount.email)
+                        user.put("location",G.location)
+                        userRef.document(G.userAccount.id).set(user)
+                    }
                     finish()
                 }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  }).create()
 

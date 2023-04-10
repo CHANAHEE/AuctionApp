@@ -10,6 +10,6 @@ class G{
         lateinit var profile: Uri
         var nickName: String = ""
         var location: String = ""
-        var userAccount: UserAccount? = null
+        var userAccount: UserAccount = UserAccount("","")
     }
 }

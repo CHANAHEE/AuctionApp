@@ -1,6 +1,9 @@
 package com.cha.auctionapp.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,18 +12,27 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMainBinding
+import com.cha.auctionapp.databinding.HeaderLayoutBinding
 import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
 import com.google.android.material.navigation.NavigationBarView
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import de.hdodenhof.circleimageview.CircleImageView
 import java.util.Calendar
 import java.util.Date
 
@@ -53,7 +65,6 @@ class MainActivity : AppCompatActivity() {
             .menu
             .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
 
-
         /*
         *       BottomNavigationView 선택
         * */
@@ -80,7 +91,21 @@ class MainActivity : AppCompatActivity() {
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
 
+    }
 
+    override fun onResume() {
+        super.onResume()
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
+
+        userRef.document(G.userAccount.id).addSnapshotListener { value, error ->
+            G.nickName = value?.get("nickname").toString()
+            G.profile = Uri.parse(value?.get("profile").toString())
+
+            binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
+            val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
+            Glide.with(this).load(G.profile).into(profile)
+        }
     }
 
     /*
@@ -206,14 +231,19 @@ class MainActivity : AppCompatActivity() {
         actionBar?.title = null
         binding.drawerLayout.addDrawerListener(drawerToggle)
 
+        binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_email).text = G.userAccount?.email ?: "no email"
+        binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
+        val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
+        Glide.with(this).load(G.profile).into(profile)
+
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{
-                    startActivity(Intent(this,MyProfileEditActivity::class.java))
+                    startActivity(Intent(this,MyProfileEditActivity::class.java).putExtra("Edit","Edit"))
                 }
-            } 
-            
+            }
         }
+
         binding.nav.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.menu_my_fav_list->{
@@ -226,6 +256,8 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(binding.nav)
             false
         }
+
+
     }
 
     /*

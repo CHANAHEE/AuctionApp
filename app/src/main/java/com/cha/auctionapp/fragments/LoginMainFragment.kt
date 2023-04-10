@@ -166,31 +166,23 @@ class LoginMainFragment : Fragment() {
                 editor.putString("google",id)
                 editor.apply()
                 launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
-            }
+            }else{
+                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                var userRef: CollectionReference = firestore.collection("user")
 
-            var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-            var userRef: CollectionReference = firestore.collection("user")
+                userRef.document(id).get().addOnSuccessListener {
+                    G.userAccount.email = it.get("email").toString()
+                    G.userAccount.id = it.get("id").toString()
+                    G.nickName = it.get("nickname").toString()
+                    G.profile = Uri.parse(it.get("profile").toString())
+                    G.location = it.get("location").toString()
 
-            userRef.get().addOnSuccessListener { p0 ->
-                if (p0 != null) {
-                    for (snapshot in p0) {
-                        var user = snapshot.data
-                        if(id == user.get("id")){
-                            G.nickName = user.get("nickname").toString()
-                            G.profile = Uri.parse(user.get("profile").toString())
+                    startActivity(Intent(context, MainActivity::class.java))
+                    activity?.finish()
 
-                            var list =  user.get("location").toString().split(" ")
-                            G.location = list[list.lastIndex - 1]
-
-                            startActivity(Intent(context,MainActivity::class.java))
-                            activity?.finish()
-                            return@addOnSuccessListener
-                        }
-                    }
-                    launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                    return@addOnSuccessListener
                 }
             }
-
         })
 
 
@@ -213,41 +205,52 @@ class LoginMainFragment : Fragment() {
                             id = user.id.toString()
                             var email: String = user.kakaoAccount?.email ?: ""
                             G.userAccount = UserAccount(id,email)
-                            Toast.makeText(context, "${G.userAccount!!.id} : ${G.userAccount!!.email}", Toast.LENGTH_SHORT).show()
                             val editor: SharedPreferences.Editor = pref.edit()
                             editor.putString("kakao",id)
                             editor.apply()
 
                             launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
-                        }
-                        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                        var userRef: CollectionReference = firestore.collection("user")
+                        }else{
+                            var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                            var userRef: CollectionReference = firestore.collection("user")
 
-                        userRef.get().addOnSuccessListener { p0 ->
-                            if (p0 != null) {
-                                for (snapshot in p0) {
-                                    var user = snapshot.data
-                                    if(id == user.get("id")){
-                                        G.nickName = user.get("nickname").toString()
-                                        G.profile = Uri.parse(user.get("profile").toString())
+                            userRef.document(id).get().addOnSuccessListener {
+                                G.userAccount.email = it.get("email").toString()
+                                G.userAccount.id = it.get("id").toString()
+                                G.nickName = it.get("nickname").toString()
+                                G.profile = Uri.parse(it.get("profile").toString())
+                                G.location = it.get("location").toString()
 
-                                        var list = user.get("location").toString().split(" ")
-                                        G.location = list[list.lastIndex - 1]
+                                startActivity(Intent(context, MainActivity::class.java))
+                                activity?.finish()
 
-                                        Log.i("kakaoLogin","${G.nickName} : ${G.profile} : ${G.location}")
-                                        startActivity(Intent(context,MainActivity::class.java))
-                                        activity?.finish()
-                                        return@addOnSuccessListener
-                                    }else{
-
-                                    }
-                                }
-                                Log.i("kakaoLogin","${id} 동일한게 없음")
-                                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                                return@addOnSuccessListener
                             }
+
+//                        userRef.get().addOnSuccessListener { p0 ->
+//                            if (p0 != null) {
+//                                for (snapshot in p0) {
+//                                    var user = snapshot.data
+//                                    if(id == user.get("id")){
+//                                        G.nickName = user.get("nickname").toString()
+//                                        G.profile = Uri.parse(user.get("profile").toString())
+//                                        G.userAccount?.email = user.get("email").toString()
+//                                        var list = user.get("location").toString().split(" ")
+//                                        G.location = list[list.lastIndex - 1]
+//
+//                                        Log.i("kakaoLogin","${G.nickName} : ${G.profile} : ${G.location}")
+//                                        startActivity(Intent(context,MainActivity::class.java))
+//                                        activity?.finish()
+//                                        return@addOnSuccessListener
+//                                    }else{
+//
+//                                    }
+//                                }
+//                                Log.i("kakaoLogin","${id} 동일한게 없음")
+//                                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+//                            }
+//                        }
                         }
-                    }else{
-                        Log.i("kakaoLogin","5")
                     }
                 }
             }
@@ -296,25 +299,17 @@ class LoginMainFragment : Fragment() {
                     var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                     var userRef: CollectionReference = firestore.collection("user")
 
-                    userRef.get().addOnSuccessListener { p0 ->
-                        if (p0 != null) {
-                            for (snapshot in p0) {
-                                var user = snapshot.data
-                                if (id == user.get("id")) {
-                                    G.nickName = user.get("nickname").toString()
-                                    G.profile = Uri.parse(user.get("profile").toString())
-                                    Log.i("naverprofile",user.get("profile").toString())
+                    userRef.document(id).get().addOnSuccessListener {
+                        G.userAccount.email = it.get("email").toString()
+                        G.userAccount.id = it.get("id").toString()
+                        G.nickName = it.get("nickname").toString()
+                        G.profile = Uri.parse(it.get("profile").toString())
+                        G.location = it.get("location").toString()
 
-                                    var list = user.get("location").toString().split(" ")
-                                    G.location = list[list.lastIndex - 1]
+                        startActivity(Intent(context, MainActivity::class.java))
+                        activity?.finish()
 
-                                    startActivity(Intent(context, MainActivity::class.java))
-                                    activity?.finish()
-                                    return@addOnSuccessListener
-                                }
-                            }
-
-                        }
+                        return@addOnSuccessListener
                     }
                 }
                 else {
