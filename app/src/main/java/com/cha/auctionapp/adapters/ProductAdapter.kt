@@ -11,19 +11,20 @@ import com.cha.auctionapp.activities.HomeDetailActivity
 import com.cha.auctionapp.databinding.RecyclerProductItemBinding
 import com.cha.auctionapp.model.MainItem
 
-class ProductAdapter(var context:Context,var mainItems:MutableList<MainItem>) : Adapter<ProductAdapter.VH>(){
+class ProductAdapter(var context:Context,var mainItem:MutableList<MainItem>) : Adapter<ProductAdapter.VH>(){
 
 
     inner class VH(var binding:RecyclerProductItemBinding) : ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerProductItemBinding.inflate(LayoutInflater.from(context),parent,false))
-    override fun getItemCount(): Int = mainItems.size
+    override fun getItemCount(): Int = mainItem.size
     override fun onBindViewHolder(holder: VH, position: Int) {
-        var mainItem : MainItem = mainItems[position]
+        var mainItem : MainItem = mainItem[position]
 
-        Glide.with(context).load(mainItem.image).into(holder.binding.ivMainImg)
+        var baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + mainItem.image
+        Glide.with(context).load(baseAddr).into(holder.binding.ivMainImg)
         holder.binding.tvTitle.text = mainItem.title
         holder.binding.tvLocationName.text = mainItem.location
-        holder.binding.tvPrice.text = mainItem.price
+        holder.binding.tvPrice.text = "${mainItem.price} 원"
 
         holder.binding.root.setOnClickListener { clickItem(position) }
     }

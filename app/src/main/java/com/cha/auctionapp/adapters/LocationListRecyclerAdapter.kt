@@ -11,6 +11,7 @@ import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.activities.MainActivity
+import com.cha.auctionapp.activities.MyProfileEditActivity
 import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
@@ -54,6 +55,10 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
             holder.binding.root.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
                 saveUserInfo()
+
+                val list = G.location.split(" ")
+                G.location = list[list.lastIndex - 1]
+
                 context.startActivity(Intent(context,MainActivity::class.java))
                 (context as SetUpMyPlaceListActivity).finish()
             }

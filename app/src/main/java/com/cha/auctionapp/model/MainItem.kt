@@ -2,7 +2,7 @@ package com.cha.auctionapp.model
 
 import android.net.Uri
 
-data class MainItem(var title:String, var image:Int, var location:String, var price:String)
+data class MainItem(var title:String, var image:String, var location:String, var price:String)
 
 data class CategoryItem(var cgIcon:Int, var cgName:String)
 

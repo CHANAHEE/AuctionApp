@@ -90,7 +90,7 @@ class MyProfileEditActivity : AppCompatActivity() {
 
                     if(intent.getStringExtra("Login") == "Login"){
                         setResult(RESULT_OK,getIntent())
-                        launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java))
+                        launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                     }
 
                     finish()

@@ -28,7 +28,7 @@
         $dstName =  "./image/".date('YmdHis');
         $tmpName=   $file['tmp_name'];
         move_uploaded_file($tmpName, $dstName.$srcName); // 디렉토리에 저장하기
-        array_push($fileNames, $srcName); // 가공해서 배열에 넣기
+        array_push($fileNames, $dstName.$srcName); // 가공해서 배열에 넣기
         $arrayString = implode(",", $fileNames); // 배열을 문자열로 만들기
      }
 

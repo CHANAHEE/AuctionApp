@@ -2,6 +2,8 @@ package com.cha.auctionapp.network
 
 import android.net.Uri
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
+import com.cha.auctionapp.model.LoadMainProductItem
+import com.cha.auctionapp.model.MainItem
 import com.cha.auctionapp.model.NidUserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -24,11 +26,14 @@ interface RetrofitService {
     fun getNaverUserInfo(@Header("Authorization") authorization: String) : Call<NidUserInfoResponse>
 
 
-//    @Multipart
-//    @POST("Server/insertDB.php")
-//    fun postDataToServer(@PartMap dataPart: HashMap<String,String> , @Part profile: MultipartBody.Part) : Call<String>
+    // 서버로 데이터 전송
     @Multipart
     @POST("Server/insertDB.php")
     fun postDataToServer(@PartMap dataPart: HashMap<String,String> , @Part image: MutableList<MultipartBody.Part>) : Call<String>
+
+    // 서버에서 데이터 받아오기
+
+    @GET("Server/loadDB.php")
+    fun getDataFromServer() : Call<MutableList<LoadMainProductItem>>
 
 }

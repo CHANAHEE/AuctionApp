@@ -165,6 +165,7 @@ class LoginMainFragment : Fragment() {
                 val editor: SharedPreferences.Editor = pref.edit()
                 editor.putString("google",id)
                 editor.apply()
+                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
             }
 
             var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -186,7 +187,7 @@ class LoginMainFragment : Fragment() {
                             return@addOnSuccessListener
                         }
                     }
-                    launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login"))
+                    launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                 }
             }
 
@@ -200,26 +201,24 @@ class LoginMainFragment : Fragment() {
     * */
     private fun kakaoLogin() {
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            Log.i("kakaoLogin","${token} : ${error}")
             if (error != null) {
                 Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT)
             } else if (token != null) {
-
                 UserApiClient.instance.me { user, error ->
                     if(user != null){
                         val pref: SharedPreferences = requireContext().getSharedPreferences("Data",Context.MODE_PRIVATE)
                         var id: String = pref.getString("kakao","").toString()
 
-                        Log.i("kakaoLogin","${id}")
                         if(id.isBlank()){
-                            Log.i("kakaoLogin","${id} blank")
                             id = user.id.toString()
                             var email: String = user.kakaoAccount?.email ?: ""
                             G.userAccount = UserAccount(id,email)
-
+                            Toast.makeText(context, "${G.userAccount!!.id} : ${G.userAccount!!.email}", Toast.LENGTH_SHORT).show()
                             val editor: SharedPreferences.Editor = pref.edit()
                             editor.putString("kakao",id)
                             editor.apply()
+
+                            launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                         }
                         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                         var userRef: CollectionReference = firestore.collection("user")
@@ -239,10 +238,12 @@ class LoginMainFragment : Fragment() {
                                         startActivity(Intent(context,MainActivity::class.java))
                                         activity?.finish()
                                         return@addOnSuccessListener
+                                    }else{
+
                                     }
                                 }
                                 Log.i("kakaoLogin","${id} 동일한게 없음")
-                                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login"))
+                                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
                             }
                         }
                     }else{
@@ -343,7 +344,7 @@ class LoginMainFragment : Fragment() {
                                     Intent(
                                         context,
                                         MyProfileEditActivity::class.java
-                                    ).putExtra("Login", "Login")
+                                    ).putExtra("Login", "Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                                 )
                             }
 
