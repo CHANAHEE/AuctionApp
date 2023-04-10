@@ -44,6 +44,17 @@ class MyProfileEditActivity : AppCompatActivity() {
     val DEFAULT_PROFILE = 0
     val CHANGED_PROFILE = 1
 
+
+
+    /*
+    *
+    *       프로필 사진 변경 & 런처
+    *
+    * */
+    private fun clickProfileImage() {
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+        pickLauncher.launch(intent)
+    }
     var pickLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
     ) {
         if(it.resultCode == RESULT_OK) {
@@ -53,10 +64,6 @@ class MyProfileEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickProfileImage() {
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
-        pickLauncher.launch(intent)
-    }
 
     /*
     *
@@ -64,49 +71,17 @@ class MyProfileEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickCompleteBtn() {
-        /*
-        *       닉네임 중복체크
-        * */
+
         certifyNickname()
         if(isExistNickname) return
 
-        /*
-        *       변경된 프로필 정보 DB 에 저장.
-        *       G 클래스의 profileImage 를 DB 에 저장하자.
-        * */
-        Log.i("ale","다이얼로그 띄우기1")
         if(binding.etNickname.text.length < 3){
-            Log.i("alertdl","다이얼로그 띄우기2")
             AlertDialog.Builder(this).setMessage("닉네임을 3글자 이상으로 설정해주세요").show()
             return
         }else {
-            Log.i("alertdl","다이얼로그 띄우기3")
             var dialog = AlertDialog.Builder(this).setMessage("프로필을 설정 하시겠습니까?").setPositiveButton("확인",
                 DialogInterface.OnClickListener { dialog, which ->
-                    /*
-                    *       변경된 프로필 정보 G 클래스 저장
-                    * */
-                    G.nickName = binding.etNickname.text.toString()
-                    if(binding.civProfile.tag == DEFAULT_PROFILE) G.profile = getURLForResource(R.drawable.default_profile)
-
-                    if(intent.getStringExtra("Login") == "Login"){
-                        Log.i("test13","Login 에서 온것")
-                        setResult(RESULT_OK,getIntent())
-                        launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
-                    }
-                    else if(intent.getStringExtra("Edit") == "Edit"){
-                        Log.i("test13","Edit 에서 온것")
-                        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                        var userRef: CollectionReference = firestore.collection("user")
-
-                        var user = mutableMapOf<String,String>()
-                        user.put("id",G.userAccount.id)
-                        user.put("profile",G.profile.toString())
-                        user.put("nickname",G.nickName)
-                        user.put("email",G.userAccount.email)
-                        user.put("location",G.location)
-                        userRef.document(G.userAccount.id).set(user)
-                    }
+                    updateProfile()
                     finish()
                 }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  }).create()
 
@@ -114,10 +89,25 @@ class MyProfileEditActivity : AppCompatActivity() {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.brand,theme))
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.brand,theme))
         }
-
-
-
     }
+
+
+    /*
+    *
+    *       변경된 프로필 정보 G 클래스 저장
+    *
+    * */
+    private fun updateProfile(){
+        G.nickName = binding.etNickname.text.toString()
+        if(binding.civProfile.tag == DEFAULT_PROFILE) G.profile = getURLForResource(R.drawable.default_profile)
+
+        if(intent.getStringExtra("Login") == "Login"){
+            setResult(RESULT_OK,getIntent())
+            launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+        }
+        else setResult(RESULT_OK,intent)
+    }
+
 
     /*
     *
@@ -147,6 +137,8 @@ class MyProfileEditActivity : AppCompatActivity() {
         ActivityResultCallback {
             if(it.resultCode == AppCompatActivity.RESULT_OK) finish()
         })
+
+
     /*
     *
     *       기본 프로필 이미지 : drawable -> Uri
@@ -156,6 +148,11 @@ class MyProfileEditActivity : AppCompatActivity() {
         return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 
+    /*
+    *
+    *       뒤로 가기 버튼
+    *
+    * */
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()

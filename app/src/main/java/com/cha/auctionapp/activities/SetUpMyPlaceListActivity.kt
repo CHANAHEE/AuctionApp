@@ -82,11 +82,10 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
 
                     searchPlaceByAddressResponse = response.body()
 
-                    binding.recycler.adapter = LocationListRecyclerAdapter(this@SetUpMyPlaceListActivity,
+                    binding.recycler.adapter =
+                        LocationListRecyclerAdapter(this@SetUpMyPlaceListActivity,
                         searchPlaceByAddressResponse?.documents!!)
-                    //getLocationList()
                 }
-
                 override fun onFailure(call: Call<KakaoSearchItemByAddress>, t: Throwable) {
                     Log.i("errorRetrofit",t?.message ?: "")
                 }

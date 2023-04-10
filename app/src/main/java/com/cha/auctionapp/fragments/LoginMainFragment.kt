@@ -226,30 +226,6 @@ class LoginMainFragment : Fragment() {
 
                                 return@addOnSuccessListener
                             }
-
-//                        userRef.get().addOnSuccessListener { p0 ->
-//                            if (p0 != null) {
-//                                for (snapshot in p0) {
-//                                    var user = snapshot.data
-//                                    if(id == user.get("id")){
-//                                        G.nickName = user.get("nickname").toString()
-//                                        G.profile = Uri.parse(user.get("profile").toString())
-//                                        G.userAccount?.email = user.get("email").toString()
-//                                        var list = user.get("location").toString().split(" ")
-//                                        G.location = list[list.lastIndex - 1]
-//
-//                                        Log.i("kakaoLogin","${G.nickName} : ${G.profile} : ${G.location}")
-//                                        startActivity(Intent(context,MainActivity::class.java))
-//                                        activity?.finish()
-//                                        return@addOnSuccessListener
-//                                    }else{
-//
-//                                    }
-//                                }
-//                                Log.i("kakaoLogin","${id} 동일한게 없음")
-//                                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
-//                            }
-//                        }
                         }
                     }
                 }

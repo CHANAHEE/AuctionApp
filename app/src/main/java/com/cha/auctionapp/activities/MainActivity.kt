@@ -14,6 +14,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
@@ -90,21 +94,6 @@ class MainActivity : AppCompatActivity() {
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-        var userRef: CollectionReference = firestore.collection("user")
-
-        userRef.document(G.userAccount.id).addSnapshotListener { value, error ->
-            G.nickName = value?.get("nickname").toString()
-            G.profile = Uri.parse(value?.get("profile").toString())
-
-            binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
-            val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
-            Glide.with(this).load(G.profile).into(profile)
-        }
     }
 
     /*
@@ -223,7 +212,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 POPUP_MENU_SET_PLACE_ITEM_ID -> {
-                    startActivity(Intent(this, SetUpMyPlaceListActivity::class.java))
+                    var intent = Intent(this, SetUpMyPlaceListActivity::class.java)
+                    placeLauncher.launch(intent)
                 }
 
             }
@@ -231,7 +221,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
     /*
+    *
+    *       SetUpMyPlaceListActivity Launcher : 새로운 동네 설정 시, MainActivity 종료
+    *
+    * */
+    private val placeLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        when(it.resultCode){
+            RESULT_OK->finish()
+        }
+    }
+    /*
+    *
     *       Set NavigationDrawer
+    *
     * */
     private fun setNavigationDrawer() {
         setSupportActionBar(binding.toolbar)
@@ -252,7 +254,8 @@ class MainActivity : AppCompatActivity() {
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{
-                    startActivity(Intent(this,MyProfileEditActivity::class.java).putExtra("Edit","Edit"))
+                    var intent = Intent(this,MyProfileEditActivity::class.java)
+                    profileLauncher.launch(intent)
                 }
             }
         }
@@ -269,8 +272,26 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(binding.nav)
             false
         }
+    }
 
+    /*
+    *
+    *       프로필 변경 런처
+    *
+    * */
+    private val profileLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+    ) {
+        when(it.resultCode){
+            RESULT_OK->{
+                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                var userRef: CollectionReference = firestore.collection("user")
 
+                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profile.toString())
+
+                binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
+                Glide.with(this).load(G.profile).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
+            }
+        }
     }
 
     /*

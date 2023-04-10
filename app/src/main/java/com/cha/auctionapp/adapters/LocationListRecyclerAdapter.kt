@@ -55,13 +55,14 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
             holder.binding.root.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
 
-
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
                 saveUserInfo()
 
                 context.startActivity(Intent(context,MainActivity::class.java))
-                (context as SetUpMyPlaceListActivity).finish()
+                var activity = context as SetUpMyPlaceListActivity
+                activity.setResult(android.app.Activity.RESULT_OK)
+                activity.finish()
             }
         }
 
