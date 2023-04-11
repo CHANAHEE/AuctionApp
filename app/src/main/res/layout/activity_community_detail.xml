@@ -174,13 +174,14 @@
                 android:layout_below="@id/scrollview"
                 android:layout_marginTop="10dp"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/view2"
                 android:padding="8dp">
                 <ImageView
+                    android:id="@+id/iv_comments"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/comment"
@@ -193,9 +194,37 @@
                     android:fontFamily="@font/brandfont"
                     android:textStyle="bold"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="15dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/iv_comments"
+                    android:layout_centerVertical="true"/>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/btn_fav_community_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="4dp">
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/heart_outline"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="7dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:text="관 심"
+                        android:fontFamily="@font/brandfont"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:gravity="center"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
 
 
             <View

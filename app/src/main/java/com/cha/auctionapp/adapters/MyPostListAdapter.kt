@@ -20,7 +20,7 @@ class MyPostListAdapter(var context:Context, var items:MutableList<CommunityPost
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.binding.tvTitle.text = items[position].title
-        holder.binding.tvContents.text = items[position].contents
+        holder.binding.tvContents.text = items[position].description
         holder.binding.tvLocation.text = items[position].location
         holder.binding.tvFavSize.text = items[position].fav.toString()
         holder.binding.tvCommentsSize.text = items[position].comments.toString()

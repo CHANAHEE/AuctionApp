@@ -34,18 +34,16 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-
         checkPermissionLocation()
         editTextListener()
-
     }
+
 
     /*
     *
     *       위치 정보 퍼미션 체크
     *
     * */
-
     private fun checkPermissionLocation() {
         if( checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
             permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -92,6 +90,11 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
             })
     }
 
+    /*
+    *
+    *       키보드 설정
+    *
+    * */
     private fun editTextListener(){
         binding.etAddress.setOnKeyListener { v , keyCode, event ->
             if(event.action == KeyEvent.ACTION_DOWN

@@ -55,29 +55,38 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
         var address: String = documents[position].address.address_name
         holder.binding.tvLocationName.text = "${address} "
+
+
+
         if(context is LoginActivity) {
             holder.itemView.setOnClickListener {
                 bindingFrag.tvLocationSetUpPlace.text = holder.binding.tvLocationName.text
             }
         }
         else{
+
             holder.binding.root.setOnClickListener {
+
+                var activity = context as SetUpMyPlaceListActivity
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
-
-
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
-                saveUserInfo()
-
-                context.startActivity(Intent(context,MainActivity::class.java))
-                var activity = context as SetUpMyPlaceListActivity
+                when(activity.intent.getStringExtra("Community")){
+                    "Community"->{
+                        saveUserInfo()
+                        context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
+                    }
+                    else->{
+                        saveUserInfo()
+                        context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))
+                    }
+                }
                 activity.setResult(android.app.Activity.RESULT_OK)
                 activity.finish()
+
             }
         }
     }
-
-
 
 
 
@@ -92,6 +101,6 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("nickname",G.nickName)
         user.put("profile",G.profile.toString())
 
-        userRef.document(G.userAccount?.id!!).set(user)
+        userRef.document(G.userAccount?.id!!).update("location",G.location)
     }
 }

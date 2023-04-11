@@ -64,7 +64,6 @@ class SellingEditActivity : AppCompatActivity() {
         }
 
         items = mutableListOf()
-        Log.i("Hello2","${items.size}")
         binding.recycler.adapter = PictureAdapter(this, items)
 
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -74,13 +73,9 @@ class SellingEditActivity : AppCompatActivity() {
 
             flag = it.get("profile").toString()
 
-
             return@addOnSuccessListener
         }
     }
-
-
-
 
 
     /*
@@ -98,8 +93,6 @@ class SellingEditActivity : AppCompatActivity() {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-                Log.i("picture123",clipData.getItemAt(0).toString())
-                Log.i("picture123",clipData.getItemAt(0).uri.toString())
                 for(i in 0 until size){
                     Log.i("Hello2","$i")
                     items.add(PictureItem(clipData.getItemAt(i).uri))
@@ -120,7 +113,6 @@ class SellingEditActivity : AppCompatActivity() {
     private fun clickCategory() {
         AlertDialog.Builder(this).setTitle("카테고리 선택").setItems(resources.getStringArray(R.array.category_item),
             DialogInterface.OnClickListener { dialog, which ->
-                Log.i("dialogClicked","$dialog $which")
                 binding.tvCategory.text = resources.getStringArray(R.array.category_item)[which]
                 binding.tvCategory.setTextColor(resources.getColor(R.color.black,theme))
             }).create().show()
@@ -145,13 +137,9 @@ class SellingEditActivity : AppCompatActivity() {
     ) {
         when(it.resultCode){
             RESULT_OK->{
-                Log.i("cha1","${it.data?.getStringExtra("position")}")
-                
                 latitude = it.data?.getStringExtra("latitude")!!
                 longitude = it.data?.getStringExtra("longitude")!!
-
                 binding.tvPositionName.text = it.data?.getStringExtra("position")
-
             }
         }
     }
@@ -180,35 +168,6 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
 
-
-//        val firebaseStorage = FirebaseStorage.getInstance()
-//
-//        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
-//        val rootRef = firebaseStorage.reference
-//
-//        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
-//        val imgRef = rootRef.child( "IMG_" + G.userAccount.id + ".jpg")
-//        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
-//        if (imgRef != null) {
-//            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-//            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-//
-//                override fun onSuccess(p0: Uri?) {
-//                    Log.i("test1231","${p0}")
-//                    //val file: File = File(p0?.toFile())
-//                    Log.i("test1231","${file}")
-//                    val body = file.asRequestBody("image/*".toMediaTypeOrNull())
-//                    Log.i("test1231","${imgRef.downloadUrl.result}")
-//                    var fileProfilePart = MultipartBody.Part.createFormData("profile", file.name, body)
-//
-//
-//
-//                }
-//            }).addOnFailureListener {
-//                Log.i("test12344",it.toString())
-//            }
-//        }
-
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){
@@ -227,13 +186,10 @@ class SellingEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
         call.enqueue(object : Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.i("test2",call.toString())
-                Log.i("phpLog",response.body().toString())
                 finish()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.i("phpLog",t.message.toString())
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
             }
         })

@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     val binding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     lateinit var popupMenu:PopupMenu
 
+
     private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
     private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
     private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
@@ -54,37 +55,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        //Toast.makeText(this, "${G.nickName}  : ${G.location}", Toast.LENGTH_SHORT).show()
         HomeFragment()
         CommunityFragment()
         AuctionFragment()
         ChatFragment()
 
         // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
-        popupMenu = PopupMenu(this,binding.btnSelectTown)
-        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,G.location)
-        popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
-        binding.btnSelectTown.text = popupMenu
-            .menu
-            .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
+        setUpPopUpMenu()
 
-        /*
-        *       BottomNavigationView 선택
-        * */
+        // 프래그먼트 초기값 설정
+        setUpFragment()
 
-        var tran:FragmentTransaction = supportFragmentManager
-            .beginTransaction()
-            .add(R.id.container_fragment,HomeFragment().apply {
-
-                arguments = Bundle().apply {
-                    putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                }
-            })
-
-        tran.commit()
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
-
-            tran = supportFragmentManager.beginTransaction()
+            var tran = supportFragmentManager.beginTransaction()
             changeFragment(it,tran)
             return@OnItemSelectedListener true
         })
@@ -93,8 +76,45 @@ class MainActivity : AppCompatActivity() {
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
-
     }
+
+
+    /*
+    *
+    *       초기 Fragment 설정
+    *
+    * */
+    private fun setUpFragment(){
+        var tran = supportFragmentManager
+        if(intent.getStringExtra("Community") == "Community"){
+            tran.beginTransaction().replace(R.id.container_fragment,CommunityFragment()).commit()
+            binding.appbar.visibility = View.GONE
+            binding.bnv.selectedItemId = R.id.community_tab
+            return
+        }
+        tran.beginTransaction()
+            .add(R.id.container_fragment,HomeFragment().apply {
+                arguments = Bundle().apply {
+                    putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
+                }
+            }).commit()
+    }
+
+
+    /*
+    *
+    *       팝업메뉴 설정
+    *
+    * */
+    private fun setUpPopUpMenu(){
+        popupMenu = PopupMenu(this,binding.btnSelectTown)
+        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,G.location)
+        popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
+        binding.btnSelectTown.text = popupMenu
+            .menu
+            .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
+    }
+
 
     /*
     *
@@ -105,6 +125,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, SelectCategoryActivity::class.java))
 
     }
+
 
     /*
     *
@@ -158,12 +179,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    /*
+    *
+    *       동네 설정
+    *
+    * */
     private fun clickMyPlace(){
-
-
-
         menuInflater.inflate(R.menu.popupmenu,popupMenu.menu)
-
         popupMenu.show()
 
         // 각 popupMenu 의 동네 이름 string 값이 아니고, id 값을 기준으로 분기문이 실행된다.
@@ -192,25 +214,6 @@ class MainActivity : AppCompatActivity() {
                     tran.commit()
                 }
 
-                POPUP_MENU_MY_SECOND_PLACE_ITEM_ID -> {
-                    // G 클래스에 내 동네 데이터 넣는 코드 작성
-                    binding.btnSelectTown.text = popupMenu
-                        .menu
-                        .getItem(POPUP_MENU_MY_SECOND_PLACE_ITEM_ID).toString()
-                    var tran: FragmentTransaction = supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.container_fragment, HomeFragment().apply {
-
-                            arguments = Bundle().apply {
-                                putString(
-                                    "place",
-                                    this@MainActivity.binding.btnSelectTown.text.toString()
-                                )
-                            }
-                        })
-                    tran.commit()
-                }
-
                 POPUP_MENU_SET_PLACE_ITEM_ID -> {
                     var intent = Intent(this, SetUpMyPlaceListActivity::class.java)
                     placeLauncher.launch(intent)
@@ -220,6 +223,8 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
+
     /*
     *
     *       SetUpMyPlaceListActivity Launcher : 새로운 동네 설정 시, MainActivity 종료
@@ -230,6 +235,8 @@ class MainActivity : AppCompatActivity() {
             RESULT_OK->finish()
         }
     }
+
+
     /*
     *
     *       Set NavigationDrawer
@@ -275,6 +282,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     /*
     *
     *       프로필 변경 런처
@@ -294,6 +302,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     /*
     *       프래그먼트 전환 함수

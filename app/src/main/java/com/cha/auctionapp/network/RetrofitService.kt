@@ -1,5 +1,6 @@
 package com.cha.auctionapp.network
 
+import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
 import com.cha.auctionapp.model.MainItem
@@ -26,23 +27,24 @@ interface RetrofitService {
 
 
     // 서버로 데이터 전송
-//    @Multipart
-//    @POST("Server/insertDBForHomeFragment.php")
-//    fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>, @Part profile: MultipartBody.Part) : Call<String>
 
     @Multipart
     @POST("Server/insertDBForHomeFragment.php")
     fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
+
+    @Multipart
+    @POST("Server/insertDBForCommunityFragment.php")
+    fun postDataToServerForCommunityFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
 
     // 서버에서 데이터 받아오기
 
     @GET("Server/loadDBForHomeFragment.php")
     fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<MutableList<MainItem>>
 
-//    @GET("Server/loadDBForHomeFragment.php")
-//    fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<String>
-
     @GET("Server/loadDBForHomeDetail.php")
     fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
+
+    @GET("Server/loadDBForCommunityFragment.php")
+    fun postDataFromServerForCommunityFragment(@Query("location") query: String) : Call<MutableList<CommunityPostItem>>
 
 }
