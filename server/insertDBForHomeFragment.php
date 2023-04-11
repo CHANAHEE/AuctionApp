@@ -8,6 +8,7 @@
     $tradingplace=   $_POST['tradingplace'];
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
+    $profile=   $_POST['profile'];
 
 
     // $file=      $_FILES['profile'];
@@ -60,7 +61,7 @@
     mysqli_query($db,"set names utf8");
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
-    $sql = "INSERT INTO post_product(title,category,price,description,tradingplace,nickname,location,profile,now,image) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$dstName','$now','$arrayString' )";
+    $sql = "INSERT INTO post_product(title,category,price,description,tradingplace,nickname,location,profile,now,image) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$profile','$now','$arrayString' )";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

@@ -37,6 +37,10 @@ interface RetrofitService {
     @POST("Server/insertDBForCommunityFragment.php")
     fun postDataToServerForCommunityFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
 
+    @Multipart
+    @POST("Server/insertDBForCommunityFragmentComments.php")
+    fun postDataToServerForCommunityDetailComments(@PartMap dataPart: HashMap<String,String>) : Call<String>
+
     // 서버에서 데이터 받아오기
 
     @GET("Server/loadDBForHomeFragment.php")

@@ -1,14 +1,20 @@
 package com.cha.auctionapp.adapters
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.G
+import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.RecyclerCommentsItemBinding
 import com.cha.auctionapp.model.CommentsItem
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.FirebaseStorage
 
 class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>) : Adapter<CommentsAdapter.VH>(){
 
@@ -28,6 +34,23 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
             holder.binding.relativeLocation.visibility = View.VISIBLE
             holder.binding.tvLocationName.text = item.location
         }
-        Glide.with(context).load(item.image).into(holder.binding.civOtherProfile)
+
+    }
+
+
+    private fun loadProfileFromFirestore(holder: VH){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+
+        val imgRef = rootRef.child( "IMG_" + G.userAccount.id + ".jpg")
+        if (imgRef != null) {
+            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
+                override fun onSuccess(p0: Uri?) {
+                    Glide.with(context).load(p0).error(R.drawable.default_profile).into(holder.binding.civOtherProfile)
+                }
+            }).addOnFailureListener {
+                Log.i("test12344",it.toString())
+            }
+        }
     }
 }

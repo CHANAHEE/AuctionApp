@@ -62,7 +62,6 @@ data class CommunityDetailItem(
 )
 
 data class CommentsItem(
-    var image: Int,
     var id: String,
     var town: String,
     var description: String,

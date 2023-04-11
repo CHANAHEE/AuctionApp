@@ -26,15 +26,21 @@ import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class CommunityDetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCommunityDetailBinding
     lateinit var items: MutableList<CommunityDetailItem>
+    lateinit var commentsItem: MutableList<CommentsItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +52,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
 
-        //binding.recycler2.adapter = CommentsAdapter(this,items)
+        binding.recycler2.adapter = CommentsAdapter(this,commentsItem)
 
 
         loadDataFromServer()
@@ -121,7 +127,31 @@ class CommunityDetailActivity : AppCompatActivity() {
     *
     * */
     private fun clickSendBtn() {
+        // 보낼 일반 String 데이터
+        var description = binding.etMsg.text.toString()
+        var placeInfo = binding.tvLocationNameCommunityDetailComments.text.toString()
 
+        var dataPart: HashMap<String,String> = hashMapOf()
+        dataPart.put("description",description)
+        dataPart.put("placeinfo",placeInfo)
+        dataPart.put("nickname",G.nickName)
+        dataPart.put("location",G.location)
+
+        /*
+        *       Retrofit 작업 시작
+        * */
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<String> = retrofitService.postDataToServerForCommunityDetailComments(dataPart)
+        call.enqueue(object : Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                finish()
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT)
+            }
+        })
         //items.add(CommentsItem(R.drawable._0,"1번","공릉 1동",binding.etMsg.text.toString(),"미래IT"))
 //        items.add(CommentsItem(R.drawable._1,"2번","공릉 2동","안녕하세요",null))
 //        items.add(CommentsItem(R.drawable._2,"3번","공릉 1동","안녕하세요",null))
@@ -137,8 +167,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.etMsg.windowToken,0)
         binding.etMsg.setText("")
         binding.etMsg.clearFocus()
-
-
     }
 
     /*

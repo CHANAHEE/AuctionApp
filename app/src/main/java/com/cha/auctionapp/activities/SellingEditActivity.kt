@@ -167,6 +167,7 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
+        dataPart.put("profile",G.userAccount.id)
 
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()

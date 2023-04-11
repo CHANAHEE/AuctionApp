@@ -70,7 +70,14 @@ class HomeDetailActivity : AppCompatActivity() {
                 Log.i("test143",response.body().toString())
                 items = mutableListOf()
                 items = response.body()!!
-                loadProfileFromFirestore()
+                Log.i("test010101", items[0].profile)
+                if(items[0].profile != G.userAccount.id){
+                    loadProfileFromFirestore(items[0].profile)
+                }
+                else{
+                    loadProfileFromFirestore(G.userAccount.id)
+                }
+
                 binding.tvId.text = items[0].nickname
                 binding.tvTownInfo.text = items[0].location
                 binding.tvItemName.text = items[0].title
@@ -89,7 +96,7 @@ class HomeDetailActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<MutableList<HomeDetailItem>>, t: Throwable) {
-                Log.i("test01","${t.message}")
+                Log.i("test010101", items[0].profile + "fail")
             }
         })
     }
@@ -99,14 +106,16 @@ class HomeDetailActivity : AppCompatActivity() {
     *       프로필 사진 받아오기
     *
     * */
-    private fun loadProfileFromFirestore(){
+    private fun loadProfileFromFirestore(profile: String){
+        Log.i("test010101", "$profile  hhh")
         val firebaseStorage = FirebaseStorage.getInstance()
 
         // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
         val rootRef = firebaseStorage.reference
 
         // 읽어오길 원하는 파일의 참조객체를 얻어오자.
-        val imgRef = rootRef.child( "IMG_" + G.userAccount.id + ".jpg")
+        val imgRef = rootRef.child("IMG_$profile.jpg")
+        Log.i("test010101", "IMG_$profile.jpg")
         Log.i("test12344","${imgRef} : ${G.userAccount.id}")
         if (imgRef != null) {
             // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
