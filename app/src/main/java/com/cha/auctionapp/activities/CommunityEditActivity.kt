@@ -66,7 +66,7 @@ class CommunityEditActivity : AppCompatActivity() {
         dataPart.put("placeinfo",placeInfo)
         dataPart.put("nickname", G.nickName)
         dataPart.put("location",G.location)
-
+        dataPart.put("profile",G.userAccount.id)
 
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){
@@ -151,8 +151,11 @@ class CommunityEditActivity : AppCompatActivity() {
         when(it.resultCode){
             RESULT_OK->{
                 binding.relativeLocation.visibility = View.VISIBLE
-                binding.btnCancelCommunityEdit.setOnClickListener { binding.relativeLocation.visibility = View.GONE }
                 binding.tvLocationNameCommunityEdit.text = it.data?.getStringExtra("position")
+                binding.btnCancelCommunityEdit.setOnClickListener {
+                    binding.relativeLocation.visibility = View.GONE
+                    binding.tvLocationNameCommunityEdit.text = ""
+                }
             }
         }
     }

@@ -14,6 +14,8 @@ import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.RecyclerCommentsItemBinding
 import com.cha.auctionapp.model.CommentsItem
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
 class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>) : Adapter<CommentsAdapter.VH>(){
@@ -28,21 +30,32 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
 
         var item = items[position]
         holder.binding.tvCommentsDetail.text = item.description
-        holder.binding.tvOtherId.text = item.id
-        holder.binding.tvOtherTownName.text = item.town
-        if(item.location != null){
+        holder.binding.tvOtherId.text = item.nickname
+        holder.binding.tvOtherTownName.text = item.location
+        Log.i("iiiiddd",item.placeinfo ?: "dddafasf")
+        if(item.placeinfo != ""){
             holder.binding.relativeLocation.visibility = View.VISIBLE
-            holder.binding.tvLocationName.text = item.location
+            holder.binding.tvLocationName.text = item.placeinfo
         }
 
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
+
+        Log.i("iiii",item.profile)
+        userRef.document(item.profile).get().addOnSuccessListener {
+            holder.binding.tvOtherId.text = it.get("nickname").toString()
+            return@addOnSuccessListener
+        }
+
+        loadProfileFromFirestore(holder,item)
     }
 
 
-    private fun loadProfileFromFirestore(holder: VH){
+    private fun loadProfileFromFirestore(holder: VH, item: CommentsItem){
         val firebaseStorage = FirebaseStorage.getInstance()
         val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child( "IMG_" + G.userAccount.id + ".jpg")
+        val imgRef = rootRef.child( "IMG_" + item.profile + ".jpg")
         if (imgRef != null) {
             imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
                 override fun onSuccess(p0: Uri?) {

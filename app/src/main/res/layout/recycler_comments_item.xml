@@ -21,7 +21,7 @@
         android:layout_marginLeft="20dp"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:text="ID"/>
 
     <TextView
@@ -40,7 +40,7 @@
         android:layout_alignLeft="@id/relative_location"
         android:layout_below="@id/tv_other_town_name"
         android:layout_marginTop="10dp"
-        android:textSize="10sp"
+        android:textSize="13sp"
         android:text="댓글 내용"/>
 
     <RelativeLayout
@@ -50,8 +50,8 @@
         android:layout_below="@id/tv_comments_detail"
         android:background="@drawable/bg_location_select"
         android:layout_marginTop="10dp"
-        android:padding="4dp"
-        android:visibility="visible">
+        android:padding="8dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_location"
@@ -65,17 +65,12 @@
             android:id="@+id/tv_location_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 이름"
             android:layout_toRightOf="@id/iv_location"
             android:textSize="12sp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/ic_action_close"
-            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

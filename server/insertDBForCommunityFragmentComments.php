@@ -1,20 +1,22 @@
 <?php
     header('Content-Type:text/plain; charset=utf-8');
 
+    $postindex=     $_POST['idx'];
     $description=     $_POST['description'];
     $placeinfo=   $_POST['placeinfo'];
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
-
-    $title = addslashes($title); 
+    $profile=   $_POST['profile'];
+    
     $description = addslashes($description);
 
     $now = date('Y-m-d H:i:s');
 
     $db = mysqli_connect('localhost','tjdrjs0803','dkssud109!','tjdrjs0803');
-    mysqli_query($db,"set names utf8");
+    
+    $result = mysqli_query($db,"set names utf8");
 
-    $sql = "INSERT INTO post_community_comments(description,placeinfo,nickname,location,now) VALUES ( '$description' , '$placeinfo' , '$nickname' , '$location' , '$now' )";
+    $sql = "INSERT INTO post_community_comments(description,placeinfo,nickname,location,post_index,profile,now) VALUES ( '$description' , '$placeinfo' , '$nickname' , '$location' , '$postindex' , '$profile' , '$now' )";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

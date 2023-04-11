@@ -51,9 +51,10 @@ data class CommunityPostItem(
 )
 
 data class CommunityDetailItem(
+    var idx: String,
     var title: String,
     var description: String,
-    var placeinfo: String,
+    var placeinfo: String?,
     var image: String,
 
     var nickname: String,
@@ -62,10 +63,11 @@ data class CommunityDetailItem(
 )
 
 data class CommentsItem(
-    var id: String,
-    var town: String,
     var description: String,
-    var location: String?
+    var placeinfo: String,
+    var nickname: String,
+    var location: String,
+    var profile: String
 )
 
 data class PictureCommunityDetailItem(var path: String)

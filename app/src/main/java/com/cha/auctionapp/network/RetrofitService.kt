@@ -1,5 +1,6 @@
 package com.cha.auctionapp.network
 
+import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
@@ -54,4 +55,7 @@ interface RetrofitService {
 
     @GET("Server/loadDBForCommunityDetail.php")
     fun getDataFromServerForCommunityDetail(@Query("index") query: String) : Call<MutableList<CommunityDetailItem>>
+
+    @GET("Server/loadDBForCommunityDetailComments.php")
+    fun getDataFromServerForCommunityDetailComments(@Query("index") query: String) : Call<MutableList<CommentsItem>>
 }
