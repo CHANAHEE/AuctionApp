@@ -45,6 +45,9 @@ class MyProfileEditActivity : AppCompatActivity() {
         binding.civProfile.setOnClickListener { clickProfileImage() }
 
         binding.civProfile.tag = DEFAULT_PROFILE
+
+        loadProfileFromFirestore(G.userAccount.id)
+        binding.etNickname.setText(G.nickName)
     }
 
     val DEFAULT_PROFILE = 0
@@ -85,10 +88,32 @@ class MyProfileEditActivity : AppCompatActivity() {
     }
     /*
     *
-    *
+    *       기본 프로필 설정
     *
     * */
+    private fun loadProfileFromFirestore(profile: String){
+        Log.i("test010101", "$profile  hhh")
+        val firebaseStorage = FirebaseStorage.getInstance()
 
+        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
+        val rootRef = firebaseStorage.reference
+
+        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
+        val imgRef = rootRef.child("IMG_$profile.jpg")
+        Log.i("test010101", "IMG_$profile.jpg")
+        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
+        if (imgRef != null) {
+            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
+            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
+
+                override fun onSuccess(p0: Uri?) {
+                    Glide.with(this@MyProfileEditActivity).load(p0).error(R.drawable.default_profile).into(binding.civProfile)
+                }
+            }).addOnFailureListener {
+                Log.i("test12344",it.toString())
+            }
+        }
+    }
     /*
     *
     *       Uri -> File 변환
