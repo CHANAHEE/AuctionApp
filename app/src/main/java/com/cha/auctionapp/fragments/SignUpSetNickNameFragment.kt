@@ -122,7 +122,7 @@ class SignUpSetNickNameFragment : Fragment() {
         var list = location.split(" ")
         G.location = list[list.lastIndex - 1]
 
-        G.profile = getURLForResource(R.drawable.default_profile)
+        //G.profile = "null"
     }
 
     val watcher: TextWatcher = object : TextWatcher{

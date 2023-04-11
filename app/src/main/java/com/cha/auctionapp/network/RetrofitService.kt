@@ -1,8 +1,7 @@
 package com.cha.auctionapp.network
 
-import android.net.Uri
+import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
-import com.cha.auctionapp.model.LoadMainProductItem
 import com.cha.auctionapp.model.MainItem
 import com.cha.auctionapp.model.NidUserInfoResponse
 import okhttp3.MultipartBody
@@ -27,13 +26,23 @@ interface RetrofitService {
 
 
     // 서버로 데이터 전송
+//    @Multipart
+//    @POST("Server/insertDBForHomeFragment.php")
+//    fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>, @Part profile: MultipartBody.Part) : Call<String>
+
     @Multipart
-    @POST("Server/insertDB.php")
-    fun postDataToServer(@PartMap dataPart: HashMap<String,String> , @Part image: MutableList<MultipartBody.Part>) : Call<String>
+    @POST("Server/insertDBForHomeFragment.php")
+    fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
 
     // 서버에서 데이터 받아오기
 
-    @GET("Server/loadDB.php")
-    fun getDataFromServer(@Query("location") query: String) : Call<MutableList<MainItem>>
+    @GET("Server/loadDBForHomeFragment.php")
+    fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<MutableList<MainItem>>
+
+//    @GET("Server/loadDBForHomeFragment.php")
+//    fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<String>
+
+    @GET("Server/loadDBForHomeDetail.php")
+    fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
 
 }

@@ -2,9 +2,12 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cha.auctionapp.G
@@ -16,8 +19,14 @@ import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
@@ -55,6 +64,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
             holder.binding.root.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
 
+
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
                 saveUserInfo()
@@ -65,14 +75,17 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 activity.finish()
             }
         }
-
     }
+
+
+
+
 
     private fun saveUserInfo(){
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
-        var user: MutableMap<String,String> = mutableMapOf<String,String>()
+        var user: MutableMap<String,Any> = mutableMapOf<String,Any>()
         user.put("id",G.userAccount.id)
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)

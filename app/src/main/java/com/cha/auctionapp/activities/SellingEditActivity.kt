@@ -1,25 +1,23 @@
 package com.cha.auctionapp.activities
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toFile
-import androidx.loader.content.CursorLoader
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -27,24 +25,25 @@ import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.MediaType
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
-import retrofit2.http.Multipart
 import java.io.File
+
 
 class SellingEditActivity : AppCompatActivity() {
 
     lateinit var binding:ActivitySellingEditBinding
     lateinit var items: MutableList<PictureItem>
-
+    lateinit var flag: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySellingEditBinding.inflate(layoutInflater)
@@ -67,6 +66,17 @@ class SellingEditActivity : AppCompatActivity() {
         items = mutableListOf()
         Log.i("Hello2","${items.size}")
         binding.recycler.adapter = PictureAdapter(this, items)
+
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
+
+        userRef.document(G.userAccount.id).get().addOnSuccessListener {
+
+            flag = it.get("profile").toString()
+
+
+            return@addOnSuccessListener
+        }
     }
 
 
@@ -88,7 +98,8 @@ class SellingEditActivity : AppCompatActivity() {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-
+                Log.i("picture123",clipData.getItemAt(0).toString())
+                Log.i("picture123",clipData.getItemAt(0).uri.toString())
                 for(i in 0 until size){
                     Log.i("Hello2","$i")
                     items.add(PictureItem(clipData.getItemAt(i).uri))
@@ -168,16 +179,43 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
-        dataPart.put("profile",G.profile.toString())
+
+
+//        val firebaseStorage = FirebaseStorage.getInstance()
+//
+//        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
+//        val rootRef = firebaseStorage.reference
+//
+//        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
+//        val imgRef = rootRef.child( "IMG_" + G.userAccount.id + ".jpg")
+//        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
+//        if (imgRef != null) {
+//            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
+//            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
+//
+//                override fun onSuccess(p0: Uri?) {
+//                    Log.i("test1231","${p0}")
+//                    //val file: File = File(p0?.toFile())
+//                    Log.i("test1231","${file}")
+//                    val body = file.asRequestBody("image/*".toMediaTypeOrNull())
+//                    Log.i("test1231","${imgRef.downloadUrl.result}")
+//                    var fileProfilePart = MultipartBody.Part.createFormData("profile", file.name, body)
+//
+//
+//
+//                }
+//            }).addOnFailureListener {
+//                Log.i("test12344",it.toString())
+//            }
+//        }
 
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){
-            var imagePath = getFilePathFromUri(items[i].uri)
+            var imagePath = getRealPathFromUri(items[i].uri)
             val file: File = File(imagePath)
             val body = file.asRequestBody("image/*".toMediaTypeOrNull())
             fileImagePart.add(i,MultipartBody.Part.createFormData("image${i}",file.name,body))
-            Log.i("test0", fileImagePart.toString())
         }
 
 
@@ -186,9 +224,7 @@ class SellingEditActivity : AppCompatActivity() {
         * */
         var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         var retrofitService = retrofit.create(RetrofitService::class.java)
-        //var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart,fileProfilePart)
-        var call: Call<String> = retrofitService.postDataToServer(dataPart,fileImagePart)
-        Log.i("test2",call.toString())
+        var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
         call.enqueue(object : Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.i("test2",call.toString())
@@ -197,6 +233,7 @@ class SellingEditActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.i("phpLog",t.message.toString())
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
             }
         })
@@ -207,22 +244,14 @@ class SellingEditActivity : AppCompatActivity() {
     *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
     *
     * */
-    fun getFilePathFromUri(uri: Uri?): String? {
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        Log.i("dataPath",MediaStore.Images.Media.DATA)
-        Log.i("dataPath",proj.toString())
-        val loader = CursorLoader(
-            this,
-            uri!!, proj, null, null, null
-        )
-        val cursor = loader.loadInBackground()
-        Log.i("dataPath",cursor.toString())
-
-        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        val result = cursor.getString(column_index)
-        cursor.close()
-        return result
+    fun getRealPathFromUri(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            return cursor.getString(columnIndex)
+        }
+        return null
     }
 
     /*

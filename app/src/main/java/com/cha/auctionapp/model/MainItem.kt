@@ -2,7 +2,7 @@ package com.cha.auctionapp.model
 
 import android.net.Uri
 
-data class MainItem(var title:String, var image:String, var location:String, var price:String)
+data class MainItem(var idx: Int, var title:String, var image:String, var location:String, var price:String)
 
 data class CategoryItem(var cgIcon:Int, var cgName:String)
 
@@ -10,7 +10,7 @@ data class CategorySelectItem(var cgName:String)
 
 data class CommunityPostItem(var image:Int , var title:String,var contents:String,var location: String,var fav:Int,var comments:Int)
 
-data class PagerItem(var image:Int)
+data class PagerItem(var image: Uri)
 
 data class PictureItem(var uri:Uri)
 
@@ -19,3 +19,15 @@ data class CommentsItem(var image: Int, var id: String, var town: String, var de
 data class AuctionPagerItem(var video: Uri, var image: Int, var id: String, var description: String)
 
 data class MessageItem(var image: Int, var id: String, var message: String, var time: String)
+
+data class HomeDetailItem(
+    var title: String,
+    var category: String,
+    var price: String,
+    var description: String,
+    var tradingplace: String,
+    var nickname: String,
+    var location: String,
+    var profile: String,
+    var image: String
+)

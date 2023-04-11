@@ -249,7 +249,8 @@ class MainActivity : AppCompatActivity() {
         binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_email).text = G.userAccount?.email ?: "no email"
         binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
         val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
-        Glide.with(this).load(G.profile).into(profile)
+        Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(profile)
+
 
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){

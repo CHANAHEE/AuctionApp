@@ -35,9 +35,9 @@ class AuctionDetailActivity : AppCompatActivity() {
         binding.btnBid.setOnClickListener { clickBidBtn() }
 
         items = mutableListOf()
-        items.add(PagerItem(R.drawable._0))
-        items.add(PagerItem(R.drawable._1))
-        items.add(PagerItem(R.drawable._2))
+//        items.add(PagerItem(R.drawable._0))
+//        items.add(PagerItem(R.drawable._1))
+//        items.add(PagerItem(R.drawable._2))
 
         binding.pager.adapter = PagerAdapter(this,items)
         binding.dotsIndicator.attachTo(binding.pager)

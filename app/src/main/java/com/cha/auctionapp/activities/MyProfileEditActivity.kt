@@ -12,14 +12,20 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.loader.content.CursorLoader
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMyProfileEditBinding
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class MyProfileEditActivity : AppCompatActivity() {
@@ -58,12 +64,49 @@ class MyProfileEditActivity : AppCompatActivity() {
     var pickLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
     ) {
         if(it.resultCode == RESULT_OK) {
-            Glide.with(this).load(it.data?.data).into(binding.civProfile)
+            Glide.with(this).load(getFilePathFromUri(it.data?.data!!)!!).into(binding.civProfile)
             G.profile = it.data?.data!!
             binding.civProfile.tag = CHANGED_PROFILE
+
+            val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+            val fileName = "IMG_" + G.userAccount.id + ".jpg"
+            val imgRef: StorageReference =
+                firebaseStorage.getReference("$fileName")
+
+            imgRef.putFile(it.data?.data!!).addOnSuccessListener(OnSuccessListener<Any?> {
+
+            })
+                .addOnFailureListener(
+                    OnFailureListener {
+                        Log.i("test1212",it.toString())
+
+                    })
         }
     }
+    /*
+    *
+    *
+    *
+    * */
 
+    /*
+    *
+    *       Uri -> File 변환
+    *
+    * */
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
+    }
 
     /*
     *
