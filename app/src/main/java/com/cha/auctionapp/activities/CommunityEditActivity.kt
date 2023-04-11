@@ -113,7 +113,7 @@ class CommunityEditActivity : AppCompatActivity() {
     private fun clickPicture() {
         binding.etTitle.clearFocus()
         binding.etDecription.clearFocus()
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,5-items.size)
         launcher.launch(intent)
     }
 

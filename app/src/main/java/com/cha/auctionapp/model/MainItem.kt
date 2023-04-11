@@ -68,3 +68,5 @@ data class CommentsItem(
     var description: String,
     var location: String?
 )
+
+data class PictureCommunityDetailItem(var path: String)

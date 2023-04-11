@@ -17,24 +17,17 @@ class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerPictureItemBinding.inflate(LayoutInflater.from(context),parent,false))
 
-    override fun getItemCount(): Int {
-        Log.i("Hello","${items.size}")
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        Log.i("Hello","onBindViewHolder")
         Glide.with(context).load(items[position].uri).into(holder.binding.ivPicture)
         holder.binding.btnCancel.setOnClickListener {
 
             items.removeAt(position)
-            Log.i("removePicture","${position} removePicture")
-
             if(context is SellingEditActivity){
                 (context as SellingEditActivity).binding.btnImage.text = "${items.size} / 10"
             }
             this.notifyDataSetChanged()
-
         }
     }
 }

@@ -47,14 +47,9 @@ class HomeDetailActivity : AppCompatActivity() {
         //binding.pager.adapter = PagerAdapter(this,items)
         loadDataFromServer()
 
-        // status bar 투명으로 만들기
-        /*
-        *       theme.xml , manifest 파일
-        * */
+        // status bar 투명으로 만들기 : theme.xml , manifest 파일
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         else window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-
-
     }
 
     /*
@@ -99,6 +94,11 @@ class HomeDetailActivity : AppCompatActivity() {
         })
     }
 
+    /*
+    *
+    *       프로필 사진 받아오기
+    *
+    * */
     private fun loadProfileFromFirestore(){
         val firebaseStorage = FirebaseStorage.getInstance()
 
@@ -120,28 +120,21 @@ class HomeDetailActivity : AppCompatActivity() {
             }
         }
     }
+
+    /*
+    *
+    *       채팅하기 버튼 이벤트
+    *
+    * */
     private fun clickChatBtn() {
         startActivity(Intent(this, ChattingActivity::class.java))
     }
 
+    /*
+    *
+    *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
+    *
+    * */
     private fun clickFavoriteBtn() { binding.ibFav.isSelected = !binding.ibFav.isSelected }
 
-
-    fun getFilePathFromUri(uri: Uri?): String? {
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        Log.i("dataPath", MediaStore.Images.Media.DATA)
-        Log.i("dataPath",proj.toString())
-        val loader = CursorLoader(
-            this,
-            uri!!, proj, null, null, null
-        )
-        val cursor = loader.loadInBackground()
-        Log.i("dataPath",cursor.toString())
-
-        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        val result = cursor.getString(column_index)
-        cursor.close()
-        return result
-    }
 }

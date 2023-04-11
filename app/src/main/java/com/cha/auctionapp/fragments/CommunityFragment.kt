@@ -68,7 +68,7 @@ class CommunityFragment : Fragment() {
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        val call: Call<MutableList<CommunityPostItem>> = retrofitService.postDataFromServerForCommunityFragment(G.location)
+        val call: Call<MutableList<CommunityPostItem>> = retrofitService.getDataFromServerForCommunityFragment(G.location)
         call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
             override fun onResponse(
                 call: Call<MutableList<CommunityPostItem>>,

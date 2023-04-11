@@ -1,5 +1,6 @@
 package com.cha.auctionapp.network
 
+import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
@@ -45,6 +46,8 @@ interface RetrofitService {
     fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
 
     @GET("Server/loadDBForCommunityFragment.php")
-    fun postDataFromServerForCommunityFragment(@Query("location") query: String) : Call<MutableList<CommunityPostItem>>
+    fun getDataFromServerForCommunityFragment(@Query("location") query: String) : Call<MutableList<CommunityPostItem>>
 
+    @GET("Server/loadDBForCommunityDetail.php")
+    fun getDataFromServerForCommunityDetail(@Query("index") query: String) : Call<MutableList<CommunityDetailItem>>
 }
