@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuctionVideoActivity">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- 29_ 이제 캡처버튼을 만들자 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
+    <!-- 37_ 찍은 사진의 경로를 찍어주자 -->
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="image uri"
+        android:textSize="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="16dp"
+        android:padding="16dp"
+        android:textStyle="bold"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignBaseline="@id/fab"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="16dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/white"/>
+</RelativeLayout>

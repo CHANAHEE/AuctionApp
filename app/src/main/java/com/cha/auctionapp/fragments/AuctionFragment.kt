@@ -1,15 +1,19 @@
 package com.cha.auctionapp.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -59,7 +63,6 @@ class AuctionFragment : Fragment() {
         items = mutableListOf()
         items.add(AuctionPagerItem(videoUri,R.drawable._0,"HELLO","안녕"))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
-        (activity as MainActivity).binding.bnv.backgroundTintList
     }
 
     override fun onResume() {
