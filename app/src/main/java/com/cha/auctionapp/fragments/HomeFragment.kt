@@ -26,7 +26,6 @@ class HomeFragment : Fragment() {
     lateinit var binding : FragmentHomeBinding
     lateinit var mainItem: MutableList<MainItem>
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,11 +37,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainItem = mutableListOf()
-        loadData()
+        binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
+
         binding.fabEdit.setOnClickListener { startActivity(Intent(context,SellingEditActivity::class.java)) }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
 
     private fun loadData() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")

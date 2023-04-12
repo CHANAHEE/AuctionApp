@@ -21,6 +21,8 @@ import com.cha.auctionapp.model.PagerItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -70,23 +72,40 @@ class HomeDetailActivity : AppCompatActivity() {
                 Log.i("test143",response.body().toString())
                 items = mutableListOf()
                 items = response.body()!!
-                Log.i("test010101", items[0].profile)
-                if(items[0].profile != G.userAccount.id){
-                    loadProfileFromFirestore(items[0].profile)
-                }
-                else{
-                    loadProfileFromFirestore(G.userAccount.id)
+                var item = items[0]
+
+//                if(item.profile != G.userAccount.id){
+//                    loadProfileFromFirestore(item.profile)
+//                }
+//                else{
+//                    loadProfileFromFirestore(G.userAccount.id)
+//                }
+                loadProfileFromFirestore(item.profile)
+                //binding.tvId.text = item.nickname
+                binding.tvTownInfo.text = item.location
+                binding.tvItemName.text = item.title
+                binding.tvCategory.text = item.category
+                binding.tvDescription.text = item.description
+
+                if(item.tradingplace != ""){
+                    binding.relativeLocation.visibility = View.VISIBLE
+                    binding.tvLocationName.text = item.tradingplace
                 }
 
-                binding.tvId.text = items[0].nickname
-                binding.tvTownInfo.text = items[0].location
-                binding.tvItemName.text = items[0].title
-                binding.tvCategory.text = items[0].category
-                binding.tvDescription.text = items[0].description
-                binding.tvLocationName.text = items[0].tradingplace
-                binding.tvPrice.text = items[0].price
-                var imageListString = items[0].image.split(",")
+                binding.tvPrice.text = "${item.price} 원"
 
+
+                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                var userRef: CollectionReference = firestore.collection("user")
+
+                userRef.document(items[0].profile).get().addOnSuccessListener {
+                    binding.tvId.text = it.get("nickname").toString()
+                    return@addOnSuccessListener
+                }
+
+
+
+                var imageListString = item.image.split(",")
                 var imageListUri: MutableList<PagerItem> = mutableListOf()
                 for(i in imageListString.indices){
                     imageListUri.add(PagerItem(Uri.parse(imageListString[i])))

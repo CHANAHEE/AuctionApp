@@ -203,7 +203,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     * */
     val launcherActivity: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
-            if(it.resultCode == AppCompatActivity.RESULT_OK) finish()
+            if(it.resultCode == RESULT_OK) finish()
         })
 
 

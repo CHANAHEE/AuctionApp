@@ -50,15 +50,20 @@ class CommunityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        communityItems = mutableListOf()
+        binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
 
         binding.fab.setOnClickListener{ startActivity(Intent(context,CommunityEditActivity::class.java)) }
         binding.ibSearch.setOnClickListener { clickSearch(it) }
-        setUpPopupMenu()
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
 
-        loadDataFromServer()
+        setUpPopupMenu()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadDataFromServer()
+    }
 
     /*
     *

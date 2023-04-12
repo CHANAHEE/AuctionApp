@@ -74,21 +74,25 @@ class CommunityDetailActivity : AppCompatActivity() {
             ) {
                 items = mutableListOf()
                 items = response.body()!!
+                var item = items[0]
 
-                if(items[0].profile != G.userAccount.id){
-                    loadProfileFromFirestore(items[0].profile)
-                }
-                else{
-                    loadProfileFromFirestore(G.userAccount.id)
-                }
-                binding.tvMainTitle.text = items[0].title
-                binding.tvDescription.text = items[0].description
-                binding.tvMyTownName.text = items[0].location
-                binding.tvLocationNameCommunityDetail.text = items[0].placeinfo
-                binding.tvMyId.text = items[0].nickname
+                binding.root.tag = item.idx // 댓글 저장용 인덱스
 
-                binding.root.tag = items[0].idx
-                Log.i("dkssud",binding.root.tag.toString())
+                // 프로필 로드.
+//                if(items[0].profile != G.userAccount.id){
+//                    loadProfileFromFirestore(items[0].profile)
+//                }
+//                else{
+//                    loadProfileFromFirestore(G.userAccount.id)
+//                }
+                loadProfileFromFirestore(item.profile)
+                binding.tvMainTitle.text = item.title
+                binding.tvDescription.text = item.description
+                binding.tvMyTownName.text = item.location
+                binding.tvLocationNameCommunityDetail.text = item.placeinfo
+                //binding.tvMyId.text = item.nickname
+
+
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 

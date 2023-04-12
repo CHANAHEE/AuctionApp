@@ -139,6 +139,10 @@ class CommunityEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickLocation() {
+        if(binding.relativeLocation.visibility == View.VISIBLE){
+            Snackbar.make(binding.root,"장소는 1개만 추가가 가능합니다",Snackbar.LENGTH_SHORT).show()
+            return
+        }
         binding.etTitle.clearFocus()
         binding.etDecription.clearFocus()
         var intent = Intent(this,SelectPositionActivity::class.java)

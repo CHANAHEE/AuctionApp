@@ -10,8 +10,6 @@ data class PagerItem(var image: Uri)
 
 data class PictureItem(var uri:Uri)
 
-data class AuctionPagerItem(var video: Uri, var image: Int, var id: String, var description: String)
-
 data class MessageItem(var image: Int, var id: String, var message: String, var time: String)
 
 /*
@@ -71,3 +69,13 @@ data class CommentsItem(
 )
 
 data class PictureCommunityDetailItem(var path: String)
+
+/*
+*       경매 관련 데이터
+* */
+data class AuctionPagerItem(
+    var video: Uri?,
+    var image: Int?,
+    var nickname: String,
+    var description: String
+)

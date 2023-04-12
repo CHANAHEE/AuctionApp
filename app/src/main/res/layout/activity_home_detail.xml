@@ -156,7 +156,7 @@
                 android:layout_alignLeft="@id/tv_description"
                 android:layout_alignRight="@id/view1"
                 android:padding="12dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_location"

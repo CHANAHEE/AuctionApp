@@ -31,6 +31,8 @@
         android:layout_alignLeft="@id/tv_other_id"
         android:layout_below="@id/tv_other_id"
         android:textSize="10sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/brandfont"
         android:text="동네 이름"/>
 
     <TextView

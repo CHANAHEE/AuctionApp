@@ -23,8 +23,6 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -57,10 +55,11 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         holder.binding.tvLocationName.text = "${address} "
 
 
-
+        Log.i("test12311","onBindView")
         if(context is LoginActivity) {
             holder.itemView.setOnClickListener {
                 bindingFrag.tvLocationSetUpPlace.text = holder.binding.tvLocationName.text
+                Log.i("test12311","로그인 액티비티로부터..")
             }
         }
         else{
@@ -74,10 +73,12 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 when(activity.intent.getStringExtra("Community")){
                     "Community"->{
                         saveUserInfo()
+                        Log.i("test12311","커뮤니티 액티비티로부터..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
                     }
                     else->{
                         saveUserInfo()
+                        Log.i("test12311","커뮤니티 액티비티가 아닌..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))
                     }
                 }
@@ -101,6 +102,6 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("nickname",G.nickName)
         user.put("profile",G.profile.toString())
 
-        userRef.document(G.userAccount?.id!!).update("location",G.location)
+        userRef.document(G.userAccount?.id!!).set(user)
     }
 }

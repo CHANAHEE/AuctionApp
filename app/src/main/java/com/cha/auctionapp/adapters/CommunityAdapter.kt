@@ -3,6 +3,7 @@ package com.cha.auctionapp.adapters
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -25,8 +26,11 @@ class CommunityAdapter(var context:Context, var communityItem:MutableList<Commun
         if(communityItem[position].location == G.location){
             var item : CommunityPostItem = communityItem[position]
 
-            var baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + item.image.split(",")[0]
-            Glide.with(context).load(baseAddr).into(holder.binding.ivImage)
+            if(item.image != "") {
+                holder.binding.cvImage.visibility = View.VISIBLE
+                var baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + item.image.split(",")[0]
+                Glide.with(context).load(baseAddr).into(holder.binding.ivImage)
+            }
             holder.binding.tvTitle.text = item.title
             holder.binding.tvContents.text = item.description
             holder.binding.tvLocation.text = item.location

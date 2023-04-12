@@ -210,6 +210,18 @@
                     android:fontFamily="@font/brandfont"
                     android:textStyle="bold"/>
 
+                <TextView
+                    android:id="@+id/tv_position_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@id/tv_select_pos"
+                    android:textSize="16sp"
+                    android:textColor="#B5000000"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"/>
+
                 <ImageButton
                     android:id="@+id/ib_select_position"
                     android:layout_width="wrap_content"

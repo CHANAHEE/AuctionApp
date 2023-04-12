@@ -1,9 +1,10 @@
-package com.cha.auctionapp
+package com.cha.auctionapp.activities
 
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,10 +14,21 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import com.cha.auctionapp.activities.SelectPositionActivity
+import com.cha.auctionapp.G
+import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
 import com.cha.auctionapp.databinding.ActivityAuctionEditBinding
 import com.cha.auctionapp.model.PictureItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
+import com.google.android.material.snackbar.Snackbar
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
 
 class AuctionEditActivity : AppCompatActivity() {
 
@@ -46,11 +58,75 @@ class AuctionEditActivity : AppCompatActivity() {
         binding.recycler.adapter = PictureAdapter(this, items)
     }
 
+    /*
+    *
+    *       완료 버튼
+    *
+    * */
+    private fun clickCompleteBtn() {
+
+        // 보낼 일반 String 데이터
+        var title = binding.etTitle.text.toString()
+        var category = binding.tvCategory.text.toString()
+        var price = binding.etPrice.text.toString()
+        var description = binding.etDecription.text.toString()
+        var location = binding.tvPositionName.text.toString()
+
+        var dataPart: HashMap<String,String> = hashMapOf()
+        dataPart.put("title",title)
+        dataPart.put("category",category)
+        dataPart.put("price",price)
+        dataPart.put("description",description)
+        dataPart.put("tradingplace",location)
+        dataPart.put("nickname", G.nickName)
+        dataPart.put("location", G.location)
+        dataPart.put("profile", G.userAccount.id)
+
+        // 보낼 비디오 데이터
+//        var imagePath = getRealPathFromUri(items[i].uri) -> 비디오 Uri 값 전달하기
+//        val file: File = File(imagePath)
+//        val body = file.asRequestBody("video/*".toMediaTypeOrNull())
+//        var fileVideoPart = MultipartBody.Part.createFormData("video",file.name,body)
+//
+//        /*
+//        *       Retrofit 작업 시작
+//        * */
+//        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+//        var retrofitService = retrofit.create(RetrofitService::class.java)
+//        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
+//        call.enqueue(object : Callback<String> {
+//            override fun onResponse(call: Call<String>, response: Response<String>) {
+//                finish()
+//            }
+//
+//            override fun onFailure(call: Call<String>, t: Throwable) {
+//                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT)
+//            }
+//        })
+    }
+
+    fun getRealPathFromUri(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            return cursor.getString(columnIndex)
+        }
+        return null
+    }
 
 
 
 
-
+    /*
+    *
+    *       사진 선택 버튼 : 앨범에서 선택하기
+    *
+    * */
+    private fun clickPicture() {
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
+        launcher.launch(intent)
+    }
     var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
@@ -67,19 +143,6 @@ class AuctionEditActivity : AppCompatActivity() {
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
-    /*
-    *
-    *       사진 선택 버튼
-    *
-    * */
-    private fun clickPicture() {
-        /*
-        *       앨범에서 선택하기
-        * */
-
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
-        launcher.launch(intent)
-    }
 
 
     /*
@@ -106,28 +169,33 @@ class AuctionEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickSelectPos() {
-        startActivity(Intent(this, SelectPositionActivity::class.java))
+        var intent = Intent(this,SelectPositionActivity::class.java)
+        launcherLocationSelect.launch(intent)
     }
 
+    lateinit var latitude: String
+    lateinit var longitude: String
 
+    var launcherLocationSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult()
+    ) {
+        when(it.resultCode){
+            RESULT_OK->{
+                latitude = it.data?.getStringExtra("latitude")!!
+                longitude = it.data?.getStringExtra("longitude")!!
+                binding.tvPositionName.text = it.data?.getStringExtra("position")
+            }
+        }
+    }
 
 
     /*
     *
-    *       완료 버튼
+    *       뒤로 가기 버튼
     *
     * */
-    private fun clickCompleteBtn() {
-        /*
-        *
-        *       DB 에 글 저장하기
-        *
-        * */
-        finish()
-    }
     override fun onSupportNavigateUp(): Boolean {
         /*
-        *
         *       작성중이라면??
         * */
         var dialog = AlertDialog.Builder(this).setMessage("작성 중인 글이 있습니다. 종료하시겠습니까?").setPositiveButton("확인",

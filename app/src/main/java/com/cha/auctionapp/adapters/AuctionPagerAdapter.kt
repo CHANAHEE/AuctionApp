@@ -6,11 +6,10 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.AuctionEditActivity
+import com.cha.auctionapp.activities.AuctionEditActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
 import com.cha.auctionapp.model.AuctionPagerItem
@@ -23,6 +22,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
     inner class VH(var binding: RecyclerAuctionItemBinding) : ViewHolder(binding.root){
         var exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerAuctionItemBinding.inflate(LayoutInflater.from(context),parent,false))
@@ -35,12 +35,11 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         var item: AuctionPagerItem = items[position]
 
 
-
-
-        holder.binding.tvId.text = item.id
+        holder.binding.tvId.text = item.nickname
         holder.binding.tvDescription.text = item.description
         Glide.with(context).load(item.image).into(holder.binding.civProfile)
-        holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
+        holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,
+            AuctionEditActivity::class.java))}
 
 
 
@@ -111,7 +110,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
     private fun exoPlayer(item: AuctionPagerItem,holder: VH){
         Log.i("pagerExo","${holder.layoutPosition} 번 뷰홀더")
-        var mediaItem: MediaItem = MediaItem.fromUri(item.video)
+        var mediaItem: MediaItem = MediaItem.fromUri(item.video!!)
         holder.binding.videoview.player = holder.exoPlayer
         holder.exoPlayer.prepare()
         holder.exoPlayer.setMediaItem(mediaItem)
@@ -136,5 +135,14 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             }
         }
     }
+
+
+
+    /*
+    *
+    *       이미지를 비디오로 변환하는 작업
+    *
+    * */
+
 }
 

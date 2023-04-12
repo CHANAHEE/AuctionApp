@@ -1,8 +1,10 @@
 package com.cha.auctionapp.fragments
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,16 @@ import com.cha.auctionapp.adapters.AuctionPagerAdapter
 import com.cha.auctionapp.databinding.FragmentAuctionBinding
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.cha.auctionapp.R
+import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
+import com.cha.auctionapp.model.CommunityDetailItem
+import com.cha.auctionapp.model.PictureCommunityDetailItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AuctionFragment : Fragment() {
 
@@ -34,20 +46,38 @@ class AuctionFragment : Fragment() {
     lateinit var items: MutableList<AuctionPagerItem>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-
         items = mutableListOf()
-        items.add(AuctionPagerItem(videoUri,R.drawable._0,"1번","안녕하세요 1번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._1,"2번","안녕하세요 2번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._2,"3번","안녕하세요 3번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._3,"4번","안녕하세요 4번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._4,"5번","안녕하세요 5번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._5,"6번","안녕하세요 6번 입니다."))
-        items.add(AuctionPagerItem(videoUri,R.drawable._6,"7번","안녕하세요 7번 입니다."))
+        items.add(AuctionPagerItem(videoUri,R.drawable._0,"HELLO","안녕"))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
-
-
     }
+
+    override fun onResume() {
+        super.onResume()
+        //loadDataFromServer()
+    }
+
+
+    private fun loadDataFromServer(){
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+        val call: Call<MutableList<AuctionPagerItem>> = retrofitService.getDataFromServerForAuctionFragment(activity?.intent?.getStringExtra("index")!!)
+        call.enqueue(object : Callback<MutableList<AuctionPagerItem>> {
+            override fun onResponse(
+                call: Call<MutableList<AuctionPagerItem>>,
+                response: Response<MutableList<AuctionPagerItem>>
+            ) {
+                // 데이터 받아와서 어댑터에 뿌리기
+                items = response.body()!!
+                binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
+            }
+
+            override fun onFailure(call: Call<MutableList<AuctionPagerItem>>, t: Throwable) {
+                Log.i("test01","${t.message}")
+            }
+        })
+    }
+
+
+
+
 }
