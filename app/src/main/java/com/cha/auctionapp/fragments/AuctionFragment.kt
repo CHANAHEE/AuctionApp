@@ -1,5 +1,7 @@
 package com.cha.auctionapp.fragments
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -32,8 +34,11 @@ class AuctionFragment : Fragment() {
     lateinit var binding: FragmentAuctionBinding
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
-        WindowInsetsControllerCompat((activity as MainActivity).window, (activity as MainActivity).window.decorView).isAppearanceLightStatusBars = false
+        var activity = activity as MainActivity
+        activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+        WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = false
+        activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#000000"))
+
     }
 
     override fun onCreateView(
@@ -64,8 +69,10 @@ class AuctionFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        (activity as MainActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
-        WindowInsetsControllerCompat((activity as MainActivity).window, (activity as MainActivity).window.decorView).isAppearanceLightStatusBars = true
+        var activity = activity as MainActivity
+        activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = true
+        activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
     }
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")

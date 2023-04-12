@@ -38,8 +38,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         holder.binding.tvId.text = item.nickname
         holder.binding.tvDescription.text = item.description
         Glide.with(context).load(item.image).into(holder.binding.civProfile)
-        holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,
-            AuctionEditActivity::class.java))}
+       // holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
 
 
@@ -86,7 +85,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
                 var time = String.format("%02d : %02d : %02d",hour,min,second)
 
-                holder.binding.btnBid.text = "입 찰 하 기   |   ${time}"
+                holder.binding.btnBid.text = "입 찰 하 기\n\n${time}"
             }
 
             override fun onFinish() {
