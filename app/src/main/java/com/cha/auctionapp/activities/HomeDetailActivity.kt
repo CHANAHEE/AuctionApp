@@ -144,7 +144,7 @@ class HomeDetailActivity : AppCompatActivity() {
                     Glide.with(this@HomeDetailActivity).load(p0).error(R.drawable.default_profile).into(binding.civProfile)
                 }
             }).addOnFailureListener {
-                Log.i("test12344",it.toString())
+                Glide.with(this@HomeDetailActivity).load(R.drawable.default_profile).into(binding.civProfile)
             }
         }
     }

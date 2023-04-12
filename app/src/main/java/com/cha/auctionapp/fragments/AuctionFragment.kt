@@ -8,11 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import com.cha.auctionapp.adapters.AuctionPagerAdapter
 import com.cha.auctionapp.databinding.FragmentAuctionBinding
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.cha.auctionapp.R
+import com.cha.auctionapp.activities.MainActivity
 import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.PictureCommunityDetailItem
@@ -27,8 +30,10 @@ import retrofit2.Response
 class AuctionFragment : Fragment() {
 
     lateinit var binding: FragmentAuctionBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+        WindowInsetsControllerCompat((activity as MainActivity).window, (activity as MainActivity).window.decorView).isAppearanceLightStatusBars = false
     }
 
     override fun onCreateView(
@@ -49,6 +54,7 @@ class AuctionFragment : Fragment() {
         items = mutableListOf()
         items.add(AuctionPagerItem(videoUri,R.drawable._0,"HELLO","안녕"))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
+        (activity as MainActivity).binding.bnv.backgroundTintList
     }
 
     override fun onResume() {
@@ -56,7 +62,11 @@ class AuctionFragment : Fragment() {
         //loadDataFromServer()
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as MainActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        WindowInsetsControllerCompat((activity as MainActivity).window, (activity as MainActivity).window.decorView).isAppearanceLightStatusBars = true
+    }
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
