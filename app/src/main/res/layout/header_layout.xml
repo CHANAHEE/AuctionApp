@@ -6,28 +6,28 @@
     android:background="#8D96DB8A">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv"
+        android:id="@+id/iv_nav_profile"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@color/black"/>
     <TextView
-        android:id="@+id/tv_nickname"
+        android:id="@+id/tv_nav_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="android"
         android:textSize="20sp"
         android:textColor="#979494"
-        android:layout_below="@id/iv"
+        android:layout_below="@id/iv_nav_profile"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="8dp"/>
     <TextView
-        android:id="@+id/tv_email"
+        android:id="@+id/tv_nav_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="android@google.com"
         android:textColor="#979494"
-        android:layout_below="@id/tv_nickname"
+        android:layout_below="@id/tv_nav_nickname"
         android:layout_marginLeft="8dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -38,7 +38,7 @@
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
         android:textSize="17sp"
-        android:text="프 로 필   편 집"
+        android:text="프 로 필   설 정"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"

@@ -46,9 +46,11 @@
                 android:inputType="textEmailAddress"
                 android:fontFamily="@font/brandfont"
                 android:textStyle="bold"
+                android:backgroundTint="@color/brand"
                 android:textColorHint="#6A020202"
                 android:layout_weight="1"
-                android:textCursorDrawable="@drawable/bg_edit"
+                android:clipToOutline="false"
+                android:textCursorDrawable="@drawable/edit_cursor"
                 />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -76,7 +78,9 @@
             android:fontFamily="@font/brandfont"
             android:textStyle="bold"
             android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:backgroundTint="@color/brand"
+            android:clipToOutline="false"
             android:layout_marginTop="10dp"/>
 
         <EditText
@@ -89,7 +93,9 @@
             android:fontFamily="@font/brandfont"
             android:textStyle="bold"
             android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:backgroundTint="@color/brand"
+            android:clipToOutline="false"
             android:layout_marginTop="10dp"/>
     </RelativeLayout>
 

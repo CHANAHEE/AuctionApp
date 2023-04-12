@@ -78,6 +78,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="10dp"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
                 android:text="@string/image_count" />
 
             <View
@@ -206,6 +208,18 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="20dp"
                     android:textSize="16sp"
+                    android:textColor="#61000000"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_position_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@id/tv_select_pos"
+                    android:textSize="16sp"
                     android:textColor="#B5000000"
                     android:fontFamily="@font/brandfont"
                     android:textStyle="bold"/>
@@ -222,49 +236,14 @@
                     android:layout_marginRight="30dp"/>
             </RelativeLayout>
 
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#997A7A7A"
-                android:layout_below="@id/select_pos_relative"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
 
-            <RadioGroup
-                android:id="@+id/rg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/view2"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="10dp">
+<!--            <ImageView-->
+<!--                android:id="@+id/test"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="100dp"-->
+<!--                android:layout_below="@id/select_pos_relative"-->
+<!--                />-->
 
-                <RadioButton
-                    android:id="@+id/rb1_selling"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/brandfont"
-                    android:text="@string/selling_immediate"
-                    android:textStyle="bold"
-                    android:checked="true"
-                    android:textSize="15sp"/>
-
-                <View
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"/>
-
-                <RadioButton
-                    android:id="@+id/rb2_bid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/brandfont"
-                    android:text="@string/selling_edit_bid"
-                    android:textStyle="bold"
-                    android:textSize="15sp"/>
-
-            </RadioGroup>
         </RelativeLayout>
 
 

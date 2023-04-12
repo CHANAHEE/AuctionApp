@@ -1,9 +1,7 @@
 package com.cha.auctionapp.fragments
 
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -11,12 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.LocationListRecyclerAdapter
@@ -24,12 +20,6 @@ import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.material.snackbar.Snackbar
 import com.kakao.sdk.common.util.Utility
 import retrofit2.Call
@@ -83,7 +73,7 @@ class SignUpSetUpPlaceFragment : Fragment() {
 
     /*
     *
-    *      검색어 기반으로 내 위치 찾아오기
+    *      검색어 기반으로 위치 찾아오기
     *
     * */
 
@@ -101,7 +91,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
 
                     binding.recycler.adapter = LocationListRecyclerAdapter(requireContext(),
                         searchPlaceByAddressResponse?.documents!!,binding)
-                    //getLocationList()
                 }
 
                 override fun onFailure(call: Call<KakaoSearchItemByAddress>, t: Throwable) {
@@ -132,7 +121,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
                 requestMyLocation()
                 true
             }
-
             false
         }
     }
@@ -149,8 +137,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
         var fragment = SignUpSetNickNameFragment()
         var bundle = Bundle()
         bundle.putString("location",binding.tvLocationSetUpPlace.text.toString())
-        bundle.putString("name",arguments?.getString("name"))
-        bundle.putString("birth",arguments?.getString("birth"))
         bundle.putString("email",arguments?.getString("email"))
         bundle.putString("password",arguments?.getString("password"))
         fragment.arguments = bundle

@@ -1,6 +1,5 @@
 package com.cha.auctionapp.fragments
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
@@ -13,13 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.cha.auctionapp.R
-import com.cha.auctionapp.activities.LoginActivity
-import com.cha.auctionapp.activities.MainActivity
 import com.cha.auctionapp.databinding.FragmentSignUpEmailInputBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
@@ -90,7 +86,7 @@ class SignUpEmailInputFragment : Fragment() {
         /*
         *       두번째 프래그먼트 실행
         * */
-        var fragment = SignUpPersonalInfoFragment()
+        var fragment = SignUpSetUpPlaceFragment()
         var bundle = Bundle()
         bundle.putString("email",binding.etEmail.text.toString())
         bundle.putString("password",binding.etPass.text.toString())

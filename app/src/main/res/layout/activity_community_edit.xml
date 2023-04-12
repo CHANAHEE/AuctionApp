@@ -105,6 +105,7 @@
             android:src="@drawable/map_location"/>
 
         <TextView
+            android:id="@+id/tv_location_name_community_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="장소 이름"
@@ -113,6 +114,7 @@
             android:layout_marginLeft="20dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel_community_edit"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@drawable/ic_action_close"
@@ -138,15 +140,18 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <LinearLayout
-        android:id="@+id/linear1"
+
+    <RelativeLayout
+        android:id="@+id/relative1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
-        android:layout_toLeftOf="@id/linear2">
+        android:padding="8dp"
+        android:layout_toLeftOf="@id/relative2">
         <ImageButton
+            android:id="@+id/ib_cm"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/image"
@@ -156,24 +161,28 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="사진"
-            android:textSize="14sp"
+            android:text="사 진"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/ib_cm"
             android:fontFamily="@font/brandfont"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/linear2"
+    <RelativeLayout
+        android:id="@+id/relative2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp">
         <ImageButton
+            android:id="@+id/ib_cm2"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:background="@null"
@@ -183,12 +192,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소"
-            android:textSize="14sp"
+            android:text="장 소"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/ib_cm2"
             android:fontFamily="@font/brandfont"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

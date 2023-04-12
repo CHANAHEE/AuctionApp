@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.activities.HomeDetailActivity
-import com.cha.auctionapp.databinding.ActivityMyFavoriteListBinding
 import com.cha.auctionapp.databinding.RecyclerSearchByCategoryItemBinding
 import com.cha.auctionapp.model.MainItem
 

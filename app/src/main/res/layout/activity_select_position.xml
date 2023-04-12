@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SelectPositionActivity">
+    tools:context=".activities.SelectPositionActivity"
+    >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -30,12 +31,23 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/mapview"
+    <ImageView
+        android:id="@+id/iv_marker"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/location_marker"
+        android:layout_centerInParent="true"
+        />
+
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
-        android:background="#B5B5B5"/>
+        />
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_complete"
@@ -50,5 +62,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:textStyle="bold"/>
+
+    <FrameLayout
+        android:id="@+id/container_bottomsheet"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>

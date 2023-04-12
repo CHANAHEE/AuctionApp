@@ -1,6 +1,7 @@
 package com.cha.auctionapp.fragments
 
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,10 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.FragmentSignUpSetNickNameBinding
 import com.google.android.material.snackbar.Snackbar
@@ -103,8 +103,6 @@ class SignUpSetNickNameFragment : Fragment() {
     private fun saveUserInfo(){
         var email = arguments?.getString("email")!!
         var password = arguments?.getString("password")!!
-        var name = arguments?.getString("name")!!
-        var birth = arguments?.getString("birth")!!
         var location = arguments?.getString("location")!!
         var nickname = binding.etNickname.text.toString()
 
@@ -114,15 +112,17 @@ class SignUpSetNickNameFragment : Fragment() {
         var user: MutableMap<String,String> = mutableMapOf<String,String>()
         user.put("email",email)
         user.put("password",password)
-        user.put("name",name)
-        user.put("birth",birth)
         user.put("location",location)
         user.put("nickname",nickname)
 
-
         userRef.document().set(user)
 
+        G.nickName = nickname
 
+        var list = location.split(" ")
+        G.location = list[list.lastIndex - 1]
+
+        //G.profile = "null"
     }
 
     val watcher: TextWatcher = object : TextWatcher{
@@ -131,7 +131,7 @@ class SignUpSetNickNameFragment : Fragment() {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s?.length!! > 3) {
+            if(s?.length!! >= 3) {
                 binding.btnCertifyNickname.isEnabled = true
                 binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.brand,requireContext().theme))
             }
@@ -141,6 +141,10 @@ class SignUpSetNickNameFragment : Fragment() {
 
         }
 
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 }
 

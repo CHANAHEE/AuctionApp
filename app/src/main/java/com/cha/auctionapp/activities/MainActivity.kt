@@ -1,25 +1,46 @@
 package com.cha.auctionapp.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.FragmentTransaction
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMainBinding
+import com.cha.auctionapp.databinding.HeaderLayoutBinding
 import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationBarView
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
+import java.util.Calendar
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,11 +52,10 @@ class MainActivity : AppCompatActivity() {
     private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
     private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        Toast.makeText(this, "${com.cha.auctionapp.G.userAccount?.id} : ${com.cha.auctionapp.G.userAccount?.email}", Toast.LENGTH_SHORT).show()
 
         HomeFragment()
         CommunityFragment()
@@ -43,32 +63,13 @@ class MainActivity : AppCompatActivity() {
         ChatFragment()
 
         // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
-        popupMenu = PopupMenu(this,binding.btnSelectTown)
-        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,"공릉 1동")
-        popupMenu.menu.add(0, POPUP_MENU_MY_SECOND_PLACE_ITEM_ID!!,0,"공릉 2동")
-        popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
-        binding.btnSelectTown.text = popupMenu
-            .menu
-            .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
+        setUpPopUpMenu()
 
+        // 프래그먼트 초기값 설정
+        setUpFragment()
 
-        /*
-        *       BottomNavigationView 선택
-        * */
-
-        var tran:FragmentTransaction = supportFragmentManager
-            .beginTransaction()
-            .add(R.id.container_fragment,HomeFragment().apply {
-
-                arguments = Bundle().apply {
-                    putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                }
-            })
-
-        tran.commit()
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
-
-            tran = supportFragmentManager.beginTransaction()
+            var tran = supportFragmentManager.beginTransaction()
             changeFragment(it,tran)
             return@OnItemSelectedListener true
         })
@@ -77,9 +78,45 @@ class MainActivity : AppCompatActivity() {
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
-
-
     }
+
+
+    /*
+    *
+    *       초기 Fragment 설정
+    *
+    * */
+    private fun setUpFragment(){
+        var tran = supportFragmentManager
+        if(intent.getStringExtra("Community") == "Community"){
+            tran.beginTransaction().replace(R.id.container_fragment,CommunityFragment()).commit()
+            binding.appbar.visibility = View.GONE
+            binding.bnv.selectedItemId = R.id.community_tab
+            return
+        }
+        tran.beginTransaction()
+            .add(R.id.container_fragment,HomeFragment().apply {
+                arguments = Bundle().apply {
+                    putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
+                }
+            }).commit()
+    }
+
+
+    /*
+    *
+    *       팝업메뉴 설정
+    *
+    * */
+    private fun setUpPopUpMenu(){
+        popupMenu = PopupMenu(this,binding.btnSelectTown)
+        popupMenu.menu.add(0, POPUP_MENU_MY_FIRST_PLACE_ITEM_ID!!,0,G.location)
+        popupMenu.menu.add(0, POPUP_MENU_SET_PLACE_ITEM_ID!!,0,"내 동네 설정")
+        binding.btnSelectTown.text = popupMenu
+            .menu
+            .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
+    }
+
 
     /*
     *
@@ -90,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, SelectCategoryActivity::class.java))
 
     }
+
 
     /*
     *
@@ -107,6 +145,7 @@ class MainActivity : AppCompatActivity() {
                     val imm: InputMethodManager =
                         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+
                     binding.btnSelectTown.visibility = View.VISIBLE
                     binding.etSearch.visibility = View.INVISIBLE
                     binding.etSearch.setText("")
@@ -142,55 +181,68 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    /*
+    *
+    *       동네 설정
+    *
+    * */
     private fun clickMyPlace(){
-
-
-
         menuInflater.inflate(R.menu.popupmenu,popupMenu.menu)
-
         popupMenu.show()
 
         // 각 popupMenu 의 동네 이름 string 값이 아니고, id 값을 기준으로 분기문이 실행된다.
         // 그러니, 기본설정값 만들 때, 주의할것.
         popupMenu.setOnMenuItemClickListener {
             var id:Int = it.itemId
-            if(id == POPUP_MENU_MY_FIRST_PLACE_ITEM_ID){
+            when(id) {
                 // G 클래스에 내 동네 데이터 넣는 코드 작성
-                binding.btnSelectTown.text = popupMenu
-                    .menu
-                    .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
 
-                var tran:FragmentTransaction = supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container_fragment,HomeFragment().apply {
+                POPUP_MENU_MY_FIRST_PLACE_ITEM_ID -> {
+                    binding.btnSelectTown.text = popupMenu
+                        .menu
+                        .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
 
-                        arguments = Bundle().apply {
-                            putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                        }
-                    })
-                tran.commit()
-            }else if(id == POPUP_MENU_MY_SECOND_PLACE_ITEM_ID){
-                // G 클래스에 내 동네 데이터 넣는 코드 작성
-                binding.btnSelectTown.text = popupMenu
-                    .menu
-                    .getItem(POPUP_MENU_MY_SECOND_PLACE_ITEM_ID).toString()
-                var tran:FragmentTransaction = supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container_fragment,HomeFragment().apply {
+                    var tran: FragmentTransaction = supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container_fragment, HomeFragment().apply {
 
-                        arguments = Bundle().apply {
-                            putString("place",this@MainActivity.binding.btnSelectTown.text.toString())
-                        }
-                    })
-                tran.commit()
-            }else if(id == POPUP_MENU_SET_PLACE_ITEM_ID){
-                startActivity(Intent(this,SetUpMyPlaceActivity::class.java))
+                            arguments = Bundle().apply {
+                                putString(
+                                    "place",
+                                    this@MainActivity.binding.btnSelectTown.text.toString()
+                                )
+                            }
+                        })
+                    tran.commit()
+                }
+
+                POPUP_MENU_SET_PLACE_ITEM_ID -> {
+                    var intent = Intent(this, SetUpMyPlaceListActivity::class.java)
+                    placeLauncher.launch(intent)
+                }
+
             }
             false
         }
     }
+
+
     /*
+    *
+    *       SetUpMyPlaceListActivity Launcher : 새로운 동네 설정 시, MainActivity 종료
+    *
+    * */
+    private val placeLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        when(it.resultCode){
+            RESULT_OK->finish()
+        }
+    }
+
+
+    /*
+    *
     *       Set NavigationDrawer
+    *
     * */
     private fun setNavigationDrawer() {
         setSupportActionBar(binding.toolbar)
@@ -203,14 +255,22 @@ class MainActivity : AppCompatActivity() {
         actionBar?.title = null
         binding.drawerLayout.addDrawerListener(drawerToggle)
 
+        binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_email).text = G.userAccount?.email ?: "no email"
+        binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
+        val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
+
+        //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(profile)
+        loadProfileFromFirestore(G.userAccount.id,profile)
+
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{
-                    startActivity(Intent(this,MyProfileEditActivity::class.java))
+                    var intent = Intent(this,MyProfileEditActivity::class.java)
+                    profileLauncher.launch(intent)
                 }
-            } 
-            
+            }
         }
+
         binding.nav.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.menu_my_fav_list->{
@@ -224,6 +284,45 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+    private fun loadProfileFromFirestore(profile: String,view: CircleImageView){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+
+        val imgRef = rootRef.child("IMG_$profile.jpg")
+        if (imgRef != null) {
+            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
+            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
+
+                override fun onSuccess(p0: Uri?) {
+                    Glide.with(this@MainActivity).load(p0).error(R.drawable.default_profile).into(view)
+                }
+            }).addOnFailureListener {
+                Log.i("test12344",it.toString())
+            }
+        }
+    }
+
+    /*
+    *
+    *       프로필 변경 런처
+    *
+    * */
+    private val profileLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+    ) {
+        when(it.resultCode){
+            RESULT_OK->{
+                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                var userRef: CollectionReference = firestore.collection("user")
+
+                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profile.toString())
+
+                binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
+                Glide.with(this).load(G.profile).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
+            }
+        }
+    }
+
+
 
     /*
     *       프래그먼트 전환 함수

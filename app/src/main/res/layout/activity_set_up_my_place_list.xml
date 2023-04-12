@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DADADA">
+    android:background="#FFFFFF">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -37,6 +37,10 @@
             android:layout_below="@id/appbar"
             android:hint="동 이름으로 검색"
             android:textColorHint="#6A020202"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:inputType="text"
             android:layout_margin="8dp"
             android:layout_marginTop="50dp"/>
 

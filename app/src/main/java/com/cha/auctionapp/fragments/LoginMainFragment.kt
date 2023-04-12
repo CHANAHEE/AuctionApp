@@ -1,6 +1,9 @@
 package com.cha.auctionapp.fragments
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -9,6 +12,7 @@ import android.view.View
 import android.view.View.OnKeyListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +23,7 @@ import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.activities.MainActivity
+import com.cha.auctionapp.activities.MyProfileEditActivity
 import com.cha.auctionapp.databinding.FragmentLoginMainBinding
 import com.cha.auctionapp.model.NidUserInfoResponse
 import com.cha.auctionapp.model.UserAccount
@@ -89,9 +94,12 @@ class LoginMainFragment : Fragment() {
                         if (binding.etId.text.toString() == snapshot.data["email"].toString()
                             && binding.etPass.text.toString() == snapshot.data["password"].toString()
                         ) {
+                            G.nickName = snapshot.data.get("nickname").toString()
+                            G.location = snapshot.data.get("location").toString()
+
                             var intent: Intent = Intent(context, MainActivity::class.java)
                             startActivity(intent)
-                            LoginActivity().finish()
+                            activity?.finish()
                         }
                     }
                     Snackbar.make(
@@ -146,12 +154,35 @@ class LoginMainFragment : Fragment() {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
             val account: GoogleSignInAccount = task.result
 
-            var id: String = account.id ?: ""
-            var email: String = account.email ?: ""
-            com.cha.auctionapp.G.userAccount = UserAccount(id, email)
+            val pref: SharedPreferences = requireContext().getSharedPreferences("Data",Context.MODE_PRIVATE)
+            var id: String = pref.getString("google","").toString()
 
-            startActivity(Intent(requireContext(),MainActivity::class.java))
-            activity?.finish()
+            if(id.isBlank()){
+                id = account.id ?: ""
+                var email: String = account.email ?: ""
+                G.userAccount = UserAccount(id,email)
+
+                val editor: SharedPreferences.Editor = pref.edit()
+                editor.putString("google",id)
+                editor.apply()
+                launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+            }else{
+                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                var userRef: CollectionReference = firestore.collection("user")
+
+                userRef.document(id).get().addOnSuccessListener {
+                    G.userAccount.email = it.get("email").toString()
+                    G.userAccount.id = it.get("id").toString()
+                    G.nickName = it.get("nickname").toString()
+                    G.profile = Uri.parse(it.get("profile").toString())
+                    G.location = it.get("location").toString()
+
+                    startActivity(Intent(context, MainActivity::class.java))
+                    activity?.finish()
+
+                    return@addOnSuccessListener
+                }
+            }
         })
 
 
@@ -162,22 +193,40 @@ class LoginMainFragment : Fragment() {
     * */
     private fun kakaoLogin() {
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            Log.i("kakaoLogin","${token} : ${error}")
             if (error != null) {
                 Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT)
             } else if (token != null) {
-                Log.i("kakaoLogin","4")
                 UserApiClient.instance.me { user, error ->
                     if(user != null){
-                        var id: String = user.id.toString()
-                        var email: String = user.kakaoAccount?.email ?: ""
+                        val pref: SharedPreferences = requireContext().getSharedPreferences("Data",Context.MODE_PRIVATE)
+                        var id: String = pref.getString("kakao","").toString()
 
-                        com.cha.auctionapp.G.userAccount = UserAccount(id,email)
+                        if(id.isBlank()){
+                            id = user.id.toString()
+                            var email: String = user.kakaoAccount?.email ?: ""
+                            G.userAccount = UserAccount(id,email)
+                            val editor: SharedPreferences.Editor = pref.edit()
+                            editor.putString("kakao",id)
+                            editor.apply()
 
-                        startActivity(Intent(requireContext(),MainActivity::class.java))
-                        activity?.finish()
-                    }else{
-                        Log.i("kakaoLogin","5")
+                            launcherActivity.launch(Intent(context,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                        }else{
+                            var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                            var userRef: CollectionReference = firestore.collection("user")
+
+                            userRef.document(id).get().addOnSuccessListener {
+                                G.userAccount.email = it.get("email").toString()
+                                G.userAccount.id = it.get("id").toString()
+                                G.nickName = it.get("nickname").toString()
+                                G.profile = Uri.parse(it.get("profile").toString())
+                                G.location = it.get("location").toString()
+
+                                startActivity(Intent(context, MainActivity::class.java))
+                                activity?.finish()
+
+                                return@addOnSuccessListener
+                            }
+                        }
                     }
                 }
             }
@@ -218,34 +267,74 @@ class LoginMainFragment : Fragment() {
             }
 
             override fun onSuccess() {
-                val accessToken: String? = NaverIdLoginSDK.getAccessToken()
 
-                val retrofit = RetrofitHelper.getRetrofitInstance("https://openapi.naver.com")
-                retrofit
-                    .create(RetrofitService::class.java)
-                    .getNaverUserInfo("Bearer ${accessToken}")
-                    .enqueue(object : Callback<NidUserInfoResponse>{
-                        override fun onResponse(
-                            call: Call<NidUserInfoResponse>,
-                            response: Response<NidUserInfoResponse>
-                        ) {
-                            val userInfoResponse = response.body()
-                            val id: String = userInfoResponse?.response?.id ?: ""
-                            val email: String = userInfoResponse?.response?.email ?: ""
+                val pref: SharedPreferences = requireContext().getSharedPreferences("Data",Context.MODE_PRIVATE)
+                var id: String = pref.getString("naver","").toString()
 
-                            com.cha.auctionapp.G.userAccount = UserAccount(id,email)
+                if(!id.isBlank()) {
+                    var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+                    var userRef: CollectionReference = firestore.collection("user")
 
-                            startActivity(Intent(requireContext(),MainActivity::class.java))
-                            activity?.finish()
-                        }
+                    userRef.document(id).get().addOnSuccessListener {
+                        G.userAccount.email = it.get("email").toString()
+                        G.userAccount.id = it.get("id").toString()
+                        G.nickName = it.get("nickname").toString()
+                        G.profile = Uri.parse(it.get("profile").toString())
+                        G.location = it.get("location").toString()
 
-                        override fun onFailure(call: Call<NidUserInfoResponse>, t: Throwable) {
-                            Snackbar.make(binding.root,"네이버 회원정보 로드 실패 : ${t.message}",Snackbar.LENGTH_SHORT).show()
-                        }
+                        startActivity(Intent(context, MainActivity::class.java))
+                        activity?.finish()
 
-                    })
+                        return@addOnSuccessListener
+                    }
+                }
+                else {
+                    val accessToken: String? = NaverIdLoginSDK.getAccessToken()
+
+                    val retrofit = RetrofitHelper.getRetrofitInstance("https://openapi.naver.com")
+                    retrofit
+                        .create(RetrofitService::class.java)
+                        .getNaverUserInfo("Bearer ${accessToken}")
+                        .enqueue(object : Callback<NidUserInfoResponse> {
+                            override fun onResponse(
+                                call: Call<NidUserInfoResponse>,
+                                response: Response<NidUserInfoResponse>
+                            ) {
+                                val userInfoResponse = response.body()
+                                val id: String = userInfoResponse?.response?.id ?: ""
+                                val email: String = userInfoResponse?.response?.email ?: ""
+
+                                G.userAccount = UserAccount(id, email)
+
+                                val editor: SharedPreferences.Editor = pref.edit()
+                                editor.putString("naver", id)
+                                editor.apply()
+
+
+                                launcherActivity.launch(
+                                    Intent(
+                                        context,
+                                        MyProfileEditActivity::class.java
+                                    ).putExtra("Login", "Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                                )
+                            }
+
+                            override fun onFailure(call: Call<NidUserInfoResponse>, t: Throwable) {
+                                Snackbar.make(
+                                    binding.root,
+                                    "네이버 회원정보 로드 실패 : ${t.message}",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        })
+                }
             }
-
         })
     }
+
+    val launcherActivity: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback {
+            if(it.resultCode == AppCompatActivity.RESULT_OK) (context as LoginActivity).finish()
+        })
 }

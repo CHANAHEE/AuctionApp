@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:344450460221:android:137184d39722a721bdd854",
+        "mobilesdk_app_id": "1:344450460221:android:bc1371497e1399aabdd854",
         "android_client_info": {
           "package_name": "com.cha.auctionapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "344450460221-qk651rt97qdjvng5cu3gojdcj53n1qvd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cha.auctionapp",
+            "certificate_hash": "dd540fa1b3297bc14776730fde53165a8edbc1ed"
+          }
+        },
         {
           "client_id": "344450460221-jb8i959vj3qo8vejptqq95t1e6ouebak.apps.googleusercontent.com",
           "client_type": 3

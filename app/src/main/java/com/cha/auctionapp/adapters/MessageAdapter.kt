@@ -9,9 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.G
 import com.cha.auctionapp.R
-import com.cha.auctionapp.databinding.RecyclerMessageMeBinding
 import com.cha.auctionapp.model.MessageItem
 
 class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) : Adapter<MessageAdapter.VH>(){

@@ -25,7 +25,7 @@
             android:id="@+id/tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="세번째, 동네설정"
+            android:text="두번째, 동네설정"
             android:fontFamily="@font/brandfont"
             android:textStyle="bold"
             android:textSize="17sp"
@@ -43,7 +43,8 @@
             android:inputType="text"
             android:hint="동 이름으로 검색"
             android:textColorHint="#6A020202"
-            android:textCursorDrawable="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:backgroundTint="@color/brand"
             android:layout_marginTop="50dp"/>
 
         <TextView

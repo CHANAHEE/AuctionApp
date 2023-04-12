@@ -7,7 +7,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.CategorySearchAdapter
-import com.cha.auctionapp.adapters.ProductAdapter
 import com.cha.auctionapp.databinding.ActivitySearchItemByCategoryBinding
 import com.cha.auctionapp.model.MainItem
 
@@ -31,26 +30,26 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
         *       items 에 검색된 데이터 넣기. 근데 인덱스를 기반으로 HomeDetail 만들꺼니까.
         *       인덱스를 잘 생각하자.
         * */
-        mainItems.add(MainItem("MainItem 1",R.drawable._0,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._8,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._9,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._0,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
-        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
-
-        binding.recycler.adapter = CategorySearchAdapter(this,mainItems)
+//        mainItems.add(MainItem("MainItem 1",R.drawable._0,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._8,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._9,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._0,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
+//        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
+//
+//        binding.recycler.adapter = CategorySearchAdapter(this,mainItems)
     }
 
     override fun onSupportNavigateUp(): Boolean {
