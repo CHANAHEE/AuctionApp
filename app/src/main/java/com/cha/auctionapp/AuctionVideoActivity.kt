@@ -3,6 +3,8 @@ package com.cha.auctionapp
 import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,7 +18,9 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.activities.MainActivity
 import com.cha.auctionapp.databinding.ActivityAuctionVideoBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
@@ -26,10 +30,14 @@ import java.util.Locale
 class AuctionVideoActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAuctionVideoBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
         checkCameraPermission()
         binding.fab.setOnClickListener { clickCaptureBtn() }
@@ -39,7 +47,6 @@ class AuctionVideoActivity : AppCompatActivity() {
         super.onResume()
         startCamera()
     }
-
     /*
     *
     *       프리뷰 기능
@@ -99,6 +106,8 @@ class AuctionVideoActivity : AppCompatActivity() {
                 }
             })
     }
+
+
     /*
     *
     *       오디오와 카메라 퍼미션 체크 및 허용
