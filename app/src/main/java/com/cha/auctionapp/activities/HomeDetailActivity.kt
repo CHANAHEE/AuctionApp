@@ -35,6 +35,9 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeDetailBinding
     lateinit var items: MutableList<HomeDetailItem>
 
+    lateinit var otherNickname: String
+    var otherProfile: Uri? = null
+
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +48,8 @@ class HomeDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnChat.setOnClickListener { clickChatBtn() }
+
+        Log.i("checkfo","${binding.tvId.text} : ${G.nickName}")
 
         //binding.pager.adapter = PagerAdapter(this,items)
         loadDataFromServer()
@@ -100,6 +105,12 @@ class HomeDetailActivity : AppCompatActivity() {
 
                 userRef.document(items[0].profile).get().addOnSuccessListener {
                     binding.tvId.text = it.get("nickname").toString()
+                    if(binding.tvId.text == G.nickName){
+                        binding.btnChat.visibility = View.GONE
+                        /*
+                        *           상품에 대해 채팅하고 있는 채팅 내역 보여주기
+                        * */
+                    }
                     return@addOnSuccessListener
                 }
 
@@ -142,6 +153,7 @@ class HomeDetailActivity : AppCompatActivity() {
 
                 override fun onSuccess(p0: Uri?) {
                     Glide.with(this@HomeDetailActivity).load(p0).error(R.drawable.default_profile).into(binding.civProfile)
+                    otherProfile = p0
                 }
             }).addOnFailureListener {
                 Log.i("test12344",it.toString())
@@ -155,7 +167,10 @@ class HomeDetailActivity : AppCompatActivity() {
     *
     * */
     private fun clickChatBtn() {
-        startActivity(Intent(this, ChattingActivity::class.java))
+        startActivity(Intent(this, ChattingActivity::class.java)
+            .putExtra("otherNickname",binding.tvId.text.toString())
+            .putExtra("otherProfile",otherProfile.toString())
+        )
     }
 
     /*

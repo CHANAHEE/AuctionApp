@@ -10,14 +10,16 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.activities.ChattingActivity
 import com.cha.auctionapp.activities.SellingEditActivity
+import com.cha.auctionapp.databinding.RecyclerPictureChatItemBinding
+import com.cha.auctionapp.databinding.RecyclerPictureCommunityDetailItemBinding
 import com.cha.auctionapp.databinding.RecyclerPictureItemBinding
 import com.cha.auctionapp.model.PictureItem
 
-class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) : Adapter<PictureAdapter.VH>() {
+class PictureChatAdapter(var context: Context, var items: MutableList<PictureItem>) : Adapter<PictureChatAdapter.VH>() {
 
-    inner class VH(var binding: RecyclerPictureItemBinding) : ViewHolder(binding.root)
+    inner class VH(var binding: RecyclerPictureChatItemBinding) : ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerPictureItemBinding.inflate(LayoutInflater.from(context),parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerPictureChatItemBinding.inflate(LayoutInflater.from(context),parent,false))
 
     override fun getItemCount(): Int = items.size
 
@@ -26,10 +28,9 @@ class PictureAdapter(var context: Context, var items: MutableList<PictureItem>) 
         holder.binding.btnCancel.setOnClickListener {
 
             items.removeAt(position)
-            if(context is SellingEditActivity){
-                (context as SellingEditActivity).binding.btnImage.text = "${items.size} / 10"
+            if(items.size == 0) {
+                (context as ChattingActivity).binding.cvPicture.visibility = View.GONE
             }
-
             this.notifyDataSetChanged()
         }
     }

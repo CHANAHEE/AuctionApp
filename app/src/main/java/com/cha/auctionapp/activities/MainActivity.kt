@@ -298,6 +298,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }).addOnFailureListener {
                 Log.i("test12344",it.toString())
+                Glide.with(this@MainActivity).load(R.drawable.default_profile).into(view)
             }
         }
     }
