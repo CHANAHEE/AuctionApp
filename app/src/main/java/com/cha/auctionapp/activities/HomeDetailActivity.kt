@@ -32,7 +32,6 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var items: MutableList<HomeDetailItem>
 
     lateinit var otherID: String
-    lateinit var otherNickname: String
     var otherProfile: Uri? = null
 
     @SuppressLint("WrongConstant")
@@ -108,7 +107,8 @@ class HomeDetailActivity : AppCompatActivity() {
                     if(binding.tvId.text == G.nickName){
                         binding.btnChat.visibility = View.GONE
                         /*
-                        *           상품에 대해 채팅하고 있는 채팅 내역 보여주기
+                        *          if 문 조건이 내글인지 판단하는 내용이므로,
+                        *          채팅버튼 대신 상품에 대해 채팅하고 있는 채팅 내역 보여주는 버튼 만들기
                         * */
                     }
                     return@addOnSuccessListener
@@ -168,6 +168,7 @@ class HomeDetailActivity : AppCompatActivity() {
         startActivity(Intent(this, ChattingActivity::class.java)
             .putExtra("otherNickname",binding.tvId.text.toString())
             .putExtra("otherProfile",otherProfile.toString())
+            .putExtra("otherID",otherID)
         )
     }
 

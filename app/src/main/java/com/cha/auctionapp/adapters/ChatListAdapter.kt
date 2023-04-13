@@ -20,7 +20,7 @@ class ChatListAdapter(var context: Context, var items: MutableList<MessageItem>)
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         var item = items[position]
-        holder.binding.tvNicknameChatList.text = item.id
+        holder.binding.tvNicknameChatList.text = item.nickname
         holder.binding.tvMsgChatList.text = item.message
         holder.binding.tvTimeChatList.text = item.time
         Glide.with(context).load(item.image).into(holder.binding.civProfileChatList)

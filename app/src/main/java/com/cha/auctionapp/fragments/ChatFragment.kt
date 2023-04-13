@@ -18,16 +18,16 @@ class ChatFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         chatItem = mutableListOf()
-        chatItem.add(MessageItem(R.drawable._0,"0번","0번 입니다.","오후 14:12"))
-        chatItem.add(MessageItem(R.drawable._1,"1번","1번 입니다.","오후 13:57"))
-        chatItem.add(MessageItem(R.drawable._2,"2번","2번 입니다.","오후 12:12"))
-        chatItem.add(MessageItem(R.drawable._3,"3번","3번 입니다.","오전 11:23"))
-        chatItem.add(MessageItem(R.drawable._4,"4번","4번 입니다.","4월 1일"))
-        chatItem.add(MessageItem(R.drawable._5,"5번","5번 입니다.","4월 1일"))
-        chatItem.add(MessageItem(R.drawable._6,"6번","6번 입니다.","4월 1일"))
-        chatItem.add(MessageItem(R.drawable._7,"7번","7번 입니다.","3월 29일"))
-        chatItem.add(MessageItem(R.drawable._8,"8번","8번 입니다.","3월 29일"))
-        chatItem.add(MessageItem(R.drawable._9,"9번","9번 입니다.","3월 29일"))
+//        chatItem.add(MessageItem(R.drawable._0,"0번","0번 입니다.","오후 14:12"))
+//        chatItem.add(MessageItem(R.drawable._1,"1번","1번 입니다.","오후 13:57"))
+//        chatItem.add(MessageItem(R.drawable._2,"2번","2번 입니다.","오후 12:12"))
+//        chatItem.add(MessageItem(R.drawable._3,"3번","3번 입니다.","오전 11:23"))
+//        chatItem.add(MessageItem(R.drawable._4,"4번","4번 입니다.","4월 1일"))
+//        chatItem.add(MessageItem(R.drawable._5,"5번","5번 입니다.","4월 1일"))
+//        chatItem.add(MessageItem(R.drawable._6,"6번","6번 입니다.","4월 1일"))
+//        chatItem.add(MessageItem(R.drawable._7,"7번","7번 입니다.","3월 29일"))
+//        chatItem.add(MessageItem(R.drawable._8,"8번","8번 입니다.","3월 29일"))
+//        chatItem.add(MessageItem(R.drawable._9,"9번","9번 입니다.","3월 29일"))
     }
 
     override fun onCreateView(

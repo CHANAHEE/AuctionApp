@@ -36,7 +36,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/linear"
-        android:layout_below="@id/appbar"/>
+        android:layout_below="@id/appbar"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        app:stackFromEnd="true"/>
 
     <View
         android:layout_width="match_parent"
