@@ -23,6 +23,10 @@ import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
 import com.cha.auctionapp.databinding.ActivityChattingBinding
 import com.cha.auctionapp.model.PictureCommunityDetailItem
 import com.cha.auctionapp.model.PictureItem
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 
 class ChattingActivity : AppCompatActivity() {
 
@@ -30,6 +34,7 @@ class ChattingActivity : AppCompatActivity() {
     lateinit var otherNickname: String
     var otherProfile: Uri? = null
     lateinit var items: MutableList<PictureItem>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
@@ -39,6 +44,9 @@ class ChattingActivity : AppCompatActivity() {
         //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(binding.btnSend)
     }
 
+    /*
+    *       초기화 작업
+    * */
     private fun init(){
         otherNickname = intent.getStringExtra("otherNickname")!!
         otherProfile = Uri.parse(intent.getStringExtra("otherProfile"))
@@ -125,11 +133,22 @@ class ChattingActivity : AppCompatActivity() {
         }
     }
 
+
+
+    /*
+    *
+    *       서버에 메시지 저장.
+    *       사진 정보는 어떻게 할지 생각해보자..
+    * */
     private fun clickSendBtn(){
-        /*
-        *       서버에 메시지 저장.
-        *       사진 정보는 어떻게 할지 생각해보자..
-        * */
+        var firestore = FirebaseFirestore.getInstance()
+        var chatRef = firestore.collection("chat1")
+        chatRef.addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+
+            }
+
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -83,13 +83,8 @@ class SellingEditActivity : AppCompatActivity() {
     *       사진 선택 버튼 : 앨범에서 선택
     *
     * */
-//    private fun clickPicture() {
-//        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
-//        launcherPictureSelect.launch(intent)
-//    }
-
     private fun clickPicture() {
-        var intent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT).setType("image/*").putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
         launcherPictureSelect.launch(intent)
     }
 

@@ -24,8 +24,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.text.SimpleDateFormat
-import java.util.Date
 
 
 class MyProfileEditActivity : AppCompatActivity() {
@@ -68,7 +66,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     ) {
         if(it.resultCode == RESULT_OK) {
             Glide.with(this).load(getFilePathFromUri(it.data?.data!!)!!).into(binding.civProfile)
-            G.profile = it.data?.data!!
+            G.profileImg = it.data?.data!!
             binding.civProfile.tag = CHANGED_PROFILE
 
             val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -167,7 +165,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     * */
     private fun updateProfile(){
         G.nickName = binding.etNickname.text.toString()
-        if(binding.civProfile.tag == DEFAULT_PROFILE) G.profile = getURLForResource(R.drawable.default_profile)
+        if(binding.civProfile.tag == DEFAULT_PROFILE) G.profileImg = getURLForResource(R.drawable.default_profile)
 
         if(intent.getStringExtra("Login") == "Login"){
             setResult(RESULT_OK,getIntent())

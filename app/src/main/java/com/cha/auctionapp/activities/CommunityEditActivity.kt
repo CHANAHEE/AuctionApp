@@ -66,7 +66,7 @@ class CommunityEditActivity : AppCompatActivity() {
         dataPart.put("placeinfo",placeInfo)
         dataPart.put("nickname", G.nickName)
         dataPart.put("location",G.location)
-        dataPart.put("profile",G.userAccount.id)
+        dataPart.put("id",G.userAccount.id)
 
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){

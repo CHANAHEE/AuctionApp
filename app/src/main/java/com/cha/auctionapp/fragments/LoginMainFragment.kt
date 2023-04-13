@@ -12,7 +12,6 @@ import android.view.View
 import android.view.View.OnKeyListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -174,7 +173,7 @@ class LoginMainFragment : Fragment() {
                     G.userAccount.email = it.get("email").toString()
                     G.userAccount.id = it.get("id").toString()
                     G.nickName = it.get("nickname").toString()
-                    G.profile = Uri.parse(it.get("profile").toString())
+                    G.profileImg = Uri.parse(it.get("profile").toString())
                     G.location = it.get("location").toString()
 
                     startActivity(Intent(context, MainActivity::class.java))
@@ -218,7 +217,7 @@ class LoginMainFragment : Fragment() {
                                 G.userAccount.email = it.get("email").toString()
                                 G.userAccount.id = it.get("id").toString()
                                 G.nickName = it.get("nickname").toString()
-                                G.profile = Uri.parse(it.get("profile").toString())
+                                G.profileImg = Uri.parse(it.get("profile").toString())
                                 G.location = it.get("location").toString()
 
                                 startActivity(Intent(context, MainActivity::class.java))
@@ -279,7 +278,7 @@ class LoginMainFragment : Fragment() {
                         G.userAccount.email = it.get("email").toString()
                         G.userAccount.id = it.get("id").toString()
                         G.nickName = it.get("nickname").toString()
-                        G.profile = Uri.parse(it.get("profile").toString())
+                        G.profileImg = Uri.parse(it.get("profile").toString())
                         G.location = it.get("location").toString()
 
                         startActivity(Intent(context, MainActivity::class.java))
