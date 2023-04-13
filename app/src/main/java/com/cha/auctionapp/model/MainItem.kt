@@ -10,10 +10,14 @@ data class PagerItem(var image: Uri)
 
 data class PictureItem(var uri:Uri)
 
-data class MessageItem(var image: Int, var id: String, var message: String, var time: String)
+
+
+
 
 /*
+*
 *       홈 관련 데이터
+*
 * */
 data class MainItem(
     var idx: Int,
@@ -31,12 +35,17 @@ data class HomeDetailItem(
     var tradingplace: String,
     var nickname: String,
     var location: String,
-    var profile: String,
+    var id: String,
     var image: String
 )
 
+
+
+
 /*
-*       커뮤니티 관련 데이터
+*
+*    커뮤니티 관련 데이터
+*
 * */
 data class CommunityPostItem(
     var idx: Int,
@@ -57,7 +66,7 @@ data class CommunityDetailItem(
 
     var nickname: String,
     var location: String,
-    var profile: String,
+    var id: String,
 )
 
 data class CommentsItem(
@@ -65,17 +74,34 @@ data class CommentsItem(
     var placeinfo: String,
     var nickname: String,
     var location: String,
-    var profile: String
+    var id: String
 )
 
 data class PictureCommunityDetailItem(var path: String)
 
+
+
 /*
+*
 *       경매 관련 데이터
+*
 * */
 data class AuctionPagerItem(
     var video: Uri?,
     var image: Int?,
     var nickname: String,
     var description: String
+)
+
+
+/*
+*
+*     채팅 관련 데이터
+*
+* */
+data class MessageItem(
+    var image: Int,
+    var id: String,
+    var message: String,
+    var time: String
 )

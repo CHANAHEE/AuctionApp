@@ -1,8 +1,6 @@
 package com.cha.auctionapp.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,9 +11,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
@@ -26,21 +21,15 @@ import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityMainBinding
-import com.cha.auctionapp.databinding.HeaderLayoutBinding
 import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.Calendar
-import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -298,6 +287,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }).addOnFailureListener {
                 Log.i("test12344",it.toString())
+                Glide.with(this@MainActivity).load(R.drawable.default_profile).into(view)
             }
         }
     }
@@ -314,10 +304,10 @@ class MainActivity : AppCompatActivity() {
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profile.toString())
+                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profileImg.toString())
 
                 binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
-                Glide.with(this).load(G.profile).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
+                Glide.with(this).load(G.profileImg).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
             }
         }
     }

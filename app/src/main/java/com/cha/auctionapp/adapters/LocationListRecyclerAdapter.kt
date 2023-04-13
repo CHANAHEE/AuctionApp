@@ -2,29 +2,22 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
 import com.cha.auctionapp.activities.MainActivity
-import com.cha.auctionapp.activities.MyProfileEditActivity
 import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.Date
 
 
 class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
@@ -100,7 +93,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
-        user.put("profile",G.profile.toString())
+        user.put("profileImg",G.profileImg.toString())
 
         userRef.document(G.userAccount?.id!!).set(user)
     }

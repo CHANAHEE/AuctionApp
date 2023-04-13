@@ -5,12 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.loader.content.CursorLoader
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
@@ -24,8 +22,6 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,6 +30,10 @@ class HomeDetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHomeDetailBinding
     lateinit var items: MutableList<HomeDetailItem>
+
+    lateinit var otherID: String
+    lateinit var otherNickname: String
+    var otherProfile: Uri? = null
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -45,6 +45,8 @@ class HomeDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnChat.setOnClickListener { clickChatBtn() }
+
+        Log.i("checkfo","${binding.tvId.text} : ${G.nickName}")
 
         //binding.pager.adapter = PagerAdapter(this,items)
         loadDataFromServer()
@@ -80,7 +82,7 @@ class HomeDetailActivity : AppCompatActivity() {
 //                else{
 //                    loadProfileFromFirestore(G.userAccount.id)
 //                }
-                loadProfileFromFirestore(item.profile)
+                loadProfileFromFirestore(item.id)
                 //binding.tvId.text = item.nickname
                 binding.tvTownInfo.text = item.location
                 binding.tvItemName.text = item.title
@@ -98,8 +100,16 @@ class HomeDetailActivity : AppCompatActivity() {
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-                userRef.document(items[0].profile).get().addOnSuccessListener {
+
+                otherID = items[0].id
+                userRef.document(items[0].id).get().addOnSuccessListener {
                     binding.tvId.text = it.get("nickname").toString()
+                    if(binding.tvId.text == G.nickName){
+                        binding.btnChat.visibility = View.GONE
+                        /*
+                        *           상품에 대해 채팅하고 있는 채팅 내역 보여주기
+                        * */
+                    }
                     return@addOnSuccessListener
                 }
 
@@ -115,7 +125,7 @@ class HomeDetailActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<MutableList<HomeDetailItem>>, t: Throwable) {
-                Log.i("test010101", items[0].profile + "fail")
+                Log.i("test010101", items[0].id + "fail")
             }
         })
     }
@@ -155,7 +165,10 @@ class HomeDetailActivity : AppCompatActivity() {
     *
     * */
     private fun clickChatBtn() {
-        startActivity(Intent(this, ChattingActivity::class.java))
+        startActivity(Intent(this, ChattingActivity::class.java)
+            .putExtra("otherNickname",binding.tvId.text.toString())
+            .putExtra("otherProfile",otherProfile.toString())
+        )
     }
 
     /*

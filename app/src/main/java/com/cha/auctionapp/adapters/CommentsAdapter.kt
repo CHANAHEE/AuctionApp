@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.RecyclerCommentsItemBinding
 import com.cha.auctionapp.model.CommentsItem
@@ -41,8 +40,8 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
-        Log.i("iiii",item.profile)
-        userRef.document(item.profile).get().addOnSuccessListener {
+        Log.i("iiii",item.id)
+        userRef.document(item.id).get().addOnSuccessListener {
             holder.binding.tvOtherId.text = it.get("nickname").toString()
             return@addOnSuccessListener
         }
@@ -55,7 +54,7 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         val firebaseStorage = FirebaseStorage.getInstance()
         val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child( "IMG_" + item.profile + ".jpg")
+        val imgRef = rootRef.child( "IMG_" + item.id + ".jpg")
         if (imgRef != null) {
             imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
                 override fun onSuccess(p0: Uri?) {

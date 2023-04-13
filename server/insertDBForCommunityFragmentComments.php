@@ -6,7 +6,7 @@
     $placeinfo=   $_POST['placeinfo'];
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
-    $profile=   $_POST['profile'];
+    $id=   $_POST['id'];
     
     $description = addslashes($description);
 
@@ -16,7 +16,7 @@
     
     $result = mysqli_query($db,"set names utf8");
 
-    $sql = "INSERT INTO post_community_comments(description,placeinfo,nickname,location,post_index,profile,now) VALUES ( '$description' , '$placeinfo' , '$nickname' , '$location' , '$postindex' , '$profile' , '$now' )";
+    $sql = "INSERT INTO post_community_comments(description,placeinfo,nickname,location,post_index,id,now) VALUES ( '$description' , '$placeinfo' , '$nickname' , '$location' , '$postindex' , '$id' , '$now' )";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

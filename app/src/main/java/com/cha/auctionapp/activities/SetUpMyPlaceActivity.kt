@@ -24,10 +24,7 @@ class SetUpMyPlaceActivity : AppCompatActivity() {
     }
 
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return super.onSupportNavigateUp()
-    }
+
 
     private fun clickAddBtn() {
         startActivity(Intent(this,SetUpMyPlaceListActivity::class.java))
@@ -39,4 +36,13 @@ class SetUpMyPlaceActivity : AppCompatActivity() {
         ) { p0, p1 -> }.show()
     }
 
+    /*
+    *
+    *       뒤로 가기 버튼
+    *
+    * */
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
+    }
 }

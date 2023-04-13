@@ -46,7 +46,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
        // holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
 
-
+        // 안녕ㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ
 
         // 동영상 촬영 클릭 이벤트
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }

@@ -14,16 +14,11 @@ import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.CommentsAdapter
-import com.cha.auctionapp.adapters.PagerAdapter
-import com.cha.auctionapp.adapters.PictureAdapter
 import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
 import com.cha.auctionapp.databinding.ActivityCommunityDetailBinding
 import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
-import com.cha.auctionapp.model.HomeDetailItem
-import com.cha.auctionapp.model.PagerItem
 import com.cha.auctionapp.model.PictureCommunityDetailItem
-import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.gms.tasks.OnSuccessListener
@@ -31,13 +26,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class CommunityDetailActivity : AppCompatActivity() {
 
@@ -85,7 +76,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 //                else{
 //                    loadProfileFromFirestore(G.userAccount.id)
 //                }
-                loadProfileFromFirestore(item.profile)
+                loadProfileFromFirestore(item.id)
                 binding.tvMainTitle.text = item.title
                 binding.tvDescription.text = item.description
                 binding.tvMyTownName.text = item.location
@@ -96,7 +87,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-                userRef.document(items[0].profile).get().addOnSuccessListener {
+                userRef.document(items[0].id).get().addOnSuccessListener {
                     binding.tvMyId.text = it.get("nickname").toString()
                     return@addOnSuccessListener
                 }
@@ -168,7 +159,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         dataPart.put("placeinfo",placeInfo)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
-        dataPart.put("profile",G.userAccount.id)
+        dataPart.put("id",G.userAccount.id)
 
         /*
         *       Retrofit 작업 시작

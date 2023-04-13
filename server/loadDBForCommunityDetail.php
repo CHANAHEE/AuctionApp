@@ -5,7 +5,7 @@
     $db = mysqli_connect('localhost','tjdrjs0803','dkssud109!','tjdrjs0803');
     mysqli_query($db,"set names utf8");
 
-    $sql = "SELECT idx,title,image,location,place_info,description,nickname,profile FROM post_community WHERE idx='$index'";
+    $sql = "SELECT idx,title,image,location,place_info,description,nickname,id FROM post_community WHERE idx='$index'";
     $result = mysqli_query($db,$sql);
 
     // 결과표로 부터 총 레코드 수를 알아내자.
