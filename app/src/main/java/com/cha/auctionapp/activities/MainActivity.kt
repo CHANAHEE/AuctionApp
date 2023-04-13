@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity() {
         val firebaseStorage = FirebaseStorage.getInstance()
         val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child("IMG_$profile.jpg")
+        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
         if (imgRef != null) {
             // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
             imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {

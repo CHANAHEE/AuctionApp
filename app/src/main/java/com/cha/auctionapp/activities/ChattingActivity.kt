@@ -35,6 +35,9 @@ class ChattingActivity : AppCompatActivity() {
     var otherProfile: Uri? = null
     lateinit var items: MutableList<PictureItem>
 
+    var firestore = FirebaseFirestore.getInstance()
+    var chatRef = firestore.collection("chat1")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
@@ -141,13 +144,11 @@ class ChattingActivity : AppCompatActivity() {
     *       사진 정보는 어떻게 할지 생각해보자..
     * */
     private fun clickSendBtn(){
-        var firestore = FirebaseFirestore.getInstance()
-        var chatRef = firestore.collection("chat1")
+
         chatRef.addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
 
             }
-
         })
     }
 

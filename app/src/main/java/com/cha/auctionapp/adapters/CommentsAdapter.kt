@@ -54,7 +54,7 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         val firebaseStorage = FirebaseStorage.getInstance()
         val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child( "IMG_" + item.id + ".jpg")
+        val imgRef = rootRef.child( "profile/IMG_" + item.id + ".jpg")
         if (imgRef != null) {
             imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
                 override fun onSuccess(p0: Uri?) {

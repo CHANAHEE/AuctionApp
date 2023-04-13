@@ -61,7 +61,7 @@
     mysqli_query($db,"set names utf8");
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
-    $sql = "INSERT INTO post_product(title,category,price,description,tradingplace,nickname,location,id,now,image) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$profile','$now','$arrayString' )";
+    $sql = "INSERT INTO post_product(title,category,price,description,tradingplace,nickname,location,id,now,image) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$arrayString' )";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

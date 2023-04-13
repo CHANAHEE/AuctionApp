@@ -102,6 +102,7 @@ class HomeDetailActivity : AppCompatActivity() {
 
 
                 otherID = items[0].id
+                Log.i("asdfnm",items[0].id)
                 userRef.document(items[0].id).get().addOnSuccessListener {
                     binding.tvId.text = it.get("nickname").toString()
                     if(binding.tvId.text == G.nickName){
@@ -143,8 +144,7 @@ class HomeDetailActivity : AppCompatActivity() {
         val rootRef = firebaseStorage.reference
 
         // 읽어오길 원하는 파일의 참조객체를 얻어오자.
-        val imgRef = rootRef.child("IMG_$profile.jpg")
-        Log.i("test010101", "IMG_$profile.jpg")
+        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
         Log.i("test12344","${imgRef} : ${G.userAccount.id}")
         if (imgRef != null) {
             // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
