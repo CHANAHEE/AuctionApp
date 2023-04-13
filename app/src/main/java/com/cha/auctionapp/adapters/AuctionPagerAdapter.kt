@@ -42,7 +42,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             AuctionEditActivity::class.java))}
 
 
-
+        // 안녕ㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ
 
         /*
         *       경매 남은 시간 타이머
