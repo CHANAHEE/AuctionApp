@@ -8,33 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.getSystemService
-import androidx.core.net.toUri
-import androidx.core.view.size
-import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
-import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.MessageAdapter
-import com.cha.auctionapp.adapters.PictureAdapter
 import com.cha.auctionapp.adapters.PictureChatAdapter
-import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
 import com.cha.auctionapp.databinding.ActivityChattingBinding
 import com.cha.auctionapp.model.MessageItem
-import com.cha.auctionapp.model.PictureCommunityDetailItem
 import com.cha.auctionapp.model.PictureItem
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.storage.FirebaseStorage
 import java.util.Calendar
 
 class ChattingActivity : AppCompatActivity() {
@@ -67,7 +52,7 @@ class ChattingActivity : AppCompatActivity() {
     * */
     private fun init(){
         otherNickname = intent.getStringExtra("otherNickname")!!
-        otherProfile = Uri.parse(intent.getStringExtra("otherProfile"))
+        otherProfile = intent.data
         otherID = intent.getStringExtra("otherID")!!
         binding.tvOtherId.text = otherNickname
 
@@ -104,8 +89,6 @@ class ChattingActivity : AppCompatActivity() {
         var image = items
         var hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         var minute = Calendar.getInstance().get(Calendar.MINUTE)
-
-
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
 
         chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(image,nickname,id,message, time,G.profileImg))
@@ -125,6 +108,7 @@ class ChattingActivity : AppCompatActivity() {
     *       메시지 불러오기
     *
     * */
+    @Suppress("UNCHECKED_CAST")
     private fun loadMessage() {
         var chatRef = firestore.collection(collectionName!!)
         chatRef.addSnapshotListener { value, error ->
@@ -137,22 +121,28 @@ class ChattingActivity : AppCompatActivity() {
                 var id = map.get("id").toString()
                 var message = map.get("message").toString()
                 var time = map.get("time").toString()
-                var image = map.get("image") as MutableList<PictureItem>
+                var image = map["image"] as MutableList<PictureItem>
 
-                val firebaseStorage = FirebaseStorage.getInstance()
-                val rootRef = firebaseStorage.reference
 
-                val imgRef = rootRef.child("profile/IMG_$id.jpg")
-                if (imgRef != null) {
-                    // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-                    imgRef.downloadUrl.addOnSuccessListener { p0 ->
-                        messageItem.add(MessageItem(image, nickname,id, message, time,p0))
-                        binding.recycler.adapter = MessageAdapter(this@ChattingActivity,messageItem)
-                        binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
-                    }.addOnFailureListener {
 
-                    }
-                }
+                messageItem.add(MessageItem(image, nickname,id, message, time,Uri.parse(map.get("profileImage").toString())))
+                binding.recycler.adapter = MessageAdapter(this@ChattingActivity,messageItem)
+                binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
+
+//                val firebaseStorage = FirebaseStorage.getInstance()
+//                val rootRef = firebaseStorage.reference
+//
+//                val imgRef = rootRef.child("profile/IMG_$id.jpg")
+//                if (imgRef != null) {
+//                    // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
+//                    imgRef.downloadUrl.addOnSuccessListener { p0 ->
+//                        messageItem.add(MessageItem(image, nickname,id, message, time,p0))
+//                        binding.recycler.adapter = MessageAdapter(this@ChattingActivity,messageItem)
+//                        binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
+//                    }.addOnFailureListener {
+//
+//                    }
+//                }
             }
         }
     }

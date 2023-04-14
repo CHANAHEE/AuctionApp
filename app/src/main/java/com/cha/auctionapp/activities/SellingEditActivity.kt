@@ -1,13 +1,15 @@
 package com.cha.auctionapp.activities
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultCallback
@@ -15,9 +17,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toFile
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -25,11 +24,10 @@ import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
-import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.common.util.IOUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -37,6 +35,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 
 class SellingEditActivity : AppCompatActivity() {
@@ -87,15 +89,27 @@ class SellingEditActivity : AppCompatActivity() {
         var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
         launcherPictureSelect.launch(intent)
     }
-
+//    private fun clickPicture() {
+//        var intent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("image/*").putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+//        launcherPictureSelect.launch(intent)
+//    }
     var launcherPictureSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
+
+
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
                 for(i in 0 until size){
-                    Log.i("Hello2","$i")
                     items.add(PictureItem(clipData.getItemAt(i).uri))
+
+//                    if(checkUriPermission(
+//                        items[0].uri,
+//                        android.os.Process.myPid(),
+//                        android.os.Process.myUid(),
+//                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                    ) == PackageManager.PERMISSION_GRANTED) Log.i("permission","GRANTED")
+//                    else Log.i("permission","DENIDE")
                 }
                 binding.recycler.adapter?.notifyDataSetChanged()
                 binding.btnImage.text = "${items.size} / 10"
@@ -187,10 +201,12 @@ class SellingEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
         call.enqueue(object : Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("avzxcv",response.body().toString())
                 finish()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.i("avzxcv",t.message.toString())
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
             }
         })
@@ -201,6 +217,7 @@ class SellingEditActivity : AppCompatActivity() {
     *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
     *
     * */
+
     fun getRealPathFromUri(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = contentResolver.query(uri, projection, null, null, null)
@@ -210,7 +227,6 @@ class SellingEditActivity : AppCompatActivity() {
         }
         return null
     }
-
     /*
     *
     *       앱 바의 뒤로가기 버튼
