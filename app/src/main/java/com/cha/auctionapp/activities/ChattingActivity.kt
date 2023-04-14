@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -12,15 +11,20 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.MessageAdapter
 import com.cha.auctionapp.adapters.PictureChatAdapter
 import com.cha.auctionapp.databinding.ActivityChattingBinding
 import com.cha.auctionapp.model.MessageItem
 import com.cha.auctionapp.model.PictureItem
+import com.cha.auctionapp.model.PictureMessageItem
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
+
 
 class ChattingActivity : AppCompatActivity() {
 
@@ -43,10 +47,6 @@ class ChattingActivity : AppCompatActivity() {
         //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(binding.btnSend)
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadMessage()
-    }
     /*
     *       초기화 작업
     * */
@@ -71,6 +71,7 @@ class ChattingActivity : AppCompatActivity() {
             if(hasFocus) binding.relativeOption.visibility = View.GONE
         }
         createFirebaseCollectionName()
+        loadMessage()
     }
 
 
@@ -108,12 +109,13 @@ class ChattingActivity : AppCompatActivity() {
     *       메시지 불러오기
     *
     * */
-    @Suppress("UNCHECKED_CAST")
     private fun loadMessage() {
         var chatRef = firestore.collection(collectionName!!)
+
         chatRef.addSnapshotListener { value, error ->
             var documentChanges = value?.documentChanges ?: return@addSnapshotListener
             for(documentChange in documentChanges){
+
                 var snapshot = documentChange.document
                 var map = snapshot.data
 
@@ -121,31 +123,20 @@ class ChattingActivity : AppCompatActivity() {
                 var id = map.get("id").toString()
                 var message = map.get("message").toString()
                 var time = map.get("time").toString()
-                var image = map["image"] as MutableList<PictureItem>
+                var imageUri = (map.get("image") as MutableList<*>).mapNotNull { it as Map<*,*> }.map { it["uri"].toString() }
 
-
+                var image: MutableList<PictureItem> = mutableListOf()
+                for(i in imageUri.indices) image.add(PictureItem(Uri.parse(imageUri[i])))
 
                 messageItem.add(MessageItem(image, nickname,id, message, time,Uri.parse(map.get("profileImage").toString())))
-                binding.recycler.adapter = MessageAdapter(this@ChattingActivity,messageItem)
-                binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
 
-//                val firebaseStorage = FirebaseStorage.getInstance()
-//                val rootRef = firebaseStorage.reference
-//
-//                val imgRef = rootRef.child("profile/IMG_$id.jpg")
-//                if (imgRef != null) {
-//                    // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-//                    imgRef.downloadUrl.addOnSuccessListener { p0 ->
-//                        messageItem.add(MessageItem(image, nickname,id, message, time,p0))
-//                        binding.recycler.adapter = MessageAdapter(this@ChattingActivity,messageItem)
-//                        binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
-//                    }.addOnFailureListener {
-//
-//                    }
-//                }
+                Log.i("messageItem", messageItem.get(0).image.size.toString())
+                binding.recycler.adapter?.notifyItemInserted(messageItem.size)
+                binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
             }
         }
     }
+
     /*
     *
     *       컬렉션 이름 생성 : 컬렉션이 DB 내 채팅방의 이름 -> 채팅방을 유일하게 구별 가능
@@ -201,9 +192,12 @@ class ChattingActivity : AppCompatActivity() {
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
 
+
                 for(i in 0 until size){
                     items.add(PictureItem(clipData.getItemAt(i).uri))
+                    Log.i("1eee","${clipData.getItemAt(i).uri}")
                 }
+
                 binding.cvPicture.visibility = View.VISIBLE
                 binding.recyclerPicture.adapter?.notifyDataSetChanged()
 

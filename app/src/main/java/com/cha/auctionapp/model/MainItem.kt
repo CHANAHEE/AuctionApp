@@ -100,10 +100,11 @@ data class AuctionPagerItem(
 *
 * */
 data class MessageItem(
-    var image: MutableList<PictureItem>,
-    var nickname: String,
-    var id: String,
-    var message: String?,
-    var time: String,
+    var image: MutableList<PictureItem> = mutableListOf(),
+    var nickname: String = "",
+    var id: String = "",
+    var message: String? = "",
+    var time: String = "",
     var profileImage: Uri?
 )
+data class PictureMessageItem(var path: String)
