@@ -36,15 +36,20 @@ class MainActivity : AppCompatActivity() {
     val binding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     lateinit var popupMenu:PopupMenu
 
-
-    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
-    private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
-    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
+    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int = 0
+    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int = 2
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        Log.i("daniboeb","확인용")
+        init()
+    }
+
+
+    private fun init() {
+        getProfileURLFromFirestore(G.userAccount.id)
 
         HomeFragment()
         CommunityFragment()
@@ -63,12 +68,29 @@ class MainActivity : AppCompatActivity() {
             return@OnItemSelectedListener true
         })
 
-        setNavigationDrawer()
+
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
-    }
 
+
+    }
+    /*
+    *
+    *       전역으로 쓰일 프로필 다운로드 URL 받아오기
+    *
+    * */
+    private fun getProfileURLFromFirestore(id: String){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+
+        val imgRef = rootRef.child("profile/IMG_$id.jpg")
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            G.profileImg = p0
+            setNavigationDrawer()
+        }.addOnFailureListener {
+        }
+    }
 
     /*
     *
@@ -248,8 +270,8 @@ class MainActivity : AppCompatActivity() {
         binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
         val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
 
-        //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(profile)
-        loadProfileFromFirestore(G.userAccount.id,profile)
+        Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(profile)
+        //loadProfileFromFirestore(G.userAccount.id,profile)
 
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
@@ -273,24 +295,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-    private fun loadProfileFromFirestore(profile: String,view: CircleImageView){
-        val firebaseStorage = FirebaseStorage.getInstance()
-        val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-        if (imgRef != null) {
-            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(this@MainActivity).load(p0).error(R.drawable.default_profile).into(view)
-                }
-            }).addOnFailureListener {
-                Log.i("test12344",it.toString())
-                Glide.with(this@MainActivity).load(R.drawable.default_profile).into(view)
-            }
-        }
-    }
 
     /*
     *
@@ -304,14 +309,31 @@ class MainActivity : AppCompatActivity() {
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profileImg.toString())
+                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profileImage",G.profileImg)
 
                 binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
                 Glide.with(this).load(G.profileImg).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
             }
         }
     }
-
+//    private fun loadProfileFromFirestore(profile: String,view: CircleImageView){
+//        val firebaseStorage = FirebaseStorage.getInstance()
+//        val rootRef = firebaseStorage.reference
+//
+//        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
+//        if (imgRef != null) {
+//            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
+//            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
+//
+//                override fun onSuccess(p0: Uri?) {
+//                    Glide.with(this@MainActivity).load(p0).error(R.drawable.default_profile).into(view)
+//                }
+//            }).addOnFailureListener {
+//                Log.i("test12344",it.toString())
+//                Glide.with(this@MainActivity).load(R.drawable.default_profile).into(view)
+//            }
+//        }
+//    }
 
 
     /*

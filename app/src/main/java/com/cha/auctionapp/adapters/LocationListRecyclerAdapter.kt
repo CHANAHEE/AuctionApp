@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.LoginActivity
@@ -18,6 +19,7 @@ import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 
 class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
@@ -65,12 +67,12 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 G.location = list[list.lastIndex - 1]
                 when(activity.intent.getStringExtra("Community")){
                     "Community"->{
-                        saveUserInfo()
+                        loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티로부터..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
                     }
                     else->{
-                        saveUserInfo()
+                        loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티가 아닌..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))
                     }
@@ -85,6 +87,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
 
     private fun saveUserInfo(){
+
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
@@ -93,8 +96,20 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
-        user.put("profileImg",G.profileImg.toString())
+        user.put("profileImage",G.profileImg)
 
         userRef.document(G.userAccount?.id!!).set(user)
+    }
+
+    private fun loadProfileFromFirestore(profile: String){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
+
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            G.profileImg = p0
+            saveUserInfo()
+        }.addOnFailureListener {
+        }
     }
 }

@@ -31,7 +31,6 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         holder.binding.tvCommentsDetail.text = item.description
         holder.binding.tvOtherId.text = item.nickname
         holder.binding.tvOtherTownName.text = item.location
-        Log.i("iiiiddd",item.placeinfo ?: "dddafasf")
         if(item.placeinfo != ""){
             holder.binding.relativeLocation.visibility = View.VISIBLE
             holder.binding.tvLocationName.text = item.placeinfo
@@ -40,13 +39,13 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
-        Log.i("iiii",item.id)
         userRef.document(item.id).get().addOnSuccessListener {
             holder.binding.tvOtherId.text = it.get("nickname").toString()
+            Glide.with(context).load(it.get("profileImage")).error(R.drawable.default_profile).into(holder.binding.civOtherProfile)
             return@addOnSuccessListener
         }
 
-        loadProfileFromFirestore(holder,item)
+        //loadProfileFromFirestore(holder,item)
     }
 
 
@@ -61,7 +60,6 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
                     Glide.with(context).load(p0).error(R.drawable.default_profile).into(holder.binding.civOtherProfile)
                 }
             }).addOnFailureListener {
-                Log.i("test12344",it.toString())
             }
         }
     }

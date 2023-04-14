@@ -173,7 +173,6 @@ class LoginMainFragment : Fragment() {
                     G.userAccount.email = it.get("email").toString()
                     G.userAccount.id = it.get("id").toString()
                     G.nickName = it.get("nickname").toString()
-                    G.profileImg = Uri.parse(it.get("profile").toString())
                     G.location = it.get("location").toString()
 
                     startActivity(Intent(context, MainActivity::class.java))
@@ -217,7 +216,6 @@ class LoginMainFragment : Fragment() {
                                 G.userAccount.email = it.get("email").toString()
                                 G.userAccount.id = it.get("id").toString()
                                 G.nickName = it.get("nickname").toString()
-                                G.profileImg = Uri.parse(it.get("profile").toString())
                                 G.location = it.get("location").toString()
 
                                 startActivity(Intent(context, MainActivity::class.java))
@@ -278,7 +276,6 @@ class LoginMainFragment : Fragment() {
                         G.userAccount.email = it.get("email").toString()
                         G.userAccount.id = it.get("id").toString()
                         G.nickName = it.get("nickname").toString()
-                        G.profileImg = Uri.parse(it.get("profile").toString())
                         G.location = it.get("location").toString()
 
                         startActivity(Intent(context, MainActivity::class.java))

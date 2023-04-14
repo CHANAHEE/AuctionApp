@@ -64,53 +64,40 @@ class CommunityDetailActivity : AppCompatActivity() {
                 response: Response<MutableList<CommunityDetailItem>>
             ) {
                 items = mutableListOf()
-                items = response.body()!!
-                var item = items[0]
+                var item = response.body()!![0]
 
+                loadProfileFromFirestore(item)
+                loadImageFiles(item)
                 binding.root.tag = item.idx // 댓글 저장용 인덱스
-
-                // 프로필 로드.
-//                if(items[0].profile != G.userAccount.id){
-//                    loadProfileFromFirestore(items[0].profile)
-//                }
-//                else{
-//                    loadProfileFromFirestore(G.userAccount.id)
-//                }
-                loadProfileFromFirestore(item.id)
                 binding.tvMainTitle.text = item.title
                 binding.tvDescription.text = item.description
                 binding.tvMyTownName.text = item.location
                 binding.tvLocationNameCommunityDetail.text = item.placeinfo
-                //binding.tvMyId.text = item.nickname
-
-
-                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                var userRef: CollectionReference = firestore.collection("user")
-
-                userRef.document(items[0].id).get().addOnSuccessListener {
-                    binding.tvMyId.text = it.get("nickname").toString()
-                    return@addOnSuccessListener
-                }
-
-
-                var imageListString = items[0].image.split(",")
-                Log.i("iii",items[0].image.length.toString())
-                if(items[0].image.isNotEmpty()) {
-                    var imageListPath: MutableList<PictureCommunityDetailItem> = mutableListOf()
-                    for (i in imageListString.indices) {
-                        imageListPath.add(PictureCommunityDetailItem(imageListString[i]))
-                    }
-                    binding.recycler.adapter =
-                        PictureCommunityDetailAdapter(this@CommunityDetailActivity, imageListPath)
-                }
 
                 loadCommentsDataFromServer()
             }
-
             override fun onFailure(call: Call<MutableList<CommunityDetailItem>>, t: Throwable) {
-                Log.i("test01","${t.message}")
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다",Snackbar.LENGTH_SHORT).show()
             }
         })
+    }
+
+
+    /*
+    *
+    *       이미지 파일 받아오기
+    *
+    * */
+    private fun loadImageFiles(item: CommunityDetailItem){
+        var imageListString = item.image.split(",")
+        if(item.image.isNotEmpty()) {
+            var imageListPath: MutableList<PictureCommunityDetailItem> = mutableListOf()
+            for (i in imageListString.indices) {
+                imageListPath.add(PictureCommunityDetailItem(imageListString[i]))
+            }
+            binding.recycler.adapter =
+                PictureCommunityDetailAdapter(this@CommunityDetailActivity, imageListPath)
+        }
     }
 
 
@@ -119,25 +106,14 @@ class CommunityDetailActivity : AppCompatActivity() {
     *       프로필 사진 받아오기
     *
     * */
-    private fun loadProfileFromFirestore(profile: String){
-        val firebaseStorage = FirebaseStorage.getInstance()
+    private fun loadProfileFromFirestore(item: CommunityDetailItem){
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
 
-        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
-        val rootRef = firebaseStorage.reference
-
-        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
-        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
-        if (imgRef != null) {
-            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(this@CommunityDetailActivity).load(p0).error(R.drawable.default_profile).into(binding.civMyProfile)
-                }
-            }).addOnFailureListener {
-                Log.i("test12344",it.toString())
-            }
+        userRef.document(item.id).get().addOnSuccessListener {
+            binding.tvMyId.text = it.get("nickname").toString()
+            Glide.with(this@CommunityDetailActivity).load(it.get("profileImage")).error(R.drawable.default_profile).into(binding.civMyProfile)
+            return@addOnSuccessListener
         }
     }
 
@@ -152,7 +128,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         var description = binding.etMsg.text.toString()
         var placeInfo = binding.tvLocationNameCommunityDetailComments.text.toString()
 
-        Log.i("sendMSG",placeInfo)
         var dataPart: HashMap<String,String> = hashMapOf()
         dataPart.put("idx",binding.root.tag as String)
         dataPart.put("description",description)
@@ -175,17 +150,12 @@ class CommunityDetailActivity : AppCompatActivity() {
                 *
                 * */
                 loadCommentsDataFromServer()
-                Log.i("testco",response.body().toString() + "   dd")
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
-                Log.i("testco",t.message.toString())
             }
         })
-
-        //binding.recycler2.adapter?.notifyDataSetChanged()
-
         val imm : InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etMsg.windowToken,0)
         binding.etMsg.setText("")
@@ -204,7 +174,6 @@ class CommunityDetailActivity : AppCompatActivity() {
         var call: Call<MutableList<CommentsItem>> = retrofitService.getDataFromServerForCommunityDetailComments(binding.root.tag.toString())
         call.enqueue(object : Callback<MutableList<CommentsItem>>{
             override fun onResponse(call: Call<MutableList<CommentsItem>>, response: Response<MutableList<CommentsItem>>) {
-                Log.i("daasdfasdfasdf",response.body().toString())
                 binding.recycler2.adapter = CommentsAdapter(this@CommunityDetailActivity,response.body()!!)
             }
 
@@ -242,6 +211,11 @@ class CommunityDetailActivity : AppCompatActivity() {
     }
 
 
+    /*
+    *
+    *       뒤로 가기 버튼
+    *
+    * */
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()

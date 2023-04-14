@@ -32,7 +32,7 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var items: MutableList<HomeDetailItem>
 
     lateinit var otherID: String
-    var otherProfile: Uri? = null
+    private var otherProfile: Uri? = null
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -40,13 +40,13 @@ class HomeDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    private fun init() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnChat.setOnClickListener { clickChatBtn() }
-
-        Log.i("checkfo","${binding.tvId.text} : ${G.nickName}")
-
         //binding.pager.adapter = PagerAdapter(this,items)
         loadDataFromServer()
 
@@ -54,6 +54,7 @@ class HomeDetailActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         else window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
     }
+
 
     /*
     *
@@ -70,40 +71,32 @@ class HomeDetailActivity : AppCompatActivity() {
                 call: Call<MutableList<HomeDetailItem>>,
                 response: Response<MutableList<HomeDetailItem>>
             ) {
-                Log.i("test143",response.body().toString())
                 items = mutableListOf()
                 items = response.body()!!
                 var item = items[0]
 
-//                if(item.profile != G.userAccount.id){
-//                    loadProfileFromFirestore(item.profile)
-//                }
-//                else{
-//                    loadProfileFromFirestore(G.userAccount.id)
-//                }
-                loadProfileFromFirestore(item.id)
-                //binding.tvId.text = item.nickname
+                //loadProfileFromFirestore(item.id)
                 binding.tvTownInfo.text = item.location
                 binding.tvItemName.text = item.title
                 binding.tvCategory.text = item.category
                 binding.tvDescription.text = item.description
+                binding.tvPrice.text = "${item.price} 원"
 
                 if(item.tradingplace != ""){
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationName.text = item.tradingplace
                 }
 
-                binding.tvPrice.text = "${item.price} 원"
-
-
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-
                 otherID = items[0].id
-                Log.i("asdfnm",items[0].id)
                 userRef.document(items[0].id).get().addOnSuccessListener {
                     binding.tvId.text = it.get("nickname").toString()
+                    Glide.with(this@HomeDetailActivity)
+                        .load(it.get("profileImage"))
+                        .error(R.drawable.default_profile)
+                        .into(binding.civProfile)
                     if(binding.tvId.text == G.nickName){
                         binding.btnChat.visibility = View.GONE
                         /*
@@ -113,8 +106,6 @@ class HomeDetailActivity : AppCompatActivity() {
                     }
                     return@addOnSuccessListener
                 }
-
-
 
                 var imageListString = item.image.split(",")
                 var imageListUri: MutableList<PagerItem> = mutableListOf()
@@ -126,38 +117,10 @@ class HomeDetailActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<MutableList<HomeDetailItem>>, t: Throwable) {
-                Log.i("test010101", items[0].id + "fail")
             }
         })
     }
 
-    /*
-    *
-    *       프로필 사진 받아오기
-    *
-    * */
-    private fun loadProfileFromFirestore(profile: String){
-        Log.i("test010101", "$profile  hhh")
-        val firebaseStorage = FirebaseStorage.getInstance()
-
-        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
-        val rootRef = firebaseStorage.reference
-
-        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
-        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
-        if (imgRef != null) {
-            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(this@HomeDetailActivity).load(p0).error(R.drawable.default_profile).into(binding.civProfile)
-                }
-            }).addOnFailureListener {
-                Glide.with(this@HomeDetailActivity).load(R.drawable.default_profile).into(binding.civProfile)
-            }
-        }
-    }
 
     /*
     *
@@ -167,7 +130,7 @@ class HomeDetailActivity : AppCompatActivity() {
     private fun clickChatBtn() {
         startActivity(Intent(this, ChattingActivity::class.java)
             .putExtra("otherNickname",binding.tvId.text.toString())
-            .putExtra("otherProfile",otherProfile.toString())
+            .putExtra("otherProfile",otherProfile)
             .putExtra("otherID",otherID)
         )
     }

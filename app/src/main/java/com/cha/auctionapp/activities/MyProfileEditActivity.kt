@@ -44,7 +44,8 @@ class MyProfileEditActivity : AppCompatActivity() {
 
         binding.civProfile.tag = DEFAULT_PROFILE
 
-        loadProfileFromFirestore(G.userAccount.id)
+        Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(binding.civProfile)
+        //loadProfileFromFirestore(G.userAccount.id)
         binding.etNickname.setText(G.nickName)
     }
 
@@ -65,8 +66,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     var pickLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
     ) {
         if(it.resultCode == RESULT_OK) {
-            Glide.with(this).load(getFilePathFromUri(it.data?.data!!)!!).into(binding.civProfile)
-            G.profileImg = it.data?.data!!
+            Glide.with(this).load(it.data?.data).error(R.drawable.default_profile).into(binding.civProfile)
             binding.civProfile.tag = CHANGED_PROFILE
 
             val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -90,25 +90,13 @@ class MyProfileEditActivity : AppCompatActivity() {
     *
     * */
     private fun loadProfileFromFirestore(profile: String){
-        Log.i("test010101", "$profile  hhh")
         val firebaseStorage = FirebaseStorage.getInstance()
-
-        // 저장소의 최상위 위치를 참조하는 참조객체를 얻어오자.
         val rootRef = firebaseStorage.reference
-
-        // 읽어오길 원하는 파일의 참조객체를 얻어오자.
         val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-        Log.i("test12344","${imgRef} : ${G.userAccount.id}")
-        if (imgRef != null) {
-            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(this@MyProfileEditActivity).load(p0).error(R.drawable.default_profile).into(binding.civProfile)
-                }
-            }).addOnFailureListener {
-                Log.i("test12344",it.toString())
-            }
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            Glide.with(this@MyProfileEditActivity).load(p0).error(R.drawable.default_profile)
+                .into(binding.civProfile)
+        }.addOnFailureListener {
         }
     }
     /*
@@ -147,7 +135,7 @@ class MyProfileEditActivity : AppCompatActivity() {
             var dialog = AlertDialog.Builder(this).setMessage("프로필을 설정 하시겠습니까?").setPositiveButton("확인",
                 DialogInterface.OnClickListener { dialog, which ->
                     updateProfile()
-                    finish()
+
                 }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  }).create()
 
             dialog.show()
@@ -165,6 +153,7 @@ class MyProfileEditActivity : AppCompatActivity() {
     private fun updateProfile(){
         G.nickName = binding.etNickname.text.toString()
         if(binding.civProfile.tag == DEFAULT_PROFILE) G.profileImg = getURLForResource(R.drawable.default_profile)
+        else getProfileURLFromFirestore(G.userAccount.id)
 
         if(intent.getStringExtra("Login") == "Login"){
             setResult(RESULT_OK,getIntent())
@@ -172,7 +161,17 @@ class MyProfileEditActivity : AppCompatActivity() {
         }
         else setResult(RESULT_OK,intent)
     }
+    private fun getProfileURLFromFirestore(id: String){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
 
+        val imgRef = rootRef.child("profile/IMG_$id.jpg")
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            G.profileImg = p0
+            finish()
+        }.addOnFailureListener {
+        }
+    }
 
     /*
     *
