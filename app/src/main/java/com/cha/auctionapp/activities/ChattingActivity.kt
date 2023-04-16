@@ -25,17 +25,22 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlinx.coroutines.*
 import java.lang.NumberFormatException
+import java.text.NumberFormat
 
 
 class ChattingActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityChattingBinding
+
+    var lastIndex: Int = 0
+    var lastOtherMessageIndex = 0
 
     lateinit var otherNickname: String
     lateinit var otherID: String
@@ -85,9 +90,42 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
         createFirebaseCollectionName()
+
+        getMessageLastIndex()
+        getLastOtherMessageIndex()
     }
 
 
+    private fun getMessageLastIndex(){
+        if(collectionName == null) return
+        var chatRef = firestore.collection(collectionName!!)
+        chatRef.get().addOnSuccessListener {
+            for(document in  it.documents){
+                if(document.get("index").toString() == "") lastIndex = 0
+                else lastIndex = document.get("index").toString().toInt()
+            }
+            Log.i("4zxc","$lastIndex")
+        }
+    }
+
+
+    private fun getLastOtherMessageIndex(){
+        if(collectionName == null) return
+        var chatRef = firestore.collection(collectionName!!)
+        chatRef.orderBy("index", Query.Direction.DESCENDING)
+            .get().addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    if(document.get("id") != G.userAccount.id){
+                        Log.i("4zxc","${document.get("id")} : ${G.userAccount.id}")
+                        lastOtherMessageIndex = document.get("index").toString().toInt()
+                        break
+                    }
+                }
+                Log.i("4zxc","$lastOtherMessageIndex")
+            }.addOnFailureListener { exception ->
+                Log.e("1234aa", "Error getting documents.", exception)
+            }
+    }
     /*
     *
     *       서버에 메시지 저장.
@@ -109,6 +147,7 @@ class ChattingActivity : AppCompatActivity() {
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
         var location = binding.tvLocationNameChat.text.toString()
 
+
         if(pictureSelectedItem.isNotEmpty())
         {
             Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
@@ -116,7 +155,9 @@ class ChattingActivity : AppCompatActivity() {
         }
         else {
             Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
-            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location))
+            lastIndex += 1
+            Log.i("4zxc","$lastIndex")
+            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location, lastIndex,lastOtherMessageIndex))
         }
 
         binding.relativeLocationChat.visibility = View.GONE
@@ -154,7 +195,9 @@ class ChattingActivity : AppCompatActivity() {
                                 G.profileImg,
                                 pictureItem,
                                 pictureItem.size,
-                                binding.tvLocationNameChat.text.toString()
+                                binding.tvLocationNameChat.text.toString(),
+                                index = lastIndex,
+                                lastOtherMessageIndex
                             )
                         ).addOnFailureListener {
                         }
@@ -192,16 +235,17 @@ class ChattingActivity : AppCompatActivity() {
                 var image = map.get("image") as MutableList<*>
                 var imageSize: String? = map.get("imageSize").toString()
                 var location = map.get("location").toString()
-                Log.i("oeribn","firebase 에서 로드해오기 : ${location}")
+                var index = map.get("index").toString()
+
                 for(i in 0 until image.size){
                     pictureItem.add(Uri.parse(image[i].toString()))
                 }
                 var newPictureItem = pictureItem.toMutableList()
 
                 try{
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location))
+                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,index?.toInt() ?: 0,lastOtherMessageIndex))
                 }catch (e: NumberFormatException){
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location))
+                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex))
                 }
                 pictureItem.clear()
             }

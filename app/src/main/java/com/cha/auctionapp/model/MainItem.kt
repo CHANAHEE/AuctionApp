@@ -108,6 +108,8 @@ data class MessageItem(
     //var image: MutableList<Uri>
     var image: MutableList<Uri>,
     var imageSize: Int,
-    var location: String
+    var location: String,
+    var index: Int,
+    var lastOtherMessageIndex: Int
 )
 data class PictureMessageItem(var uri: Uri)
