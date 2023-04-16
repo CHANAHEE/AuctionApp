@@ -41,8 +41,11 @@ class ChattingActivity : AppCompatActivity() {
 
     lateinit var items: MutableList<PictureItem>
     lateinit var messageItem: MutableList<MessageItem>
+    //lateinit var pictureSelectedItem: MutableList<Uri>
     lateinit var pictureSelectedItem: MutableList<Uri>
     lateinit var pictureItem: MutableList<Uri>
+    //lateinit var pictureItem: MutableMap<String,Uri>
+    lateinit var pictureItem2: MutableList<Uri>
     var firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +54,6 @@ class ChattingActivity : AppCompatActivity() {
         setContentView(binding.root)
         init()
         loadMessage()
-        //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(binding.btnSend)
     }
 
     /*
@@ -73,6 +75,8 @@ class ChattingActivity : AppCompatActivity() {
         binding.recycler.adapter = MessageAdapter(this,messageItem)
         pictureSelectedItem = mutableListOf()
         pictureItem = mutableListOf()
+        //pictureItem = mutableMapOf()
+        pictureItem2 = mutableListOf()
 
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnOption.setOnClickListener { clickOptionBtn() }
@@ -103,18 +107,13 @@ class ChattingActivity : AppCompatActivity() {
 
         if(pictureSelectedItem.isNotEmpty())
         {
-            Log.i("zxcv45","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
-            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,chatRef)
+            Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
+            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time)
         }
         else {
-            Log.i("zxcv45",pictureSelectedItem.size.toString())
-            Log.i("zxcv45","set 시작 ")
-            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem)).addOnFailureListener {
-                Log.i("zxcv45",it.message.toString())
-            }
+            Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
+            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0))
         }
-
-
 
         binding.relativeLocationChat.visibility = View.GONE
         binding.cvPicture.visibility = View.GONE
@@ -129,25 +128,23 @@ class ChattingActivity : AppCompatActivity() {
                                          nickname: String,
                                          message: String,
                                          id: String,
-                                         time: String,
-                                         chatRef: CollectionReference){
+                                         time: String){
+
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         var fileName = ""
         fileName = "$collectionName/${G.userAccount.id}$time/"
 
-        Log.i("123asdfe", "사진 정보 추가: ${pictureSelectedItem.size}")
-        for(i in pictureSelectedItem.indices){
+        for(i in 0 until pictureSelectedItem.size){
             val imgRef: StorageReference =
                 firebaseStorage.getReference("${fileName}IMG_$time$i.jpg")
-            Log.i("123asdfe", "사진 정보 추가: ${pictureSelectedItem[i]}")
             imgRef.putFile(pictureSelectedItem[i]).addOnSuccessListener(OnSuccessListener<Any?> {
-                Log.i("123asdfe", "사진 정보 추가 성공!!: ${pictureSelectedItem[i]}")
                 imgRef.downloadUrl.addOnSuccessListener {
-                    Log.i("123asdfe", "사진 정보 다운로드URL 성공!!: ${pictureSelectedItem[i]}")
                     var chatRef = firestore.collection(collectionName!!)
+                    //pictureItem.add(it)
                     pictureItem.add(it)
-                    //Log.i("123asdfe", "${pictureItem[i]}")
+                    Log.i("pictureIssue","스토리지에 사진 업로드 작업 : ${pictureItem.size}")
                     if(i == pictureSelectedItem.size - 1) {
+                        Log.i("pictureIssue","스토리지에 사진 업로드 작업 if 안쪽 : ${i}")
                         chatRef.document("MSG_${System.currentTimeMillis()}").set(
                             MessageItem(
                                 nickname,
@@ -155,28 +152,20 @@ class ChattingActivity : AppCompatActivity() {
                                 message,
                                 time,
                                 G.profileImg,
-                                pictureItem
+                                pictureItem,
+                                pictureItem.size
                             )
+
+
                         ).addOnFailureListener {
-                            Log.i("123asdfe", "사진 정보 추가 실패 : ${it.message}")
                         }
+                        pictureItem.clear()
+                        pictureSelectedItem.clear()
                     }
                 }
-//                if(i == pictureItem.size-1) {
-//
-//                    imgRef.downloadUrl.addOnSuccessListener {
-//                        var chatRef = firestore.collection(collectionName!!)
-//                        pictureItem.add(it)
-//                        chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureItem)).addOnFailureListener {
-//                            Log.i("123asdfe","사진 정보 추가: ${it.message}")
-//                        }
-//
-//                    }
-//                }
             })
                 .addOnFailureListener(
                     OnFailureListener {
-                        Log.i("123asdfe","사진 정보 추가 실패: ${it.message}")
                     })
         }
     }
@@ -190,10 +179,11 @@ class ChattingActivity : AppCompatActivity() {
         var chatRef = firestore.collection(collectionName!!)
 
         chatRef.addSnapshotListener { value, error ->
-
+            Log.i("pictureIssue","스냅샷 리스너 발동00 ")
             var documentChanges = value?.documentChanges ?: return@addSnapshotListener
-
+            var newMessageItems = mutableListOf<MessageItem>()
             for (documentChange in documentChanges) {
+
                 var snapshot = documentChange.document
                 var map = snapshot.data
 
@@ -203,23 +193,37 @@ class ChattingActivity : AppCompatActivity() {
                 var time = map.get("time").toString()
                 var profileImage = Uri.parse(map.get("profileImage").toString())
                 var image = map.get("image") as MutableList<*>
+                var imageSize = map.get("imageSize").toString()
 
+                Log.i("pictureIssue","스토어에서 다운로드 작업 : ${imageSize} : ${image.size}")
                 for(i in 0 until image.size){
                     pictureItem.add(Uri.parse(image[i].toString()))
                 }
+                var newPictureItem = pictureItem.toMutableList()
+                /*
+                *       픽쳐아이템이 2개이다 -> id+시간을 키값으로 갖는 맵에 픽쳐아이템을 넣는다.
+                * */
+                //pictureItem.put(i,pictureItem2)
+//                for(i in 0 until image.size){
+//                    pictureItem.put(i,Uri.parse(image[i].toString()))
+//                }
+                Log.i("pictureIssue","채팅액티비티 에서의 내가 저장한 이미지 사이즈정보 : ${imageSize.toInt()}")
+                messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize.toInt()))
+                Log.i("pictureIssue","메세지 아이템에 add : ${messageItem}")
+                pictureItem.clear()
 
 
-
-                messageItem.add(MessageItem( nickname,id, message, time,profileImage,pictureItem))
-                binding.recycler.adapter?.notifyItemInserted(messageItem.size)
-                binding.recycler.scrollToPosition(messageItem.size-1)
-//                pictureItem.clear()
 //                        getFileCount(id,time)
 //                        getPictureURLFromFirestore(nickname,id,message,time,profileImage,fileNum)
 //                        Glide.with(this@ChattingActivity).load("https://firebasestorage.googleapis.com/v0/b/auctionapp-cha.appspot.com/o/profile%2FIMG_107906160521912199636.jpg?alt=media&token=41c70088-bd6b-49b7-899d-a43e909482be").into(binding.btnOption)
 
-                Log.i("15eeee","${inx} 반복문 종료")
             }
+//            Log.i("pictureIssue","pictureItem 초기화 시작: ${pictureItem.size}")
+//            pictureItem.clear()
+//            Log.i("pictureIssue","pictureItem 초기화 완료: ${pictureItem.size}")
+            Log.i("pictureIssue","스토어에서 다운로드 작업 완료 : ${messageItem}")
+            binding.recycler.adapter?.notifyItemInserted(messageItem.size)
+            binding.recycler.scrollToPosition(messageItem.size-1)
         }
     }
 //
@@ -335,14 +339,15 @@ class ChattingActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
             if(it.resultCode == RESULT_OK){
+                pictureItem.clear()
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
 
                 for(i in 0 until size){
                     pictureSelectedItem.add(clipData.getItemAt(i).uri)
                     items.add(PictureItem(clipData.getItemAt(i).uri))
+                    Log.i("pictureIssue","사진 선택 $i : ${pictureSelectedItem.size}")
                 }
-
                 binding.cvPicture.visibility = View.VISIBLE
                 binding.recyclerPicture.adapter?.notifyDataSetChanged()
 

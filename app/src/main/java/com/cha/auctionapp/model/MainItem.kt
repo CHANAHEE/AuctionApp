@@ -105,6 +105,8 @@ data class MessageItem(
     var message: String? = "",
     var time: String = "",
     var profileImage: Uri?,
-    var image: MutableList<Uri>
+    //var image: MutableList<Uri>
+    var image: MutableList<Uri>,
+    var imageSize: Int
 )
 data class PictureMessageItem(var uri: Uri)

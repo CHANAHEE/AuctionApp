@@ -99,9 +99,37 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
         }else if(holder is PictureVH){
             Log.i("15ee","Picture VH")
             holder.nickName.text = item.nickname
-            Log.i("15eeefasdfasdfasdf","${items[position].id}")
-            pictureItem = items[0].image
-            holder.picture.adapter = PictureMessageAdapter(context, items[position].id,pictureItem)
+            //Log.i("pictureIssue","Message 어댑터 onBind Items[position] -> 맵: ${items[position].image.size}")
+            pictureItem = items[position].image
+            var newPictureItem: MutableList<Uri> = mutableListOf()
+            var copyPictureItem = pictureItem.toMutableList()
+            //Log.i("pictureIssue","Message 어댑터 onBind 에서의 size : ${items[position].imageSize} ==== ${items[position].image.size}")
+            for(i in 0 until items[position].imageSize){
+                Log.i("pictureIssue","Message 어댑터 onBind 에서의 내가 저장한 이미지 사이즈정보 : ${items[position].imageSize}")
+                Log.i("pictureIssue","Message 어댑터 onBind 에서의 실제 저장된 이미지 사이즈정보 : ${pictureItem.size}")
+
+
+                newPictureItem.add(pictureItem.get(i))
+                //if(pictureItem.size == i)break
+            }
+            Log.i("pictureIssue","Message 어댑터 onBind 에서의 내가 저장한 이미지 사이즈정보 : ${items[position].imageSize}")
+            //if(items[position].imageSize != pictureItem.size) return
+//            var copyPictureItem = pictureItem.toMutableList()
+//            for(i in items[position].imageSize-1 downTo 0){
+//                Log.i("pictureIssue","Message 어댑터 onBind 에서의 내가 저장한 이미지 사이즈정보2 : ${items[position].imageSize-1}")
+//                Log.i("pictureIssue","copy 사이즈 와 픽쳐 사이즈 : ${copyPictureItem.size} : ${pictureItem.size}")
+//                newPictureItem.add(copyPictureItem.get(i))
+//                copyPictureItem.removeAt(i)
+//
+//            }
+//            for(i in copyPictureItem.size-1 downTo copyPictureItem.size-items[position].imageSize){
+//                Log.i("pictureIssue","Message 어댑터 onBind 에서의 내가 저장한 이미지 사이즈정보2 : ${items[position].imageSize-1}")
+//                //Log.i("pictureIssue","copy 사이즈 와 픽쳐 사이즈 : ${copyPictureItem.size} : ${pictureItem.size}")
+//                newPictureItem.add(copyPictureItem.get(i))
+//                copyPictureItem.removeAt(i)
+//
+//            }
+            holder.picture.adapter = PictureMessageAdapter(context, items[position].id,newPictureItem)
 
             holder.time.text = item.time
             Glide.with(context).load(item.profileImage).error(R.drawable.default_profile)

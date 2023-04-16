@@ -30,6 +30,7 @@ class PictureMessageAdapter(var context: Context, var id: String, var item: Muta
     }
 
     override fun getItemViewType(position: Int): Int {
+        Log.i("pictureIssue","PictureMessage 어댑터 getItemView 이미지 사이즈정보 : ${item.size}")
         Log.i("123rde","${id} : ${G.userAccount.id}")
         if(id == G.userAccount.id) return TYPE_MY_MESSAGE
         else return TYPE_OTHER_MESSAGE
@@ -48,10 +49,12 @@ class PictureMessageAdapter(var context: Context, var id: String, var item: Muta
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if(holder is MyVH) {
             Log.i("15ee","MYVH : ${item[position]} ")
+            Log.i("pictureIssue","PictureMessage 어댑터 onBind")
             Glide.with(context).load(item[position]).into(holder.myPicture)
         }
         else if(holder is OtherVH){
             Log.i("15ee","OTHER : ${item[position]}")
+            Log.i("pictureIssue","PictureMessage 어댑터 onBind")
             Glide.with(context).load(item[position]).into(holder.otherPicture)
         }
     }
