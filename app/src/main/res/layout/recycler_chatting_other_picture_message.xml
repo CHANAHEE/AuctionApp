@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:padding="6dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    android:elevation="10dp"
+    android:padding="2dp">
 
     <ImageView
         android:id="@+id/iv_chat_picture_message"
@@ -10,4 +13,4 @@
         android:layout_height="match_parent"
         android:src="@drawable/bg_one05"
         android:scaleType="centerCrop"/>
-</RelativeLayout>
+</androidx.cardview.widget.CardView>

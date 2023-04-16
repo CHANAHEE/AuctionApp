@@ -11,19 +11,24 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+import androidx.lifecycle.lifecycleScope
 import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.MessageAdapter
 import com.cha.auctionapp.adapters.PictureChatAdapter
 import com.cha.auctionapp.databinding.ActivityChattingBinding
 import com.cha.auctionapp.model.MessageItem
 import com.cha.auctionapp.model.PictureItem
-import com.cha.auctionapp.model.PictureMessageItem
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlinx.coroutines.*
 
 
 class ChattingActivity : AppCompatActivity() {
@@ -36,7 +41,8 @@ class ChattingActivity : AppCompatActivity() {
 
     lateinit var items: MutableList<PictureItem>
     lateinit var messageItem: MutableList<MessageItem>
-
+    lateinit var pictureSelectedItem: MutableList<Uri>
+    lateinit var pictureItem: MutableList<Uri>
     var firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +50,7 @@ class ChattingActivity : AppCompatActivity() {
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
+        loadMessage()
         //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(binding.btnSend)
     }
 
@@ -64,6 +71,8 @@ class ChattingActivity : AppCompatActivity() {
         binding.recyclerPicture.adapter = PictureChatAdapter(this, items)
         messageItem = mutableListOf()
         binding.recycler.adapter = MessageAdapter(this,messageItem)
+        pictureSelectedItem = mutableListOf()
+        pictureItem = mutableListOf()
 
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnOption.setOnClickListener { clickOptionBtn() }
@@ -71,7 +80,7 @@ class ChattingActivity : AppCompatActivity() {
             if(hasFocus) binding.relativeOption.visibility = View.GONE
         }
         createFirebaseCollectionName()
-        loadMessage()
+
     }
 
 
@@ -87,12 +96,25 @@ class ChattingActivity : AppCompatActivity() {
         var nickname = G.nickName
         var message = binding.etMsg.text.toString()
         var id = G.userAccount.id
-        var image = items
         var hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         var minute = Calendar.getInstance().get(Calendar.MINUTE)
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
 
-        chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(image,nickname,id,message, time,G.profileImg))
+
+        if(pictureSelectedItem.isNotEmpty())
+        {
+            Log.i("zxcv45","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
+            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,chatRef)
+        }
+        else {
+            Log.i("zxcv45",pictureSelectedItem.size.toString())
+            Log.i("zxcv45","set 시작 ")
+            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem)).addOnFailureListener {
+                Log.i("zxcv45",it.message.toString())
+            }
+        }
+
+
 
         binding.relativeLocationChat.visibility = View.GONE
         binding.cvPicture.visibility = View.GONE
@@ -103,6 +125,61 @@ class ChattingActivity : AppCompatActivity() {
         items.removeAll { items -> true }
     }
 
+    private fun uploadPictureToFirestore(pictureSelectedItem: MutableList<Uri>,
+                                         nickname: String,
+                                         message: String,
+                                         id: String,
+                                         time: String,
+                                         chatRef: CollectionReference){
+        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+        var fileName = ""
+        fileName = "$collectionName/${G.userAccount.id}$time/"
+
+        Log.i("123asdfe", "사진 정보 추가: ${pictureSelectedItem.size}")
+        for(i in pictureSelectedItem.indices){
+            val imgRef: StorageReference =
+                firebaseStorage.getReference("${fileName}IMG_$time$i.jpg")
+            Log.i("123asdfe", "사진 정보 추가: ${pictureSelectedItem[i]}")
+            imgRef.putFile(pictureSelectedItem[i]).addOnSuccessListener(OnSuccessListener<Any?> {
+                Log.i("123asdfe", "사진 정보 추가 성공!!: ${pictureSelectedItem[i]}")
+                imgRef.downloadUrl.addOnSuccessListener {
+                    Log.i("123asdfe", "사진 정보 다운로드URL 성공!!: ${pictureSelectedItem[i]}")
+                    var chatRef = firestore.collection(collectionName!!)
+                    pictureItem.add(it)
+                    //Log.i("123asdfe", "${pictureItem[i]}")
+                    if(i == pictureSelectedItem.size - 1) {
+                        chatRef.document("MSG_${System.currentTimeMillis()}").set(
+                            MessageItem(
+                                nickname,
+                                id,
+                                message,
+                                time,
+                                G.profileImg,
+                                pictureItem
+                            )
+                        ).addOnFailureListener {
+                            Log.i("123asdfe", "사진 정보 추가 실패 : ${it.message}")
+                        }
+                    }
+                }
+//                if(i == pictureItem.size-1) {
+//
+//                    imgRef.downloadUrl.addOnSuccessListener {
+//                        var chatRef = firestore.collection(collectionName!!)
+//                        pictureItem.add(it)
+//                        chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureItem)).addOnFailureListener {
+//                            Log.i("123asdfe","사진 정보 추가: ${it.message}")
+//                        }
+//
+//                    }
+//                }
+            })
+                .addOnFailureListener(
+                    OnFailureListener {
+                        Log.i("123asdfe","사진 정보 추가 실패: ${it.message}")
+                    })
+        }
+    }
 
     /*
     *
@@ -113,9 +190,10 @@ class ChattingActivity : AppCompatActivity() {
         var chatRef = firestore.collection(collectionName!!)
 
         chatRef.addSnapshotListener { value, error ->
-            var documentChanges = value?.documentChanges ?: return@addSnapshotListener
-            for(documentChange in documentChanges){
 
+            var documentChanges = value?.documentChanges ?: return@addSnapshotListener
+
+            for (documentChange in documentChanges) {
                 var snapshot = documentChange.document
                 var map = snapshot.data
 
@@ -123,19 +201,87 @@ class ChattingActivity : AppCompatActivity() {
                 var id = map.get("id").toString()
                 var message = map.get("message").toString()
                 var time = map.get("time").toString()
-                var imageUri = (map.get("image") as MutableList<*>).mapNotNull { it as Map<*,*> }.map { it["uri"].toString() }
+                var profileImage = Uri.parse(map.get("profileImage").toString())
+                var image = map.get("image") as MutableList<*>
 
-                var image: MutableList<PictureItem> = mutableListOf()
-                for(i in imageUri.indices) image.add(PictureItem(Uri.parse(imageUri[i])))
+                for(i in 0 until image.size){
+                    pictureItem.add(Uri.parse(image[i].toString()))
+                }
 
-                messageItem.add(MessageItem(image, nickname,id, message, time,Uri.parse(map.get("profileImage").toString())))
 
-                Log.i("messageItem", messageItem.get(0).image.size.toString())
+
+                messageItem.add(MessageItem( nickname,id, message, time,profileImage,pictureItem))
                 binding.recycler.adapter?.notifyItemInserted(messageItem.size)
-                binding.recycler.scrollToPosition((binding.recycler.adapter as MessageAdapter).itemCount - 1)
+                binding.recycler.scrollToPosition(messageItem.size-1)
+//                pictureItem.clear()
+//                        getFileCount(id,time)
+//                        getPictureURLFromFirestore(nickname,id,message,time,profileImage,fileNum)
+//                        Glide.with(this@ChattingActivity).load("https://firebasestorage.googleapis.com/v0/b/auctionapp-cha.appspot.com/o/profile%2FIMG_107906160521912199636.jpg?alt=media&token=41c70088-bd6b-49b7-899d-a43e909482be").into(binding.btnOption)
+
+                Log.i("15eeee","${inx} 반복문 종료")
             }
         }
     }
+//
+//
+//    var fileNum = 0
+//
+//    private suspend fun getFileCount(id: String, time: String) = coroutineScope{
+//        Log.i("15eeee","파일카운트 실행")
+//        val firebaseStorage = FirebaseStorage.getInstance()
+//        val rootRef = firebaseStorage.reference
+//        var fileRef = rootRef.child("${collectionName}/$id$time/")
+//
+//        fileRef.listAll().addOnSuccessListener {task->
+//            Log.i("15eeee","파일카운트 비동기 작업 실행")
+//            fileNum = task.items.size
+//
+//            Log.i("15eeee","파일카운트 비동기 작업 종료")
+//        }.await()
+//    }
+//
+//    private suspend fun getPictureURLFromFirestore(nickname: String,
+//                                                   id: String,
+//                                                   message: String,
+//                                                   time: String,
+//                                                   profileImage: Uri,
+//                                                   fileNum: Int) = suspendCoroutine<Boolean>{
+//
+//
+//        Log.i("15eeee","getPicture 실행")
+//        val firebaseStorage = FirebaseStorage.getInstance()
+//        Log.i("15eeee","getPicture for문 시작 : 1")
+//        val rootRef = firebaseStorage.reference
+//
+//        Log.i("15eeee","getPicture for문 시작 : 2")
+//        var fileCount = fileNum
+//        Log.i("15eeee","getPicture for문 시작 : 3")
+//        var fileRef = rootRef.child("${collectionName}/$id$time/")
+//        Log.i("15eeee","getPicture for문 시작 : 4 : $fileNum")
+//
+//        for(i in 0 until fileNum){
+//            Log.i("15eeee","getPicture for문 시작 : $i")
+//            var imgRef = rootRef.child("${collectionName}/$id$time/IMG_$time$i.jpg")
+//            Log.i("15eeee","getPicture for문 시작 : $imgRef")
+//            imgRef.downloadUrl.addOnSuccessListener {
+//                uri->
+//                Log.i("15eeee","getPicture 비동기 작업 실행")
+//                pictureItem.add(uri)
+//                Log.i("15eeee","반복문 : ${i}")
+//                if(i == fileNum-1){
+//                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,pictureItem))
+//                    binding.recycler.adapter?.notifyItemInserted(messageItem.size)
+//                    Log.i("15eeee","${messageItem[i].image}")
+//                    Glide.with(this@ChattingActivity).load(messageItem[i].image).into(binding.btnOption)
+//                    pictureItem.clear()
+//                }
+//                Log.i("15eeee","다운로드 URL : ${pictureItem}")
+//                Log.i("15eeee","getPicture 비동기 작업 종료")
+//                //it.resume(true)
+//
+//            }
+//        }
+//    }
 
     /*
     *
@@ -192,10 +338,9 @@ class ChattingActivity : AppCompatActivity() {
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
 
-
                 for(i in 0 until size){
+                    pictureSelectedItem.add(clipData.getItemAt(i).uri)
                     items.add(PictureItem(clipData.getItemAt(i).uri))
-                    Log.i("1eee","${clipData.getItemAt(i).uri}")
                 }
 
                 binding.cvPicture.visibility = View.VISIBLE

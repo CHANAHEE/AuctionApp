@@ -1,6 +1,7 @@
 package com.cha.auctionapp.adapters
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,9 @@ import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.model.MessageItem
+import com.cha.auctionapp.model.PictureItem
+import com.cha.auctionapp.model.PictureMessageItem
+import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) : Adapter<ViewHolder>(){
@@ -21,6 +25,7 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
     private var TYPE_OTHER_MESSAGE = 1
     private var TYPE_MY_PICTURE_MESSAGE = 2
     private var TYPE_OTHER_PICTURE_MESSAGE = 3
+    private var pictureItem: MutableList<Uri> = mutableListOf()
 
     inner class MessageVH(itemView: View) : ViewHolder(itemView) {
 
@@ -61,13 +66,13 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
 //        Log.i("messageCheck","${items.get(position).image.size} : ${position}")
         if(items[position].id
             == G.userAccount.id
-            && items[position].image.size == 0) return TYPE_MY_MESSAGE
+            && items[position].message != "") return TYPE_MY_MESSAGE
         else if (items[position].id
             == G.userAccount.id
-            && items[position].image.size != 0) return TYPE_MY_PICTURE_MESSAGE
+            && items[position].message == "") return TYPE_MY_PICTURE_MESSAGE
         else if (items[position].id
             != G.userAccount.id
-            && items[position].image.size == 0) return TYPE_OTHER_MESSAGE
+            && items[position].message != "") return TYPE_OTHER_MESSAGE
         else return TYPE_OTHER_PICTURE_MESSAGE
     }
 
@@ -92,11 +97,19 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
             Glide.with(context).load(item.profileImage).error(R.drawable.default_profile)
                 .into(holder.profile)
         }else if(holder is PictureVH){
+            Log.i("15ee","Picture VH")
             holder.nickName.text = item.nickname
-            holder.picture.adapter = PictureMessageAdapter(context, item.image, items)
+            Log.i("15eeefasdfasdfasdf","${items[position].id}")
+            pictureItem = items[0].image
+            holder.picture.adapter = PictureMessageAdapter(context, items[position].id,pictureItem)
+
             holder.time.text = item.time
             Glide.with(context).load(item.profileImage).error(R.drawable.default_profile)
                 .into(holder.profile)
+
         }
     }
+
+
+
 }

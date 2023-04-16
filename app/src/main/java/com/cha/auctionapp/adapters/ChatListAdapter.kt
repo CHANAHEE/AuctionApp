@@ -23,7 +23,7 @@ class ChatListAdapter(var context: Context, var items: MutableList<MessageItem>)
         holder.binding.tvNicknameChatList.text = item.nickname
         holder.binding.tvMsgChatList.text = item.message
         holder.binding.tvTimeChatList.text = item.time
-        Glide.with(context).load(item.image).into(holder.binding.civProfileChatList)
+        //Glide.with(context).load(item.image).into(holder.binding.civProfileChatList)
 
         holder.itemView.setOnClickListener {
             context.startActivity(Intent(context, com.cha.auctionapp.activities.ChattingActivity::class.java))

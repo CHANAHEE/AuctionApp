@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         val imgRef = rootRef.child("profile/IMG_$id.jpg")
         imgRef.downloadUrl.addOnSuccessListener { p0 ->
             G.profileImg = p0
+            Log.i("15eeee","$p0")
             setNavigationDrawer()
         }.addOnFailureListener {
         }

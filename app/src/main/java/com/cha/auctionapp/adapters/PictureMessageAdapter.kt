@@ -17,28 +17,42 @@ import com.cha.auctionapp.model.PictureCommunityDetailItem
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.model.PictureMessageItem
 
-class PictureMessageAdapter(var context: Context, var items: MutableList<PictureItem>,var viewTypeItem: MutableList<MessageItem>) : Adapter<PictureMessageAdapter.VH>() {
+class PictureMessageAdapter(var context: Context, var id: String, var item: MutableList<Uri>) : Adapter<ViewHolder>() {
 
     private var TYPE_MY_MESSAGE = 0
     private var TYPE_OTHER_MESSAGE = 1
 
-    inner class VH(itemView: View) : ViewHolder(itemView) {
-        var picture = itemView.findViewById<ImageView>(R.id.iv_chat_picture_message)
+    inner class MyVH(itemView: View) : ViewHolder(itemView) {
+        var myPicture = itemView.findViewById<ImageView>(R.id.iv_chat_picture_message)
+    }
+    inner class OtherVH(itemView: View) : ViewHolder(itemView) {
+        var otherPicture = itemView.findViewById<ImageView>(R.id.iv_chat_picture_message)
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.i("123rde","${viewTypeItem[position].id} : ${G.userAccount.id}")
-        if(viewTypeItem[position].id == G.userAccount.id) return TYPE_MY_MESSAGE
+        Log.i("123rde","${id} : ${G.userAccount.id}")
+        if(id == G.userAccount.id) return TYPE_MY_MESSAGE
         else return TYPE_OTHER_MESSAGE
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        if(viewType == TYPE_MY_MESSAGE) return VH(LayoutInflater.from(context).inflate(R.layout.recycler_chatting_my_picture_message,parent,false))
-        else return VH(LayoutInflater.from(context).inflate(R.layout.recycler_chatting_other_picture_message,parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.i("15ee","${viewType}")
+        if(viewType == TYPE_MY_MESSAGE) return MyVH(LayoutInflater.from(context).inflate(R.layout.recycler_chatting_my_picture_message,parent,false))
+        else return OtherVH(LayoutInflater.from(context).inflate(R.layout.recycler_chatting_other_picture_message,parent,false))
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        Log.i("15ee","${item.size}")
+        return item.size
+    }
 
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        Glide.with(context).load(items[position].uri).into(holder.picture)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if(holder is MyVH) {
+            Log.i("15ee","MYVH : ${item[position]} ")
+            Glide.with(context).load(item[position]).into(holder.myPicture)
+        }
+        else if(holder is OtherVH){
+            Log.i("15ee","OTHER : ${item[position]}")
+            Glide.with(context).load(item[position]).into(holder.otherPicture)
+        }
     }
 }
