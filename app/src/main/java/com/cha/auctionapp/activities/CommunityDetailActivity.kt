@@ -72,7 +72,12 @@ class CommunityDetailActivity : AppCompatActivity() {
                 binding.tvMainTitle.text = item.title
                 binding.tvDescription.text = item.description
                 binding.tvMyTownName.text = item.location
-                binding.tvLocationNameCommunityDetail.text = item.placeinfo
+                if(item.placeinfo?.isNotBlank() == true){
+                    Log.i("communityCheck",item.placeinfo.toString())
+                    binding.relativeLocation.visibility = View.VISIBLE
+                    binding.tvLocationNameCommunityDetail.text = item.placeinfo
+                }
+
 
                 loadCommentsDataFromServer()
             }
