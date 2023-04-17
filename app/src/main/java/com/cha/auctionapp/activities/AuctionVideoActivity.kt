@@ -1,16 +1,21 @@
-package com.cha.auctionapp
+package com.cha.auctionapp.activities
 
 import android.Manifest
+import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -20,12 +25,13 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.activities.MainActivity
+import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class AuctionVideoActivity : AppCompatActivity() {
 
@@ -38,27 +44,30 @@ class AuctionVideoActivity : AppCompatActivity() {
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-
-        checkCameraPermission()
         binding.fab.setOnClickListener { clickCaptureBtn() }
+        binding.btnChange.setOnClickListener { switchCamera() }
+        checkCameraPermission()
     }
 
     override fun onResume() {
         super.onResume()
-        startCamera()
+        startCamera(cameraSelector)
     }
+
     /*
     *
     *       프리뷰 기능
     *
     * */
     lateinit var imageCapture: ImageCapture
-    private fun startCamera() {
+    var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+    private fun startCamera(cameraSelector: CameraSelector) {
         val listenableFuture: ListenableFuture<ProcessCameraProvider> = ProcessCameraProvider.getInstance(this)
         listenableFuture.addListener(Runnable {
                                               kotlin.run {
                                                   var cameraProvider = listenableFuture.get()
-                                                  var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                                                  cameraProvider.unbindAll()
                                                   var preview = Preview.Builder().build()
                                                   preview.setSurfaceProvider(binding.previewView.surfaceProvider)
                                                   imageCapture = ImageCapture.Builder().build()
@@ -68,6 +77,19 @@ class AuctionVideoActivity : AppCompatActivity() {
         },ContextCompat.getMainExecutor(this))
     }
 
+    /*
+    *
+    *       카메라 렌즈 방향 변경
+    *
+    * */
+    private fun switchCamera(){
+        cameraSelector = if(cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+            CameraSelector.DEFAULT_FRONT_CAMERA
+        }else{
+            CameraSelector.DEFAULT_BACK_CAMERA
+        }
+        startCamera(cameraSelector)
+    }
 
     /*
     *
@@ -96,7 +118,6 @@ class AuctionVideoActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     Toast.makeText(this@AuctionVideoActivity, "촬영 성공", Toast.LENGTH_SHORT).show()
-                    binding.tv.setText(outputFileResults.savedUri.toString())
                     Glide.with(this@AuctionVideoActivity).load(outputFileResults.savedUri).into(binding.civ)
                 }
 
@@ -122,7 +143,8 @@ class AuctionVideoActivity : AppCompatActivity() {
         var checkResult1 = checkSelfPermission(permissions.get(0))
         var checkResult2 = checkSelfPermission(permissions.get(1))
 
-        if(checkResult1 == PackageManager.PERMISSION_DENIED || checkResult2 == PackageManager.PERMISSION_DENIED){
+        if(checkResult1 == PackageManager.PERMISSION_DENIED
+            || checkResult2 == PackageManager.PERMISSION_DENIED){
             var stringArr = permissions.toTypedArray()
             launcher.launch(stringArr)
         }
@@ -130,8 +152,24 @@ class AuctionVideoActivity : AppCompatActivity() {
     var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         var keys: Set<String> = it.keys
         for(key in keys){
-            var value = it.get(key) ?: false
-            if(!value) Snackbar.make(binding.root,"$key 퍼미션이 허용되었습니다.",Snackbar.LENGTH_SHORT).show()
+            var value = it[key] ?: false
+
+            if(!value) {
+                AlertDialog.Builder(this@AuctionVideoActivity)
+                    .setMessage("퍼미션이 거부되었습니다. 앱 설정에서 권한을 다시 설정해주세요")
+                    .setCancelable(false)
+                    .setPositiveButton(
+                    "확인"
+                ) { dialog, which -> finish() }.show()
+            }
+            else {
+                Snackbar.make(binding.root,"카메라와 오디오 사용이 허용되었습니다.",Snackbar.LENGTH_SHORT).show()
+
+
+            }
         }
     }
+
+
+
 }

@@ -3,19 +3,14 @@ package com.cha.auctionapp.adapters
 import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.cha.auctionapp.AuctionVideoActivity
-import com.cha.auctionapp.activities.AuctionEditActivity
+import com.cha.auctionapp.activities.AuctionVideoActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
-import com.cha.auctionapp.activities.MainActivity
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.google.android.exoplayer2.ExoPlayer
@@ -67,7 +62,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *
     * */
     private fun filmingVideo() {
-        context.startActivity(Intent(context,AuctionVideoActivity::class.java))
+        context.startActivity(Intent(context, AuctionVideoActivity::class.java))
     }
 
 
