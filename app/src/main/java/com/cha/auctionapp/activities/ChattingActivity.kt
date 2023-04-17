@@ -45,7 +45,7 @@ class ChattingActivity : AppCompatActivity() {
 
     lateinit var otherNickname: String
     lateinit var otherID: String
-    var otherProfile: Uri? = null
+    lateinit var otherProfile: String
 
     lateinit var items: MutableList<PictureItem>
     lateinit var messageItem: MutableList<MessageItem>
@@ -54,6 +54,7 @@ class ChattingActivity : AppCompatActivity() {
     var firestore = FirebaseFirestore.getInstance()
     var collectionName: String? = null
     lateinit var chatRoomNameRef: DocumentReference
+    var chatRef = firestore.collection("chat")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,8 @@ class ChattingActivity : AppCompatActivity() {
     * */
     private fun init(){
         otherNickname = intent.getStringExtra("otherNickname")!!
-        otherProfile = intent.data
+        otherProfile = intent.getStringExtra("otherProfile")!!
+        Log.i("profilecheck","$otherProfile")
         otherID = intent.getStringExtra("otherID")!!
         binding.tvOtherId.text = otherNickname
 
@@ -93,6 +95,7 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
         createFirebaseCollectionName()
+        Log.i("HELLO",collectionName!!)
         chatRoomNameRef = firestore.collection("chat").document(collectionName!!)
 //        getMessageLastIndex()
 //        getLastOtherMessageIndex()
@@ -150,19 +153,22 @@ class ChattingActivity : AppCompatActivity() {
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
         var location = binding.tvLocationNameChat.text.toString()
 
-        var subCollectionName: MutableMap<String,Long> = mutableMapOf()
-        subCollectionName.put(messageIndex.toString(),System.currentTimeMillis())
+        var documentName = System.currentTimeMillis()
+
+
+
         if(pictureSelectedItem.isNotEmpty())
         {
             Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
-            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,subCollectionName)
+            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,documentName)
         }
         else {
             Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
 
             Log.i("4zxc","$messageIndex")
             messageIndex += 1
-            chatRoomNameRef.collection(collectionName!!).document("MSG_${subCollectionName.get(messageIndex.toString())}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex))
+            chatRef.document(collectionName!!).set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
             //chatRoomNameRef.set(subCollectionName) -> 필드 인덱스
         }
 
@@ -180,7 +186,7 @@ class ChattingActivity : AppCompatActivity() {
                                          message: String,
                                          id: String,
                                          time: String,
-                                         subCollectionName: Map<String,Long>){
+                                         documentName: Long){
 
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         var fileName = "$collectionName/${G.userAccount.id}$time/"
@@ -193,7 +199,8 @@ class ChattingActivity : AppCompatActivity() {
 
                     pictureItem.add(it)
                     if(i == pictureSelectedItem.size - 1) {
-                        chatRoomNameRef.collection(collectionName!!).document("MSG_${subCollectionName.get(messageIndex.toString())}").set(
+                        chatRef.document(collectionName!!).set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,binding.tvLocationNameChat.text.toString(),messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+                        chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(
                             MessageItem(
                                 nickname,
                                 id,
@@ -204,7 +211,7 @@ class ChattingActivity : AppCompatActivity() {
                                 pictureItem.size,
                                 binding.tvLocationNameChat.text.toString(),
                                 messageIndex,
-                                lastOtherMessageIndex
+                                lastOtherMessageIndex,otherProfile,otherID,otherNickname
                             )
                         ).addOnFailureListener {
                         }
@@ -249,9 +256,9 @@ class ChattingActivity : AppCompatActivity() {
                 var newPictureItem = pictureItem.toMutableList()
 
                 try{
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex))
+                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
                 }catch (e: NumberFormatException){
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex))
+                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
                 }
                 pictureItem.clear()
 

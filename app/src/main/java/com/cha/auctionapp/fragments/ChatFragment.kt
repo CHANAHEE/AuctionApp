@@ -24,12 +24,14 @@ import java.lang.NumberFormatException
 class ChatFragment : Fragment() {
 
     lateinit var binding: FragmentChatBinding
-    lateinit var chatItem: MutableList<MessageItem>
-    var collectionName: String? = null
+
+
+    lateinit var chatListItem: MutableList<ChatListItem>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        chatItem = mutableListOf()
+        chatListItem = mutableListOf()
     }
 
     override fun onCreateView(
@@ -43,7 +45,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recycler.adapter = ChatListAdapter(requireContext(),chatItem)
+        binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
         getChattingInfoFromFirebase()
     }
 
@@ -51,15 +53,45 @@ class ChatFragment : Fragment() {
 
     private fun getChattingInfoFromFirebase(){
         var firestore = FirebaseFirestore.getInstance()
-        var chatListRef = firestore.collectionGroup(G.userAccount.id)
+        var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
+            var documentChange = it.documentChanges
+            for(document in documentChange){
+                var snapshot = document.document
+                var map = snapshot.data
 
-        Log.i("chatList","chatListRef : ${chatListRef}")
-        chatListRef.get().addOnSuccessListener {
-            Log.i("chatList",it.documents.size.toString())
-        }.addOnFailureListener {
-            Log.i("chatList",it.message.toString())
+                if(G.userAccount.id == map.get("id").toString()){
+                    var lastMessage = map.get("message").toString()
+                    var nickname = map.get("otherNickname").toString()
+                    var profileImage = map.get("otherProfileImage").toString()
+                    var time = map.get("time").toString()
+                    var otherID = map.get("otherID").toString()
+                    chatListItem.add(ChatListItem(nickname, profileImage, lastMessage, time,otherID))
+                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                }else if(G.userAccount.id == map.get("otherID").toString()){
+                    var lastMessage = map.get("message").toString()
+                    var nickname = map.get("nickname").toString()
+                    var profileImage = map.get("profileImage").toString()
+                    var time = map.get("time").toString()
+                    var otherID = map.get("id").toString()
+                    chatListItem.add(ChatListItem(nickname, profileImage, lastMessage, time,otherID))
+                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                }
+            }
         }
+
+//        Log.i("chatList","chatListRef : ${chatListRef}")
+//        chatListRef.get().addOnSuccessListener {
+//            Log.i("chatList",it.documents.size.toString())
+//        }.addOnFailureListener {
+//            Log.i("chatList",it.message.toString())
+//        }
     }
+//    private fun createFirebaseCollectionName() {
+//        var compareResult = G.userAccount.id.compareTo(otherID)
+//        collectionName = if(compareResult > 0) G.userAccount.id + otherID
+//        else if(compareResult < 0) otherID + G.userAccount.id
+//        else null
+//    }
 }
 //            for (documentChange in documentChanges) {
 //
@@ -92,12 +124,7 @@ class ChatFragment : Fragment() {
 //            binding.recycler.scrollToPosition(messageItem.size-1)
 
 
-//    private fun createFirebaseCollectionName() {
-//        var compareResult = G.userAccount.id.compareTo(otherID)
-//        collectionName = if(compareResult > 0) G.userAccount.id + otherID
-//        else if(compareResult < 0) otherID + G.userAccount.id
-//        else null
-//    }
+
 //
 //    private fun loadProfileFromFirestore(item: ChatListItem){
 //        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()

@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.activities.ChattingActivity
 import com.cha.auctionapp.databinding.RecyclerChatListItemBinding
+import com.cha.auctionapp.model.ChatListItem
 import com.cha.auctionapp.model.MessageItem
 
-class ChatListAdapter(var context: Context, var items: MutableList<MessageItem>) : Adapter<ChatListAdapter.VH>(){
+class ChatListAdapter(var context: Context, var items: MutableList<ChatListItem>) : Adapter<ChatListAdapter.VH>(){
 
     inner class VH(var binding: RecyclerChatListItemBinding) : ViewHolder(binding.root)
 
@@ -21,12 +23,16 @@ class ChatListAdapter(var context: Context, var items: MutableList<MessageItem>)
     override fun onBindViewHolder(holder: VH, position: Int) {
         var item = items[position]
         holder.binding.tvNicknameChatList.text = item.nickname
-        holder.binding.tvMsgChatList.text = item.message
+        holder.binding.tvMsgChatList.text = item.lastMessage
         holder.binding.tvTimeChatList.text = item.time
-        //Glide.with(context).load(item.image).into(holder.binding.civProfileChatList)
+        Glide.with(context).load(item.profileImage).into(holder.binding.civProfileChatList)
 
         holder.itemView.setOnClickListener {
-            context.startActivity(Intent(context, com.cha.auctionapp.activities.ChattingActivity::class.java))
+            context.startActivity(Intent(context, ChattingActivity::class.java)
+                .putExtra("otherNickname",item.nickname)
+                .putExtra("otherProfile",item.profileImage)
+                .putExtra("otherID",item.OtherID))
+
         }
     }
 

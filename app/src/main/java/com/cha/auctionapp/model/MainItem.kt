@@ -105,14 +105,19 @@ data class MessageItem(
     var message: String? = "",
     var time: String = "",
     var profileImage: Uri?,
-    //var image: MutableList<Uri>
     var image: MutableList<Uri>,
     var imageSize: Int,
     var location: String,
     var messageIndex: Int,
-    var lastOtherMessageIndex: Int
+    var lastOtherMessageIndex: Int,
+    var otherProfileImage: String?,
+    var otherID: String,
+    var otherNickname: String
 )
 data class ChatListItem(
+    var nickname: String,
+    var profileImage: String?,
     var lastMessage: String,
-    var time: String
+    var time: String,
+    var OtherID: String
 )

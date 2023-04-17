@@ -32,7 +32,7 @@ class HomeDetailActivity : AppCompatActivity() {
     lateinit var items: MutableList<HomeDetailItem>
 
     lateinit var otherID: String
-    private var otherProfile: Uri? = null
+    lateinit var otherProfile: String
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -104,6 +104,7 @@ class HomeDetailActivity : AppCompatActivity() {
                         *          채팅버튼 대신 상품에 대해 채팅하고 있는 채팅 내역 보여주는 버튼 만들기
                         * */
                     }
+                    otherProfile = it.get("profileImage").toString()
                     return@addOnSuccessListener
                 }
 
@@ -128,9 +129,10 @@ class HomeDetailActivity : AppCompatActivity() {
     *
     * */
     private fun clickChatBtn() {
+        Log.i("profilecheck", otherProfile)
         startActivity(Intent(this, ChattingActivity::class.java)
             .putExtra("otherNickname",binding.tvId.text.toString())
-            .putExtra("otherProfile",otherProfile)
+            .putExtra("otherProfile",otherProfile.toString())
             .putExtra("otherID",otherID)
         )
     }
