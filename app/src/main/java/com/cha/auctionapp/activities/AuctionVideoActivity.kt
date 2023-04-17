@@ -1,6 +1,7 @@
 package com.cha.auctionapp.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
@@ -15,13 +16,17 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.core.VideoCapture
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.MediaStoreOutputOptions
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
@@ -29,6 +34,7 @@ import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -41,11 +47,19 @@ class AuctionVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    private fun init(){
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-        binding.fab.setOnClickListener { clickCaptureBtn() }
+
+        binding.fab.setOnClickListener {
+            startRecording()
+            stopRecording()
+        }
         binding.btnChange.setOnClickListener { switchCamera() }
+
         checkCameraPermission()
     }
 
@@ -59,24 +73,41 @@ class AuctionVideoActivity : AppCompatActivity() {
     *       프리뷰 기능
     *
     * */
-    lateinit var imageCapture: ImageCapture
+//    lateinit var imageCapture: ImageCapture
+//    var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+//
+//    private fun startCamera(cameraSelector: CameraSelector) {
+//        val listenableFuture: ListenableFuture<ProcessCameraProvider> = ProcessCameraProvider.getInstance(this)
+//        listenableFuture.addListener(Runnable {
+//                                              kotlin.run {
+//                                                  var cameraProvider = listenableFuture.get()
+//                                                  cameraProvider.unbindAll()
+//                                                  var preview = Preview.Builder().build()
+//                                                  preview.setSurfaceProvider(binding.previewView.surfaceProvider)
+//                                                  imageCapture = ImageCapture.Builder().build()
+//                                                  cameraProvider.bindToLifecycle(this@AuctionVideoActivity,cameraSelector,preview,imageCapture)
+//                                              }
+//
+//        },ContextCompat.getMainExecutor(this))
+//    }
+    lateinit var videoCapture: VideoCapture
     var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
+    @SuppressLint("RestrictedApi")
     private fun startCamera(cameraSelector: CameraSelector) {
         val listenableFuture: ListenableFuture<ProcessCameraProvider> = ProcessCameraProvider.getInstance(this)
         listenableFuture.addListener(Runnable {
-                                              kotlin.run {
-                                                  var cameraProvider = listenableFuture.get()
-                                                  cameraProvider.unbindAll()
-                                                  var preview = Preview.Builder().build()
-                                                  preview.setSurfaceProvider(binding.previewView.surfaceProvider)
-                                                  imageCapture = ImageCapture.Builder().build()
-                                                  cameraProvider.bindToLifecycle(this@AuctionVideoActivity,cameraSelector,preview,imageCapture)
-                                              }
+            kotlin.run {
+                var cameraProvider = listenableFuture.get()
+                cameraProvider.unbindAll()
+                var preview = Preview.Builder().build()
+                preview.setSurfaceProvider(binding.previewView.surfaceProvider)
+                videoCapture = VideoCapture.Builder().setTargetRotation(binding.previewView.display.rotation).build()
+                cameraProvider.bindToLifecycle(this@AuctionVideoActivity,cameraSelector,preview,videoCapture)
+            }
 
         },ContextCompat.getMainExecutor(this))
     }
-
     /*
     *
     *       카메라 렌즈 방향 변경
@@ -96,38 +127,78 @@ class AuctionVideoActivity : AppCompatActivity() {
     *       캡처 버튼 이벤트
     *
     * */
-    private fun clickCaptureBtn() {
-        val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA)
-        val fileName = sdf.format(System.currentTimeMillis())
+//    private fun clickCaptureBtn() {
+//        val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA)
+//        val fileName = sdf.format(System.currentTimeMillis())
+//
+//        var contentValue: ContentValues = ContentValues()
+//        contentValue.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+//        contentValue.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) contentValue.put(
+//            MediaStore.MediaColumns.RELATIVE_PATH,
+//            "Pictures/CameraX-Image"
+//        )
+//
+//        val options = ImageCapture.OutputFileOptions.Builder(
+//            contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValue
+//        ).build()
+//
+//        imageCapture.takePicture(
+//            options,
+//            ContextCompat.getMainExecutor(this),
+//            object : ImageCapture.OnImageSavedCallback {
+//                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+//                    Toast.makeText(this@AuctionVideoActivity, "촬영 성공", Toast.LENGTH_SHORT).show()
+//                    Glide.with(this@AuctionVideoActivity).load(outputFileResults.savedUri).into(binding.ivAlbum)
+//                }
+//
+//                override fun onError(exception: ImageCaptureException) {
+//                    Toast.makeText(this@AuctionVideoActivity, "Error: $exception", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            })
+//    }
 
-        var contentValue: ContentValues = ContentValues()
-        contentValue.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-        contentValue.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) contentValue.put(
-            MediaStore.MediaColumns.RELATIVE_PATH,
-            "Pictures/CameraX-Image"
-        )
+    var isRecording = false
+    @RequiresApi(Build.VERSION_CODES.P)
+    @SuppressLint("RestrictedApi")
+    private fun startRecording() {
 
-        val options = ImageCapture.OutputFileOptions.Builder(
-            contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValue
-        ).build()
+        if(isRecording) return
 
-        imageCapture.takePicture(
-            options,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    Toast.makeText(this@AuctionVideoActivity, "촬영 성공", Toast.LENGTH_SHORT).show()
-                    Glide.with(this@AuctionVideoActivity).load(outputFileResults.savedUri).into(binding.civ)
-                }
+        val videoFile = File(externalMediaDirs.firstOrNull(), "video.mp4")
 
-                override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(this@AuctionVideoActivity, "Error: $exception", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
+        val option = VideoCapture.OutputFileOptions.Builder(videoFile).build()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        videoCapture.startRecording(option,this.mainExecutor,object : VideoCapture.OnVideoSavedCallback{
+            override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+                isRecording = true
+                Glide.with(this@AuctionVideoActivity).load(outputFileResults.savedUri).into(binding.ivAlbum)
+            }
+
+            override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
+                Snackbar.make(binding.root,"$message : 동영상 촬영에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT).show()
+            }
+        })
     }
 
+    @SuppressLint("RestrictedApi")
+    private fun stopRecording(){
+        if(!isRecording) {
+            return
+        }
+
+        isRecording = false
+        videoCapture.stopRecording()
+    }
 
     /*
     *
