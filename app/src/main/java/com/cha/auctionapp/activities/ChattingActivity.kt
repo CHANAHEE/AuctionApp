@@ -39,7 +39,7 @@ class ChattingActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityChattingBinding
 
-    var lastIndex: Int = 0
+    var messageIndex = 0
     var lastOtherMessageIndex = 0
 
     lateinit var otherNickname: String
@@ -101,10 +101,10 @@ class ChattingActivity : AppCompatActivity() {
         var chatRef = firestore.collection(collectionName!!)
         chatRef.get().addOnSuccessListener {
             for(document in  it.documents){
-                if(document.get("index").toString() == "") lastIndex = 0
-                else lastIndex = document.get("index").toString().toInt()
+                if(document.get("messageIndex").toString() == "") messageIndex = 0
+                else messageIndex = document.get("messageIndex").toString().toInt()
             }
-            Log.i("4zxc","$lastIndex")
+            Log.i("4zxc","$messageIndex")
         }
     }
 
@@ -112,12 +112,12 @@ class ChattingActivity : AppCompatActivity() {
     private fun getLastOtherMessageIndex(){
         if(collectionName == null) return
         var chatRef = firestore.collection(collectionName!!)
-        chatRef.orderBy("index", Query.Direction.DESCENDING)
+        chatRef.orderBy("messageIndex", Query.Direction.DESCENDING)
             .get().addOnSuccessListener { querySnapshot ->
                 for (document in querySnapshot.documents) {
                     if(document.get("id") != G.userAccount.id){
                         Log.i("4zxc","${document.get("id")} : ${G.userAccount.id}")
-                        lastOtherMessageIndex = document.get("index").toString().toInt()
+                        lastOtherMessageIndex = document.get("messageIndex").toString().toInt()
                         break
                     }
                 }
@@ -155,9 +155,11 @@ class ChattingActivity : AppCompatActivity() {
         }
         else {
             Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
-            lastIndex += 1
-            Log.i("4zxc","$lastIndex")
-            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location, lastIndex,lastOtherMessageIndex))
+
+            Log.i("4zxc","$messageIndex")
+            messageIndex += 1
+            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex))
+
         }
 
         binding.relativeLocationChat.visibility = View.GONE
@@ -196,7 +198,7 @@ class ChattingActivity : AppCompatActivity() {
                                 pictureItem,
                                 pictureItem.size,
                                 binding.tvLocationNameChat.text.toString(),
-                                index = lastIndex,
+                                messageIndex,
                                 lastOtherMessageIndex
                             )
                         ).addOnFailureListener {
@@ -235,7 +237,7 @@ class ChattingActivity : AppCompatActivity() {
                 var image = map.get("image") as MutableList<*>
                 var imageSize: String? = map.get("imageSize").toString()
                 var location = map.get("location").toString()
-                var index = map.get("index").toString()
+                var messageIndex = map.get("messageIndex").toString()
 
                 for(i in 0 until image.size){
                     pictureItem.add(Uri.parse(image[i].toString()))
@@ -243,7 +245,7 @@ class ChattingActivity : AppCompatActivity() {
                 var newPictureItem = pictureItem.toMutableList()
 
                 try{
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,index?.toInt() ?: 0,lastOtherMessageIndex))
+                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex))
                 }catch (e: NumberFormatException){
                     messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex))
                 }
