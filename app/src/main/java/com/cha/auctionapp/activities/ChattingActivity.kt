@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -51,6 +52,8 @@ class ChattingActivity : AppCompatActivity() {
     lateinit var pictureSelectedItem: MutableList<Uri>
     lateinit var pictureItem: MutableList<Uri>
     var firestore = FirebaseFirestore.getInstance()
+    var collectionName: String? = null
+    lateinit var chatRoomNameRef: DocumentReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,9 +93,9 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
         createFirebaseCollectionName()
-
-        getMessageLastIndex()
-        getLastOtherMessageIndex()
+        chatRoomNameRef = firestore.collection("chat").document(collectionName!!)
+//        getMessageLastIndex()
+//        getLastOtherMessageIndex()
     }
 
 
@@ -131,13 +134,13 @@ class ChattingActivity : AppCompatActivity() {
     *       서버에 메시지 저장.
     *
     * */
+//
     private fun clickSendBtn(){
         if(binding.etMsg.text.isBlank() && pictureSelectedItem.size == 0 && binding.tvLocationNameChat.text.isBlank()){
             Snackbar.make(binding.root,"메시지를 입력해주세요",Snackbar.LENGTH_SHORT).show()
             return
         }
         if(collectionName == null) return
-        var chatRef = firestore.collection(collectionName!!)
 
         var nickname = G.nickName
         var message = binding.etMsg.text.toString()
@@ -147,19 +150,20 @@ class ChattingActivity : AppCompatActivity() {
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
         var location = binding.tvLocationNameChat.text.toString()
 
-
+        var subCollectionName: MutableMap<String,Long> = mutableMapOf()
+        subCollectionName.put(messageIndex.toString(),System.currentTimeMillis())
         if(pictureSelectedItem.isNotEmpty())
         {
             Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
-            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time)
+            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,subCollectionName)
         }
         else {
             Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
 
             Log.i("4zxc","$messageIndex")
             messageIndex += 1
-            chatRef.document("MSG_${System.currentTimeMillis()}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex))
-
+            chatRoomNameRef.collection(collectionName!!).document("MSG_${subCollectionName.get(messageIndex.toString())}").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex))
+            //chatRoomNameRef.set(subCollectionName) -> 필드 인덱스
         }
 
         binding.relativeLocationChat.visibility = View.GONE
@@ -175,7 +179,8 @@ class ChattingActivity : AppCompatActivity() {
                                          nickname: String,
                                          message: String,
                                          id: String,
-                                         time: String){
+                                         time: String,
+                                         subCollectionName: Map<String,Long>){
 
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         var fileName = "$collectionName/${G.userAccount.id}$time/"
@@ -185,10 +190,10 @@ class ChattingActivity : AppCompatActivity() {
                 firebaseStorage.getReference("${fileName}IMG_$time$i.jpg")
             imgRef.putFile(pictureSelectedItem[i]).addOnSuccessListener(OnSuccessListener<Any?> {
                 imgRef.downloadUrl.addOnSuccessListener {
-                    var chatRef = firestore.collection(collectionName!!)
+
                     pictureItem.add(it)
                     if(i == pictureSelectedItem.size - 1) {
-                        chatRef.document("MSG_${System.currentTimeMillis()}").set(
+                        chatRoomNameRef.collection(collectionName!!).document("MSG_${subCollectionName.get(messageIndex.toString())}").set(
                             MessageItem(
                                 nickname,
                                 id,
@@ -219,14 +224,13 @@ class ChattingActivity : AppCompatActivity() {
     *       메시지 불러오기
     *
     * */
+//
     private fun loadMessage() {
-        var chatRef = firestore.collection(collectionName!!)
-
-        chatRef.addSnapshotListener { value, error ->
-            var documentChanges = value?.documentChanges ?: return@addSnapshotListener
-            for (documentChange in documentChanges) {
-
-                var snapshot = documentChange.document
+        Log.i("idid","loadMessage 진입")
+        firestore.collection("chat").document(collectionName!!).collection(collectionName!!).addSnapshotListener { value, error ->
+            var documentChange = value?.documentChanges ?: return@addSnapshotListener
+            for(document in documentChange){
+                var snapshot = document.document
                 var map = snapshot.data
 
                 var nickname = map.get("nickname").toString()
@@ -250,19 +254,21 @@ class ChattingActivity : AppCompatActivity() {
                     messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex))
                 }
                 pictureItem.clear()
+
+                Log.i("idid",map.get("id").toString())
             }
+
             binding.recycler.adapter?.notifyItemInserted(messageItem.size)
             binding.recycler.scrollToPosition(messageItem.size-1)
         }
     }
-
 
     /*
     *
     *       컬렉션 이름 생성 : 컬렉션이 DB 내 채팅방의 이름 -> 채팅방을 유일하게 구별 가능
     *
     * */
-    var collectionName: String? = null
+
     private fun createFirebaseCollectionName() {
         var compareResult = G.userAccount.id.compareTo(otherID)
         collectionName = if(compareResult > 0) G.userAccount.id + otherID

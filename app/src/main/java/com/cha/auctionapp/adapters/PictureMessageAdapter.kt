@@ -17,7 +17,6 @@ import com.cha.auctionapp.R
 import com.cha.auctionapp.model.MessageItem
 import com.cha.auctionapp.model.PictureCommunityDetailItem
 import com.cha.auctionapp.model.PictureItem
-import com.cha.auctionapp.model.PictureMessageItem
 
 class PictureMessageAdapter(var context: Context, var id: String, var item: MutableList<Uri>) : Adapter<ViewHolder>() {
 

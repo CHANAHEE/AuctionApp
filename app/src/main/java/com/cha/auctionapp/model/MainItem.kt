@@ -112,4 +112,7 @@ data class MessageItem(
     var messageIndex: Int,
     var lastOtherMessageIndex: Int
 )
-data class PictureMessageItem(var uri: Uri)
+data class ChatListItem(
+    var lastMessage: String,
+    var time: String
+)

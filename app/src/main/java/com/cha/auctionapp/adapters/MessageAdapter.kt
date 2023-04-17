@@ -17,8 +17,6 @@ import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.model.MessageItem
-import com.cha.auctionapp.model.PictureItem
-import com.cha.auctionapp.model.PictureMessageItem
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
