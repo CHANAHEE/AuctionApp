@@ -1,6 +1,8 @@
 package com.cha.auctionapp.network
 
 import com.cha.auctionapp.model.AuctionPagerItem
+import com.cha.auctionapp.model.CategoryItem
+import com.cha.auctionapp.model.CategorySearchItem
 import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.CommunityPostItem
@@ -58,6 +60,8 @@ interface RetrofitService {
     fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<MutableList<MainItem>>
     @GET("Server/loadDBForHomeDetail.php")
     fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
+    @GET("Server/loadDBForCategory.php")
+    fun getDataFromServerForCategory(@Query("location") query: String, @Query("category") query2: String) : Call<MutableList<CategorySearchItem>>
 
     // Community 관련
     @GET("Server/loadDBForCommunityFragment.php")

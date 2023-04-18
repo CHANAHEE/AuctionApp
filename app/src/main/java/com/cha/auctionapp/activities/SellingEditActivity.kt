@@ -1,17 +1,18 @@
 package com.cha.auctionapp.activities
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,7 +25,6 @@ import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
-import com.google.android.gms.common.util.IOUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,10 +35,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import java.text.DecimalFormat
 
 
 class SellingEditActivity : AppCompatActivity() {
@@ -50,7 +47,10 @@ class SellingEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySellingEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -59,26 +59,23 @@ class SellingEditActivity : AppCompatActivity() {
         binding.categoryRelative.setOnClickListener { clickCategory() }
         binding.selectPosRelative.setOnClickListener { clickSelectPos() }
         binding.btnImage.setOnClickListener { clickPicture() }
+        items = mutableListOf()
+        binding.recycler.adapter = PictureAdapter(this, items)
 
+        binding.etPrice.addTextChangedListener(watcher)
         binding.etPrice.setOnFocusChangeListener { v, hasFocus ->
             if(hasFocus) binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF000000"))
             else binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#4A000000"))
         }
 
-        items = mutableListOf()
-        binding.recycler.adapter = PictureAdapter(this, items)
-
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
         userRef.document(G.userAccount.id).get().addOnSuccessListener {
-
             flag = it.get("profile").toString()
-
             return@addOnSuccessListener
         }
     }
-
 
     /*
     *
@@ -95,30 +92,38 @@ class SellingEditActivity : AppCompatActivity() {
 //    }
     var launcherPictureSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
-
-
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-                for(i in 0 until size){
-                    items.add(PictureItem(clipData.getItemAt(i).uri))
-
-//                    if(checkUriPermission(
-//                        items[0].uri,
-//                        android.os.Process.myPid(),
-//                        android.os.Process.myUid(),
-//                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                    ) == PackageManager.PERMISSION_GRANTED) Log.i("permission","GRANTED")
-//                    else Log.i("permission","DENIDE")
-                }
+                for(i in 0 until size) items.add(PictureItem(clipData.getItemAt(i).uri))
                 binding.recycler.adapter?.notifyDataSetChanged()
                 binding.btnImage.text = "${items.size} / 10"
-
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
 
 
+    /*
+    *
+    *       가격 입력시, 화폐 단위 변경
+    *
+    * */
+    private val decimalFormat = DecimalFormat("#,###")
+    private var result: String = ""
+
+    private val watcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+        override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if(!TextUtils.isEmpty(charSequence.toString()) && charSequence.toString() != result){
+                result = decimalFormat.format(charSequence.toString().replace(",","").toDouble())
+                binding.etPrice.setText(result);
+                binding.etPrice.setSelection(result.length);
+            }
+        }
+        override fun afterTextChanged(p0: Editable?) {
+        }
+    }
     /*
     *
     *       카테고리 선택 버튼 : 카테고리 관련 정보 넣어서 다이얼로그 띄우기
@@ -159,12 +164,15 @@ class SellingEditActivity : AppCompatActivity() {
     }
 
 
+
+
     /*
     *
     *       완료 버튼 : DB 에 글 저장
     *
     * */
     private fun clickCompleteBtn() {
+        if(isBlankData()) return
 
         // 보낼 일반 String 데이터
         var title = binding.etTitle.text.toString()
@@ -212,6 +220,8 @@ class SellingEditActivity : AppCompatActivity() {
         })
     }
 
+
+
     /*
     *
     *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
@@ -227,6 +237,38 @@ class SellingEditActivity : AppCompatActivity() {
         }
         return null
     }
+
+
+    /*
+    *
+    *       입력 데이터 체크
+    *
+    * */
+    private fun isBlankData(): Boolean{
+        if(items.size == 0){
+            Snackbar.make(binding.root,"상품에 대한 사진은 최소 1장이 필요합니다.",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        else if(binding.etTitle.text.toString().isBlank()) {
+            binding.etTitle.requestFocus()
+            Snackbar.make(binding.root,"제목을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.tvCategory.text.toString() == "카테고리"){
+            Snackbar.make(binding.root,"카테고리를 선택해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.etPrice.text.toString().isBlank()){
+            binding.etPrice.requestFocus()
+            Snackbar.make(binding.root,"가격을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.etDecription.text.toString().isBlank()){
+            binding.etDecription.requestFocus()
+            Snackbar.make(binding.root,"상품에 대한 설명을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        else return false
+    }
+
+
     /*
     *
     *       앱 바의 뒤로가기 버튼

@@ -24,7 +24,7 @@
         android:layout_below="@id/iv_category"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:textSize="10sp"
+        android:textSize="8sp"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
         android:text="카테고리 이름"/>

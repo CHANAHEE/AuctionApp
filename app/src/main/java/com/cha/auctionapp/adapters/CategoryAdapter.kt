@@ -31,7 +31,7 @@ class CategoryAdapter(var context: Context, var categoryItems:MutableList<Catego
         *
         * */
         holder.binding.root.setOnClickListener {
-            context.startActivity(Intent(context,SearchItemByCategoryActivity::class.java))
+            context.startActivity(Intent(context,SearchItemByCategoryActivity::class.java).putExtra("category",item.cgName))
         }
     }
 }

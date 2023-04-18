@@ -64,7 +64,7 @@ class HomeDetailActivity : AppCompatActivity() {
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        Log.i("test001",retrofitService.toString())
+        Log.i("test001",intent.getStringExtra("index")!!)
         val call: Call<MutableList<HomeDetailItem>> = retrofitService.getDataFromServerForHomeDetail(intent.getStringExtra("index")!!)
         call.enqueue(object : Callback<MutableList<HomeDetailItem>> {
             override fun onResponse(

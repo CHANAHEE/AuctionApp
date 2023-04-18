@@ -39,6 +39,14 @@ data class HomeDetailItem(
     var image: String
 )
 
+data class CategorySearchItem(
+    var idx: Int,
+    var title: String,
+    var image: String,
+    var location: String,
+    var price: String
+)
+
 
 
 
