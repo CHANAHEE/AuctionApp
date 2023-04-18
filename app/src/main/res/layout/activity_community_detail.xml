@@ -129,7 +129,7 @@
                 android:layout_alignLeft="@id/tv_description"
                 android:layout_alignRight="@id/tv_description"
                 android:layout_marginRight="70dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:padding="8dp">
 
                 <ImageView
@@ -142,13 +142,13 @@
                     android:id="@+id/tv_location_name_community_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="공릉동"
                     android:layout_toRightOf="@id/iv_location"
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/brandfont"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp"
+                    />
 
 
             </RelativeLayout>
@@ -160,6 +160,7 @@
                 android:layout_below="@id/relative_location"
                 android:layout_alignLeft="@id/relative_location"
                 android:layout_alignRight="@id/relative_location"
+                android:visibility="gone"
                 android:layout_marginTop="20dp">
 
                 <androidx.recyclerview.widget.RecyclerView

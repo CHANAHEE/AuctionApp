@@ -29,7 +29,7 @@ class MyFavoriteAdapter(var context:Context, var items:MutableList<MyFavListItem
         holder.binding.tvLocationName.text = item.location
         holder.binding.tvPrice.text = item.price
 
-        holder.itemView.setOnClickListener { context.startActivity(Intent(context,HomeDetailActivity::class.java)) }
+        holder.itemView.setOnClickListener { context.startActivity(Intent(context,HomeDetailActivity::class.java).putExtra("index",item.indexProduct.toString())) }
     }
 
 }

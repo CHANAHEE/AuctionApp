@@ -33,6 +33,12 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
         init()
     }
 
+    
+    /*
+    * 
+    *       초기화 작업
+    * 
+    * */
     private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -44,31 +50,14 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
 
         categoryItems = mutableListOf()
         loadData()
-        /*
-        *       items 에 검색된 데이터 넣기. 근데 인덱스를 기반으로 HomeDetail 만들꺼니까.
-        *       인덱스를 잘 생각하자.
-        * */
-//        mainItems.add(MainItem("MainItem 1",R.drawable._0,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._8,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._9,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._0,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._1,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._2,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._3,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._4,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._5,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._6,"공릉동","34000원"))
-//        mainItems.add(MainItem("MainItem 2",R.drawable._7,"공릉동","34000원"))
-//
-//        binding.recycler.adapter = CategorySearchAdapter(this,mainItems)
     }
+
+
+    /*
+    *
+    *       서버에서 데이터 가져오기
+    *
+    * */
     private fun loadData() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
@@ -79,8 +68,11 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
                 response: Response<MutableList<CategorySearchItem>>
             ) {
                 categoryItems = response.body()!!
-                Log.i("zxicovhn","${categoryItems[0]}")
-                binding.recycler.adapter = CategorySearchAdapter(this@SearchItemByCategoryActivity,categoryItems)
+                if(categoryItems.size != 0) binding.recycler.adapter = CategorySearchAdapter(this@SearchItemByCategoryActivity,categoryItems)
+                else {
+                    binding.tvNone.visibility = View.VISIBLE
+                    binding.recycler.visibility = View.GONE
+                }
             }
 
             override fun onFailure(call: Call<MutableList<CategorySearchItem>>, t: Throwable) {
@@ -89,6 +81,12 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
         })
     }
 
+
+    /*
+    *
+    *       카테고리 내 검색 기능
+    *
+    * */
     private fun clickCategorySearch() {
         if(binding.etSearch.visibility == View.GONE){
             binding.tvAppbarTitle.visibility = View.GONE
@@ -129,6 +127,9 @@ class SearchItemByCategoryActivity : AppCompatActivity() {
             binding.etSearch.setText("")
         }
     }
+
+
+
 
     /*
     *

@@ -36,7 +36,16 @@ class CommunityEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init(){
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -55,6 +64,7 @@ class CommunityEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickCompleteBtn(){
+        if(isBlankData()) return
 
         var title = binding.etTitle.text.toString()
         var description = binding.etDecription.text.toString()
@@ -94,6 +104,11 @@ class CommunityEditActivity : AppCompatActivity() {
         })
     }
 
+    /*
+    *
+    *       Uri -> Filepath
+    *
+    * */
     fun getRealPathFromUri(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = contentResolver.query(uri, projection, null, null, null)
@@ -102,6 +117,25 @@ class CommunityEditActivity : AppCompatActivity() {
             return cursor.getString(columnIndex)
         }
         return null
+    }
+
+    /*
+    *
+    *       Data 체크
+    *
+    * */
+    private fun isBlankData(): Boolean{
+
+        if(binding.etTitle.text.toString().isBlank()) {
+            binding.etTitle.requestFocus()
+            Snackbar.make(binding.root,"제목을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.etDecription.text.toString().isBlank()){
+            binding.etDecription.requestFocus()
+            Snackbar.make(binding.root,"내용을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        else return false
     }
 
 

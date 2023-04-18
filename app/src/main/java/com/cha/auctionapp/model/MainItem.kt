@@ -84,7 +84,7 @@ data class CommunityDetailItem(
     var idx: String,
     var title: String,
     var description: String,
-    var placeinfo: String?,
+    var place_info: String?,
     var image: String,
 
     var nickname: String,

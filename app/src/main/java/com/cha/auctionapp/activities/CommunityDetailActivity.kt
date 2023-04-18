@@ -72,12 +72,12 @@ class CommunityDetailActivity : AppCompatActivity() {
                 binding.tvMainTitle.text = item.title
                 binding.tvDescription.text = item.description
                 binding.tvMyTownName.text = item.location
-                if(item.placeinfo?.isNotBlank() == true){
-                    Log.i("communityCheck",item.placeinfo.toString())
+                Log.i("communityCheck",item.place_info.toString())
+                if(item.place_info?.isNotBlank() == true){
+                    Log.i("communityCheck",item.place_info.toString())
                     binding.relativeLocation.visibility = View.VISIBLE
-                    binding.tvLocationNameCommunityDetail.text = item.placeinfo
+                    binding.tvLocationNameCommunityDetail.text = item.place_info
                 }
-
 
                 loadCommentsDataFromServer()
             }
@@ -96,6 +96,7 @@ class CommunityDetailActivity : AppCompatActivity() {
     private fun loadImageFiles(item: CommunityDetailItem){
         var imageListString = item.image.split(",")
         if(item.image.isNotEmpty()) {
+            binding.scrollview.visibility = View.VISIBLE
             var imageListPath: MutableList<PictureCommunityDetailItem> = mutableListOf()
             for (i in imageListString.indices) {
                 imageListPath.add(PictureCommunityDetailItem(imageListString[i]))
