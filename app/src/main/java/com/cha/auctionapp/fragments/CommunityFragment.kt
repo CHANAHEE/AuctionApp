@@ -3,14 +3,17 @@ package com.cha.auctionapp.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentTransaction
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
@@ -33,6 +36,13 @@ import retrofit2.Response
 class CommunityFragment : Fragment() {
 
     lateinit var binding: FragmentCommunityBinding
+    lateinit var popupMenu:PopupMenu
+    lateinit var communityItems: MutableList<CommunityPostItem>
+    lateinit var searchItems: MutableList<CommunityPostItem>
+
+    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
+    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 1
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,11 +52,7 @@ class CommunityFragment : Fragment() {
         return binding.root
     }
 
-    lateinit var popupMenu:PopupMenu
-    lateinit var communityItems: MutableList<CommunityPostItem>
 
-    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
-    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,6 +63,7 @@ class CommunityFragment : Fragment() {
         binding.ibSearch.setOnClickListener { clickSearch(it) }
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
 
+        searchItems = mutableListOf()
         setUpPopupMenu()
     }
 
@@ -145,6 +152,32 @@ class CommunityFragment : Fragment() {
     *
     * */
     private fun clickSearch(it : View){
+        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+            if(!hasFocus){
+                val imm: InputMethodManager =
+                    context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+
+                binding.btnSelectTown.visibility = View.VISIBLE
+                binding.etSearch.visibility = View.INVISIBLE
+                //binding.etSearch.setText("")
+            }
+        }
+
+
+        binding.etSearch.setOnKeyListener { v , keyCode, event ->
+            if(event.action == KeyEvent.ACTION_DOWN
+                && keyCode == KeyEvent.KEYCODE_ENTER)
+            {
+                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etSearch.windowToken,0)
+                loadSearchDataFromServer()
+                binding.etSearch.setText("")
+                true
+            }
+
+            false
+        }
         if(it.isSelected){
             it.isSelected = false
             binding.etSearch.visibility = View.VISIBLE
@@ -158,6 +191,28 @@ class CommunityFragment : Fragment() {
         }
     }
 
+    /*
+    *
+    *       검색 데이터 가져오기
+    *
+    * */
+    private fun loadSearchDataFromServer() {
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+        Log.i("test1234444",binding.etSearch.text.toString())
+        val call: Call<MutableList<CommunityPostItem>> = retrofitService.getSearchDataFromServerForCommunityFragment(binding.etSearch.text.toString())
+        call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
+            override fun onResponse(
+                call: Call<MutableList<CommunityPostItem>>,
+                response: Response<MutableList<CommunityPostItem>>
+            ) {
+                searchItems = response.body()!!
+                binding.recycler.adapter = CommunityAdapter(requireContext(),searchItems)
+            }
+            override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
+            }
+        })
+    }
     /*
     *
     *       SetUpMyPlaceListActivity Launcher : 새로운 동네 설정 시, MainActivity 종료
