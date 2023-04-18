@@ -1,6 +1,15 @@
 package com.cha.auctionapp.model
 
 import android.net.Uri
+import androidx.room.ColumnInfo
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.RoomDatabase
 
 data class CategoryItem(var cgIcon:Int, var cgName:String)
 
@@ -135,3 +144,37 @@ data class ChatListItem(
     var time: String,
     var OtherID: String
 )
+
+/*
+*
+*       관심 목록 데이터
+*
+* */
+@Entity
+data class MyFavListItem(
+    @PrimaryKey var idx: String,
+    @ColumnInfo(name = "index") var indexProduct: Int,
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "location") var location: String,
+    @ColumnInfo(name = "price") var price: String,
+    @ColumnInfo(name = "image") var image: String
+)
+
+@Database(entities = [MyFavListItem::class], version = 2)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun myFavListItemDAO(): MyFavListItemDAO
+}
+
+@Dao
+interface MyFavListItemDAO{
+    @Query("SELECT * FROM myFavListItem")
+    fun getAll() : List<MyFavListItem>
+
+    @Insert
+    fun insert(myFavProduct: MyFavListItem)
+
+    @Delete
+    fun delete(myFavProduct: MyFavListItem)
+}
+
+

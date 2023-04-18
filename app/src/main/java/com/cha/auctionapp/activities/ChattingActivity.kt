@@ -13,7 +13,6 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.MessageAdapter
 import com.cha.auctionapp.adapters.PictureChatAdapter

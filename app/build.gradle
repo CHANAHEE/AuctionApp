@@ -5,6 +5,8 @@ plugins {
 
     // google map api
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
+    id 'kotlin-kapt'
 }
 
 android {
@@ -100,9 +102,11 @@ dependencies {
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 
-    // lifecycleScope
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+
+    // Room DB 라이브러리
+    def room_version = "2.5.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
 }
