@@ -2,6 +2,7 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -54,7 +55,6 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         if(context is LoginActivity) {
             holder.itemView.setOnClickListener {
                 bindingFrag.tvLocationSetUpPlace.text = holder.binding.tvLocationName.text
-                Log.i("test12311","로그인 액티비티로부터..")
             }
         }
         else{
@@ -110,6 +110,12 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
             G.profileImg = p0
             saveUserInfo()
         }.addOnFailureListener {
+            G.profileImg = getURLForResource(R.drawable.default_profile)
+            saveUserInfo()
         }
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 }

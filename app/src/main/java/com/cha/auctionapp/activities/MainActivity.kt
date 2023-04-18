@@ -105,7 +105,13 @@ class MainActivity : AppCompatActivity() {
             Log.i("15eeee","$p0")
             setNavigationDrawer()
         }.addOnFailureListener {
+            G.profileImg = getURLForResource(R.drawable.default_profile)
+            setNavigationDrawer()
         }
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 
     /*

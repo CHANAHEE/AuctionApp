@@ -156,7 +156,7 @@ class MyProfileEditActivity : AppCompatActivity() {
         else getProfileURLFromFirestore(G.userAccount.id)
 
         if(intent.getStringExtra("Login") == "Login"){
-            setResult(RESULT_OK,getIntent())
+            setResult(RESULT_OK, intent)
             launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
         else setResult(RESULT_OK,intent)
