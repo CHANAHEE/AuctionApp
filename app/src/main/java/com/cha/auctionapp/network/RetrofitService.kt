@@ -9,6 +9,7 @@ import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
 import com.cha.auctionapp.model.MainItem
+import com.cha.auctionapp.model.MyPostListItem
 import com.cha.auctionapp.model.NidUserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -62,6 +63,8 @@ interface RetrofitService {
     fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
     @GET("Server/loadDBForCategory.php")
     fun getDataFromServerForCategory(@Query("location") query: String, @Query("category") query2: String) : Call<MutableList<CategorySearchItem>>
+    @GET("Server/loadDBForMyPostList.php")
+    fun getDataFromServerForMyPostList(@Query("id") query: String) : Call<MutableList<MyPostListItem>>
 
     // Community 관련
     @GET("Server/loadDBForCommunityFragment.php")

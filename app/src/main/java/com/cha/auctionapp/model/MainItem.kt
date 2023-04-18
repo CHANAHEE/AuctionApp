@@ -46,7 +46,13 @@ data class CategorySearchItem(
     var location: String,
     var price: String
 )
-
+data class MyPostListItem(
+    var idx: Int,
+    var title: String,
+    var image: String,
+    var location: String,
+    var price: String
+)
 
 
 

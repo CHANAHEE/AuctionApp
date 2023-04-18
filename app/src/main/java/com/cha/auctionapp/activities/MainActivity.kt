@@ -272,7 +272,6 @@ class MainActivity : AppCompatActivity() {
         val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
 
         Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(profile)
-        //loadProfileFromFirestore(G.userAccount.id,profile)
 
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
@@ -317,24 +316,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-//    private fun loadProfileFromFirestore(profile: String,view: CircleImageView){
-//        val firebaseStorage = FirebaseStorage.getInstance()
-//        val rootRef = firebaseStorage.reference
-//
-//        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-//        if (imgRef != null) {
-//            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-//            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-//
-//                override fun onSuccess(p0: Uri?) {
-//                    Glide.with(this@MainActivity).load(p0).error(R.drawable.default_profile).into(view)
-//                }
-//            }).addOnFailureListener {
-//                Log.i("test12344",it.toString())
-//                Glide.with(this@MainActivity).load(R.drawable.default_profile).into(view)
-//            }
-//        }
-//    }
 
 
     /*
