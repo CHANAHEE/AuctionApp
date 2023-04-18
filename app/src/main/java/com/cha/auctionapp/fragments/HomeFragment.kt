@@ -42,6 +42,10 @@ class HomeFragment : Fragment() {
         binding.fabEdit.setOnClickListener { startActivity(Intent(context,SellingEditActivity::class.java)) }
     }
 
+    fun setData(items: MutableList<MainItem>){
+        binding.recycler.adapter = ProductAdapter(requireContext(),items)
+
+    }
     override fun onResume() {
         super.onResume()
         loadData()

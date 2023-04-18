@@ -65,6 +65,8 @@ interface RetrofitService {
     fun getDataFromServerForCategory(@Query("location") query: String, @Query("category") query2: String) : Call<MutableList<CategorySearchItem>>
     @GET("Server/loadDBForMyPostList.php")
     fun getDataFromServerForMyPostList(@Query("id") query: String) : Call<MutableList<MyPostListItem>>
+    @GET("Server/loadDBForSearchHomeFragment.php")
+    fun getSearchDataFromServerForHomeFragment(@Query("word") query: String) : Call<MutableList<MainItem>>
 
     // Community 관련
     @GET("Server/loadDBForCommunityFragment.php")

@@ -15,21 +15,33 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
+import com.cha.auctionapp.adapters.PagerAdapter
+import com.cha.auctionapp.adapters.ProductAdapter
 import com.cha.auctionapp.databinding.ActivityMainBinding
 import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
+import com.cha.auctionapp.model.HomeDetailItem
+import com.cha.auctionapp.model.MainItem
+import com.cha.auctionapp.model.PagerItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,27 +51,30 @@ class MainActivity : AppCompatActivity() {
     private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int = 0
     private val POPUP_MENU_SET_PLACE_ITEM_ID :Int = 2
 
+    lateinit var searchItems: MutableList<MainItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        Log.i("daniboeb","확인용")
         init()
     }
 
 
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
     private fun init() {
         getProfileURLFromFirestore(G.userAccount.id)
+        searchItems = mutableListOf()
 
         HomeFragment()
         CommunityFragment()
         AuctionFragment()
         ChatFragment()
 
-        // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
         setUpPopUpMenu()
-
-        // 프래그먼트 초기값 설정
         setUpFragment()
 
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
@@ -72,9 +87,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
-
-
     }
+
+
     /*
     *
     *       전역으로 쓰일 프로필 다운로드 URL 받아오기
@@ -135,10 +150,7 @@ class MainActivity : AppCompatActivity() {
     *       카테고리 버튼 클릭
     *
     * */
-    private fun clickCategoryBtn() {
-        startActivity(Intent(this, SelectCategoryActivity::class.java))
-
-    }
+    private fun clickCategoryBtn() = startActivity(Intent(this, SelectCategoryActivity::class.java))
 
 
     /*
@@ -160,7 +172,7 @@ class MainActivity : AppCompatActivity() {
 
                     binding.btnSelectTown.visibility = View.VISIBLE
                     binding.etSearch.visibility = View.INVISIBLE
-                    binding.etSearch.setText("")
+                    //binding.etSearch.setText("")
                 }
             }
 
@@ -172,11 +184,8 @@ class MainActivity : AppCompatActivity() {
                     val imm : InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.etSearch.windowToken,0)
                     binding.containerFragment.requestFocus()
-                    /*
-                    *
-                    *       검색 결과 처리 작업
-                    *
-                    * */
+                    searchItemFromServer()
+                    binding.etSearch.setText("")
                     true
                 }
 
@@ -190,7 +199,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+     /*
+     *
+     *       검색 결과 처리 작업
+     *
+     * */
+    private fun searchItemFromServer(){
+         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+         val retrofitService = retrofit.create(RetrofitService::class.java)
+         Log.i("test1234444",binding.etSearch.text.toString())
+         val call: Call<MutableList<MainItem>> = retrofitService.getSearchDataFromServerForHomeFragment(binding.etSearch.text.toString())
+         call.enqueue(object : Callback<MutableList<MainItem>> {
+             override fun onResponse(
+                 call: Call<MutableList<MainItem>>,
+                 response: Response<MutableList<MainItem>>
+             ) {
+                 searchItems = response.body()!!
+                 Log.i("test1234444",searchItems.size.toString())
 
+                 (supportFragmentManager.findFragmentById(R.id.container_fragment) as HomeFragment).setData(searchItems)
+             }
+             override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
+             }
+         })
+    }
 
 
     /*
