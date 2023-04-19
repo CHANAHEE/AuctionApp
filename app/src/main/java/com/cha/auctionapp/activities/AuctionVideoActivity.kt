@@ -55,7 +55,7 @@ class AuctionVideoActivity : AppCompatActivity() {
     private fun init(){
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-
+        cameraExecutor = Executors.newSingleThreadExecutor()
         checkCameraPermission()
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -67,9 +67,9 @@ class AuctionVideoActivity : AppCompatActivity() {
 
         // Set up the listeners for take photo and video capture buttons
         binding.fab.setOnClickListener { captureVideo() }
-
-        cameraExecutor = Executors.newSingleThreadExecutor()
         binding.btnChange.setOnClickListener { switchCamera() }
+        binding.civAlbum.setOnClickListener{ clickAlbum() }
+        
 
     }
 
@@ -115,6 +115,8 @@ class AuctionVideoActivity : AppCompatActivity() {
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
                         binding.fab.apply {
+                            Toast.makeText(this@AuctionVideoActivity, "사진 편집으로 이동. 추후 업데이트 예정", Toast.LENGTH_SHORT)
+                                .show()
                             /*
                             *       스탑 버튼 모양으로 바꾸기
                             * */
@@ -219,7 +221,14 @@ class AuctionVideoActivity : AppCompatActivity() {
 
 
 
-
+    /*
+    * 
+    *       앨범 선택 기능
+    * 
+    * */
+    private fun clickAlbum() {
+        Toast.makeText(this, "앨범 선택 기능. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    }
 
 
     /*

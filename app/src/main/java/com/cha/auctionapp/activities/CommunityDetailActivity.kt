@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
@@ -40,20 +41,32 @@ class CommunityDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        init()
+    }
+    
+    
+    /*
+    * 
+    *       초기화 작업
+    * 
+    * */
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-
-        //binding.recycler2.adapter = CommentsAdapter(this,commentsItem)
-
-
         loadDataFromServer()
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnLocation.setOnClickListener { clickLocationBtn() }
+        binding.btnFavCommunityDetail.setOnClickListener { clickFav() }
     }
-
+    
+    
+    /*
+    * 
+    *       서버에서 데이터 받아오기 
+    * 
+    * */
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
@@ -123,6 +136,15 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
     }
 
+    
+    /*
+    * 
+    *       찜 기능
+    * 
+    * */
+    private fun clickFav(){
+        Toast.makeText(this, "커뮤니티 글 찜 기능. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    }
 
     /*
     *

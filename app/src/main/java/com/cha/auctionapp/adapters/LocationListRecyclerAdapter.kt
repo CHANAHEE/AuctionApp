@@ -54,7 +54,10 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         Log.i("test12311","onBindView")
         if(context is LoginActivity) {
             holder.itemView.setOnClickListener {
-                bindingFrag.tvLocationSetUpPlace.text = holder.binding.tvLocationName.text
+                G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
+                val list = G.location.split(" ")
+                G.location = list[list.lastIndex - 1]
+                bindingFrag.tvLocationSetUpPlace.text = G.location
             }
         }
         else{

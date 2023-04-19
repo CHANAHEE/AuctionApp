@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.FragmentSignUpEmailInputBinding
 import com.google.android.material.snackbar.Snackbar
@@ -88,7 +89,8 @@ class SignUpEmailInputFragment : Fragment() {
         * */
         var fragment = SignUpSetUpPlaceFragment()
         var bundle = Bundle()
-        bundle.putString("email",binding.etEmail.text.toString())
+        G.userAccount.email = binding.etEmail.text.toString()
+        bundle.putString("email",G.userAccount.email)
         bundle.putString("password",binding.etPass.text.toString())
         fragment.arguments = bundle
         val tran:FragmentTransaction? =

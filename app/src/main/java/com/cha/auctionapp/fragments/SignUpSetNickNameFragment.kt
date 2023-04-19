@@ -117,11 +117,6 @@ class SignUpSetNickNameFragment : Fragment() {
 
         userRef.document().set(user)
 
-        G.nickName = nickname
-
-        var list = location.split(" ")
-        G.location = list[list.lastIndex - 1]
-
         //G.profile = "null"
     }
 

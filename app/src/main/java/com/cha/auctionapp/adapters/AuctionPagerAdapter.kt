@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -40,15 +41,14 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         Glide.with(context).load(item.image).into(holder.binding.civProfile)
        // holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
-
-        // 안녕ㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ
-
         // 동영상 촬영 클릭 이벤트
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }
 
         // BottomSheet 1번 구현
         holder.binding.btnBid.setOnClickListener { clickBidBtn(holder) }
 
+        holder.binding.ibFav.setOnClickListener { clickFavBtn() }
+        holder.binding.ibComments.setOnClickListener { clickCommentsBtn() }
         // Exoplayer 구현
         exoPlayer(item,holder)
 
@@ -80,6 +80,13 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     }
 
 
+    private fun clickFavBtn(){
+        Toast.makeText(context, "좋아요 버튼. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun clickCommentsBtn(){
+        Toast.makeText(context, "댓글 정보. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    }
 
 
 
