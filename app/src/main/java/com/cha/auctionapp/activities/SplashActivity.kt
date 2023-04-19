@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         Glide.with(this).load(R.drawable.loadingicon).into(ivLoading)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this,SNSLoginActivity::class.java))
             finish()
         },1500)
     }

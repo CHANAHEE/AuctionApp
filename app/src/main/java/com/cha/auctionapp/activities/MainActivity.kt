@@ -314,7 +314,7 @@ class MainActivity : AppCompatActivity() {
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{
-                    var intent = Intent(this,MyProfileEditActivity::class.java)
+                    var intent = Intent(this,MyProfileEditActivity::class.java).putExtra("Home","Home")
                     profileLauncher.launch(intent)
                 }
             }

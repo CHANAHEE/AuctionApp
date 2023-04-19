@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
-import com.cha.auctionapp.activities.LoginActivity
+import com.cha.auctionapp.activities.EmailLoginActivity
+import com.cha.auctionapp.activities.SNSLoginActivity
 import com.cha.auctionapp.activities.MainActivity
 import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
@@ -52,7 +52,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
 
         Log.i("test12311","onBindView")
-        if(context is LoginActivity) {
+        if(context is EmailLoginActivity) {
             holder.itemView.setOnClickListener {
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
                 val list = G.location.split(" ")
@@ -74,7 +74,8 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                         Log.i("test12311","커뮤니티 액티비티로부터..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
                     }
-                    else->{
+                    "Home"->{
+                        G.userAccount.id = "${G.userAccount.email}${G.nickName}"
                         loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티가 아닌..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))

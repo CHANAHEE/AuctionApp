@@ -10,12 +10,12 @@
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 5_ 레코드오디오 관련 퍼미션 -->
     <!-- 6_ 레코드 오디오 퍼미션은 동적 퍼미션 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /><!-- 7_ api 28 버전이하에서는 외부 저장소에 대한 사용 퍼미션이 필요하다 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 7_ api 28 버전이하에서는 외부 저장소에 대한 사용 퍼미션이 필요하다 -->
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
-    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY" />
 
     <application
         android:name=".GlobalApplication"
@@ -30,6 +30,9 @@
         android:theme="@style/Theme.ActionApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.EmailLoginActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.AuctionVideoActivity"
             android:exported="false" />
@@ -77,13 +80,13 @@
         <activity
             android:name=".activities.ChattingActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.HomeDetailActivity"
             android:exported="false"
             android:theme="@style/InvisibleStatusBar" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.SNSLoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
