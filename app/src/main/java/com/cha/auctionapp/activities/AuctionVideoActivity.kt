@@ -49,6 +49,7 @@ class AuctionVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // WORKbench2
         init()
     }
 
