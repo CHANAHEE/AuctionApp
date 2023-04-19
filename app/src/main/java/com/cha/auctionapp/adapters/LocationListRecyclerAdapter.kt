@@ -57,6 +57,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
+                G.userAccount.id = "${G.userAccount.email}${G.nickName}"
                 bindingFrag.tvLocationSetUpPlace.text = G.location
             }
         }
@@ -74,8 +75,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                         Log.i("test12311","커뮤니티 액티비티로부터..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
                     }
-                    "Home"->{
-                        G.userAccount.id = "${G.userAccount.email}${G.nickName}"
+                    else->{
                         loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티가 아닌..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))

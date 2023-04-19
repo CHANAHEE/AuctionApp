@@ -61,7 +61,7 @@ class AuctionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items = mutableListOf()
-        items.add(AuctionPagerItem(videoUri,R.drawable._0,"HELLO","안녕"))
+        items.add(AuctionPagerItem(videoUri,R.drawable.mingle_logo,"하루키","안녕하세요 처음뵙겠습니다"))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
     }
 
