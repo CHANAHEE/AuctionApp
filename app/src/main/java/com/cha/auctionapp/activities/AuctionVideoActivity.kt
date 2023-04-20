@@ -2,6 +2,7 @@ package com.cha.auctionapp.activities
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -28,9 +30,12 @@ import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.PermissionChecker
 import androidx.core.view.WindowInsetsControllerCompat
+import com.bumptech.glide.Glide
+import com.cha.auctionapp.AuctionVideoCompleteActivity
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoBinding
 import com.google.android.material.snackbar.Snackbar
+import com.iammert.library.cameravideobuttonlib.CameraVideoButton
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -49,6 +54,7 @@ class AuctionVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // WORKbench2
         init()
     }
 
@@ -66,10 +72,34 @@ class AuctionVideoActivity : AppCompatActivity() {
         }
 
         // Set up the listeners for take photo and video capture buttons
-        binding.fab.setOnClickListener { captureVideo() }
+        binding.fab.setVideoDuration(15000)
+        binding.fab.enableVideoRecording(true)
+        binding.fab.actionListener = object : CameraVideoButton.ActionListener{
+            override fun onDurationTooShortError() {
+                Log.i("videotest2","듀레이션 짧은 에러")
+            }
+
+            override fun onEndRecord() {
+                Log.i("videotest2","촬영 종료")
+                captureVideo()
+                binding.btnNext.visibility = View.VISIBLE
+            }
+
+            override fun onSingleTap() {
+
+            }
+
+            override fun onStartRecord() {
+                Log.i("videotest2","촬영 시작")
+                binding.btnNext.visibility = View.GONE
+                captureVideo()
+            }
+
+        }
+        cameraExecutor = Executors.newSingleThreadExecutor()
         binding.btnChange.setOnClickListener { switchCamera() }
         binding.civAlbum.setOnClickListener{ clickAlbum() }
-        
+
 
     }
 
@@ -115,8 +145,7 @@ class AuctionVideoActivity : AppCompatActivity() {
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
                         binding.fab.apply {
-                            Toast.makeText(this@AuctionVideoActivity, "사진 편집으로 이동. 추후 업데이트 예정", Toast.LENGTH_SHORT)
-                                .show()
+                            Log.i("videotest2","촬영 시작2")
                             /*
                             *       스탑 버튼 모양으로 바꾸기
                             * */
@@ -128,11 +157,15 @@ class AuctionVideoActivity : AppCompatActivity() {
                             val msg = "Video capture succeeded: " +
                                     "${recordEvent.outputResults.outputUri}"
 
+                            Log.i("videotest2","촬영 종료?")
                             /*
                             *       여기서 다른 액티비티로 Uri 보내주기.
                             *       그러면 그 액티비티에서
                             *
                             * */
+                            binding.btnNext.setOnClickListener { startActivity(Intent(this,AuctionVideoCompleteActivity::class.java)
+                                .putExtra("video",recordEvent.outputResults.outputUri.toString())) }
+
                             Log.d(TAG, msg)
                         } else {
                             recording?.close()
@@ -222,9 +255,9 @@ class AuctionVideoActivity : AppCompatActivity() {
 
 
     /*
-    * 
+    *
     *       앨범 선택 기능
-    * 
+    *
     * */
     private fun clickAlbum() {
         Toast.makeText(this, "앨범 선택 기능. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()

@@ -31,9 +31,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.EmailLoginActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.AuctionVideoActivity"
             android:exported="false" />
         <activity
