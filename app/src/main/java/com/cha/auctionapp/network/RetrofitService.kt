@@ -53,6 +53,8 @@ interface RetrofitService {
     @Multipart
     @POST("Server/insertDBForAuctionFragment.php")
     fun postDataToServerForAuctionFragment(@PartMap dataPart: HashMap<String,String>, @Part video: MultipartBody.Part?) : Call<String>
+
+
     /*
     *       서버에서 데이터 받아오기
     * */

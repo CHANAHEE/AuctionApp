@@ -104,7 +104,7 @@ class AuctionEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
-                startActivity(Intent(this@AuctionEditActivity,AuctionDetailActivity::class.java))
+                startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
                 finish()
             }
 
