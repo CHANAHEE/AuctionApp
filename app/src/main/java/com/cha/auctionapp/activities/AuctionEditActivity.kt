@@ -39,7 +39,16 @@ class AuctionEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -47,16 +56,14 @@ class AuctionEditActivity : AppCompatActivity() {
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.categoryRelative.setOnClickListener { clickCategory() }
         binding.selectPosRelative.setOnClickListener { clickSelectPos() }
-        binding.btnImage.setOnClickListener { clickPicture() }
 
         binding.etPrice.setOnFocusChangeListener { v, hasFocus ->
             if(hasFocus) binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF000000"))
             else binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#4A000000"))
         }
-
-        items = mutableListOf()
-        binding.recycler.adapter = PictureAdapter(this, items)
     }
+
+
 
     /*
     *
@@ -71,6 +78,7 @@ class AuctionEditActivity : AppCompatActivity() {
         var price = binding.etPrice.text.toString()
         var description = binding.etDecription.text.toString()
         var location = binding.tvPositionName.text.toString()
+        var videopath = intent.getStringExtra("video")
 
         var dataPart: HashMap<String,String> = hashMapOf()
         dataPart.put("title",title)
@@ -83,66 +91,29 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("profile", G.userAccount.id)
 
         // 보낼 비디오 데이터
-//        var imagePath = getRealPathFromUri(items[i].uri) -> 비디오 Uri 값 전달하기
-//        val file: File = File(imagePath)
-//        val body = file.asRequestBody("video/*".toMediaTypeOrNull())
-//        var fileVideoPart = MultipartBody.Part.createFormData("video",file.name,body)
-//
-//        /*
-//        *       Retrofit 작업 시작
-//        * */
-//        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-//        var retrofitService = retrofit.create(RetrofitService::class.java)
-//        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
-//        call.enqueue(object : Callback<String> {
-//            override fun onResponse(call: Call<String>, response: Response<String>) {
-//                finish()
-//            }
-//
-//            override fun onFailure(call: Call<String>, t: Throwable) {
-//                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT)
-//            }
-//        })
-    }
 
-    fun getRealPathFromUri(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        if (cursor != null && cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            return cursor.getString(columnIndex)
-        }
-        return null
-    }
+        val file: File = File(videopath)
+        val body = file.asRequestBody("video/*".toMediaTypeOrNull())
+        var fileVideoPart = MultipartBody.Part.createFormData("video",file.name,body)
 
+        /*
+        *       Retrofit 작업 시작
+        * */
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Snackbar.make(binding.root,"서버 작업 완료", Snackbar.LENGTH_SHORT).show()
+                //startActivity(Intent(this@AuctionEditActivity,AuctionDetailActivity::class.java))
+            }
 
-
-
-    /*
-    *
-    *       사진 선택 버튼 : 앨범에서 선택하기
-    *
-    * */
-    private fun clickPicture() {
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
-        launcher.launch(intent)
-    }
-    var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-        ActivityResultCallback {
-            if(it.resultCode == RESULT_OK){
-                var clipData = it.data?.clipData!!
-                var size = clipData.itemCount
-
-                for(i in 0 until size){
-                    items.add(PictureItem(clipData.getItemAt(i).uri))
-                }
-                binding.recycler.adapter?.notifyDataSetChanged()
-                binding.btnImage.text = "${items.size} / 10"
-
-                if(items.size == 10) binding.btnImage.visibility = View.GONE
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
             }
         })
+    }
+
 
 
     /*

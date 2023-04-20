@@ -1,33 +1,42 @@
 package com.cha.auctionapp.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.Camera
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import android.widget.Toast
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.core.Preview
-import androidx.camera.core.CameraSelector
 import android.util.Log
+import android.view.OrientationEventListener
+import android.view.Surface
+import android.view.Surface.ROTATION_0
+import android.view.Surface.ROTATION_180
+import android.view.Surface.ROTATION_90
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.CameraX
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
+import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.core.view.WindowInsetsControllerCompat
 import com.cha.auctionapp.R
@@ -36,6 +45,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.iammert.library.cameravideobuttonlib.CameraVideoButton
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -48,6 +60,7 @@ class AuctionVideoActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionVideoBinding.inflate(layoutInflater)
@@ -56,6 +69,7 @@ class AuctionVideoActivity : AppCompatActivity() {
         init()
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun init(){
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
@@ -161,9 +175,14 @@ class AuctionVideoActivity : AppCompatActivity() {
                             *       그러면 그 액티비티에서
                             *
                             * */
-                            binding.btnNext.setOnClickListener { startActivity(Intent(this,
+                            binding.btnNext.setOnClickListener {
+
+                                startActivity(Intent(this,
                                 AuctionVideoCompleteActivity::class.java)
-                                .putExtra("video",recordEvent.outputResults.outputUri.toString())) }
+                                .putExtra("video",recordEvent.outputResults.outputUri.toString()))
+
+                                it.visibility = View.GONE
+                            }
 
                             Log.d(TAG, msg)
                         } else {
@@ -183,12 +202,18 @@ class AuctionVideoActivity : AppCompatActivity() {
             }
     }
 
+
+    @SuppressLint("RestrictedApi")
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun startCamera(cameraSelector: CameraSelector) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+
+            binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
             // Preview
             val preview = Preview.Builder()
@@ -197,12 +222,19 @@ class AuctionVideoActivity : AppCompatActivity() {
                     it.setSurfaceProvider(binding.previewView.surfaceProvider)
                 }
 
+
+//            binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+//            preview.targetRotation = ROTATION_90
+
+
             val recorder = Recorder.Builder()
                 .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
                 .build()
             videoCapture = VideoCapture.withOutput(recorder)
 
+
             // Select back camera as a default
+
 
 
             try {
@@ -210,8 +242,27 @@ class AuctionVideoActivity : AppCompatActivity() {
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture)
+                val camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture)
+                val orientationEventListener = object : OrientationEventListener(this) {
+                    override fun onOrientationChanged(orientation: Int) {
+                        if (orientation == ORIENTATION_UNKNOWN) return
 
+                        val rotation = when (orientation) {
+                            in 45 until 135 -> Surface.ROTATION_270
+                            in 135 until 225 -> Surface.ROTATION_180
+                            in 225 until 315 -> Surface.ROTATION_90
+                            else -> Surface.ROTATION_0
+                        }
+
+                        preview.targetRotation = rotation
+                        videoCapture!!.targetRotation = rotation
+                    }
+                }
+
+// OrientationEventListener를 등록합니다.
+                orientationEventListener.enable()
+
+                Log.i("adiofbnre",preview.camera!!.cameraInfo.sensorRotationDegrees.toString())
             } catch(exc: Exception) {
                 Log.e(TAG, "동영상 촬영에 실패했습니다.", exc)
             }
@@ -268,6 +319,7 @@ class AuctionVideoActivity : AppCompatActivity() {
     *       카메라 렌즈 방향 변경
     *
     * */
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun switchCamera(){
         cameraSelector = if(cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
             CameraSelector.DEFAULT_FRONT_CAMERA
@@ -281,6 +333,7 @@ class AuctionVideoActivity : AppCompatActivity() {
     *       오디오와 카메라 퍼미션 체크 및 허용
     *
     * */
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun checkCameraPermission() {
         var permissions = mutableListOf<String>()
         permissions.add(Manifest.permission.CAMERA)
@@ -296,6 +349,7 @@ class AuctionVideoActivity : AppCompatActivity() {
             launcher.launch(stringArr)
         }
     }
+    @RequiresApi(Build.VERSION_CODES.R)
     var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) {
         var keys: Set<String> = it.keys

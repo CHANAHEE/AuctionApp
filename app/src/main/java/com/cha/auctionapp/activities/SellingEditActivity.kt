@@ -222,6 +222,7 @@ class SellingEditActivity : AppCompatActivity() {
 
 
 
+
     /*
     *
     *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수

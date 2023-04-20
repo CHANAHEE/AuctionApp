@@ -24,6 +24,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
+<!--            <com.google.android.exoplayer2.ui.PlayerView-->
+<!--                android:id="@+id/videoview"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"/>-->
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/btn_back"
