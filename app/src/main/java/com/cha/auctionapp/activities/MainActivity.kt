@@ -126,6 +126,11 @@ class MainActivity : AppCompatActivity() {
             binding.appbar.visibility = View.GONE
             binding.bnv.selectedItemId = R.id.community_tab
             return
+        }else if(intent.getStringExtra("AuctionDetail") == "AuctionDetail"){
+            tran.beginTransaction().replace(R.id.container_fragment,AuctionFragment()).commit()
+            binding.appbar.visibility = View.GONE
+            binding.bnv.selectedItemId = R.id.auction_tab
+            return
         }
         tran.beginTransaction()
             .add(R.id.container_fragment,HomeFragment().apply {

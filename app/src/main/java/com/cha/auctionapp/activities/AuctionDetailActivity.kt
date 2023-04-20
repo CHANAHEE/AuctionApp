@@ -2,6 +2,7 @@ package com.cha.auctionapp.activities
 
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
@@ -33,14 +34,12 @@ class AuctionDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnBid.setOnClickListener { clickBidBtn() }
-
+        binding.btnBack.setOnClickListener { clickBackBtn() }
         items = mutableListOf()
 //        items.add(PagerItem(R.drawable._0))
 //        items.add(PagerItem(R.drawable._1))
 //        items.add(PagerItem(R.drawable._2))
 
-        binding.pager.adapter = PagerAdapter(this,items)
-        binding.dotsIndicator.attachTo(binding.pager)
 
 
         object : CountDownTimer(43200000,1000) {
@@ -186,4 +185,13 @@ class AuctionDetailActivity : AppCompatActivity() {
 
     private fun clickFavoriteBtn() { binding.ibFav.isSelected = !binding.ibFav.isSelected }
 
+
+
+    private fun clickBackBtn() {
+        startActivity(Intent(this,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
+    }
 }

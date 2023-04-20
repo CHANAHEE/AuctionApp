@@ -104,8 +104,8 @@ class AuctionEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
-                Snackbar.make(binding.root,"서버 작업 완료", Snackbar.LENGTH_SHORT).show()
-                //startActivity(Intent(this@AuctionEditActivity,AuctionDetailActivity::class.java))
+                startActivity(Intent(this@AuctionEditActivity,AuctionDetailActivity::class.java))
+                finish()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
