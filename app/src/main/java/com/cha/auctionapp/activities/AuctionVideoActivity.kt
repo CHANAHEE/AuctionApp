@@ -30,8 +30,6 @@ import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.PermissionChecker
 import androidx.core.view.WindowInsetsControllerCompat
-import com.bumptech.glide.Glide
-import com.cha.auctionapp.AuctionVideoCompleteActivity
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoBinding
 import com.google.android.material.snackbar.Snackbar
@@ -163,7 +161,8 @@ class AuctionVideoActivity : AppCompatActivity() {
                             *       그러면 그 액티비티에서
                             *
                             * */
-                            binding.btnNext.setOnClickListener { startActivity(Intent(this,AuctionVideoCompleteActivity::class.java)
+                            binding.btnNext.setOnClickListener { startActivity(Intent(this,
+                                AuctionVideoCompleteActivity::class.java)
                                 .putExtra("video",recordEvent.outputResults.outputUri.toString())) }
 
                             Log.d(TAG, msg)

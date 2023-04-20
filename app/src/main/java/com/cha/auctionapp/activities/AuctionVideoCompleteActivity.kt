@@ -1,16 +1,15 @@
-package com.cha.auctionapp
+package com.cha.auctionapp.activities
 
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
-import android.widget.RelativeLayout
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoCompleteBinding
 
 
@@ -20,7 +19,7 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAuctionVideoCompleteBinding.inflate(layoutInflater)
+        binding = com.cha.auctionapp.databinding.ActivityAuctionVideoCompleteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
     }
@@ -34,14 +33,8 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
 
         binding.videoview.setOnPreparedListener {
             binding.videoview.start()
-            val retriever = MediaMetadataRetriever()
-            retriever.setDataSource(this, videoUri)
 
-            val videoWidth = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toInt() ?: 0
-            val videoHeight = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toInt() ?: 0
 
-            binding.videoview.layoutParams.width = videoWidth
-            binding.videoview.layoutParams.height = videoHeight
 
         }
         binding.videoview.setOnCompletionListener { binding.videoview.start() }
