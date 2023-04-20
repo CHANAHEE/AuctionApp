@@ -11,6 +11,6 @@ class G{
         var nickName: String = ""
         var location: String = ""
         var userAccount: UserAccount = UserAccount("","")
-        var imgPath: String = ""
+        var password: String = ""
     }
 }

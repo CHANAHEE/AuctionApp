@@ -69,6 +69,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
+
                 when(activity.intent.getStringExtra("Community")){
                     "Community"->{
                         loadProfileFromFirestore(G.userAccount.id)

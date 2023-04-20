@@ -45,27 +45,33 @@ class SNSLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        init()
+    }
+
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init() {
         val keyHash:String = Utility.getKeyHash(this)
         Log.i("keyhash",keyHash)
 
-
         // 내 위치 정보 제공에 대한 동적 퍼미션 요청
         if( checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
-
             // 퍼미션 요청 대행사 이용 - 계약 체결
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
 
         binding.ivLoginGoogle.setOnClickListener { googleLogin() }
         binding.ivLoginKakao.setOnClickListener { kakaoLogin() }
         binding.ivLoginNaver.setOnClickListener { naverLogin() }
         binding.btnWithoutLogin.setOnClickListener { clickWithoutLogin() }
         binding.btnLogin.setOnClickListener { clickLogin() }
-
-
     }
-    
+
+
     /*
     *
     *       내 위치 정보 퍼미션 받기
@@ -84,6 +90,11 @@ class SNSLoginActivity : AppCompatActivity() {
 
 
 
+    /*
+    *
+    *       로그인 없이 둘러보기 기능
+    *
+    * */
     private fun clickWithoutLogin() {
         G.userAccount.email = "no email"
         G.userAccount.id = "-1"
@@ -105,12 +116,12 @@ class SNSLoginActivity : AppCompatActivity() {
     private fun clickLogin() = startActivity(Intent(this,EmailLoginActivity::class.java))
 
 
+
     /*
     *
     *       구글 로그인 기능
     *
     * */
-
     private fun googleLogin() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -120,7 +131,6 @@ class SNSLoginActivity : AppCompatActivity() {
 
         val signInIntent: Intent = client.signInIntent
         launcher.launch(signInIntent)
-
     }
 
     val launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()

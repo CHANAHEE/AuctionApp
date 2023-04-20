@@ -29,10 +29,9 @@ class SignUpSetNickNameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         editTextListener()
@@ -42,46 +41,35 @@ class SignUpSetNickNameFragment : Fragment() {
         binding.etNickname.addTextChangedListener(watcher)
     }
 
-    private fun clickBackBtn(){
-        val fragment = activity?.supportFragmentManager
-        fragment?.popBackStack()
-    }
 
-    private fun editTextListener(){
-        binding.etNickname.setOnKeyListener { v , keyCode, event ->
-            if(event.action == KeyEvent.ACTION_DOWN
-                && keyCode == KeyEvent.KEYCODE_ENTER)
-            {
-                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.etNickname.windowToken,0)
-                true
-            }
-
-            false
-        }
-    }
-
+    /*
+    *
+    *       닉네임 설정 완료 버튼 : BackStack 지우고 EmailLogin 으로 이동
+    *
+    * */
     private fun clickCompleteBtn(){
 
         if(binding.etNickname.text.length < 3){
             Snackbar.make(binding.root,"닉네임은 3글자 이상으로 설정해주세요",Snackbar.LENGTH_SHORT).show()
             return
-        }
-
-        if(isExistNickname){
+        }else if(isExistNickname){
             Snackbar.make(binding.root,"닉네임 중복체크를 해주세요",Snackbar.LENGTH_SHORT).show()
             return
         }else{
             val fragmentManager : FragmentManager? = activity?.supportFragmentManager
             fragmentManager?.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
+            G.nickName = binding.etNickname.text.toString()
             saveUserInfo()
             Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
         }
-
-
     }
 
+
+    /*
+    *
+    *       닉네임 중복체크
+    *
+    * */
     var isExistNickname = false
     private fun clickCertifyBtn(){
         var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -97,33 +85,39 @@ class SignUpSetNickNameFragment : Fragment() {
             }
         }
     }
+
+
+
     /*
+    *
     *       유저 정보 firestore 에 저장
+    *
     * */
     private fun saveUserInfo(){
-        var email = arguments?.getString("email")!!
-        var password = arguments?.getString("password")!!
-        var location = arguments?.getString("location")!!
-        var nickname = binding.etNickname.text.toString()
-
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
+        G.profileImg = getURLForResource(R.drawable.default_profile)
 
-        var user: MutableMap<String,String> = mutableMapOf<String,String>()
-        user.put("email",email)
-        user.put("password",password)
-        user.put("location",location)
-        user.put("nickname",nickname)
-
+        var user = mutableMapOf<String,Any>()
+        user.put("email",G.userAccount.email)
+        user.put("password",G.password)
+        user.put("location",G.location)
+        user.put("nickname",G.nickName)
+        user.put("profile",G.profileImg)
         userRef.document().set(user)
-
-        //G.profile = "null"
+    }
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 
-    val watcher: TextWatcher = object : TextWatcher{
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-        }
+    /*
+    *
+    *       닉네임 EditText 리스너
+    *
+    * */
+    val watcher: TextWatcher = object : TextWatcher{
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if(s?.length!! >= 3) {
@@ -132,14 +126,40 @@ class SignUpSetNickNameFragment : Fragment() {
             }
         }
 
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
+        override fun afterTextChanged(s: Editable?) {}
     }
 
-    private fun getURLForResource(resId: Int): Uri {
-        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
+
+
+    /*
+    *
+    *       닉네임 설정 완료 시, 키보드 숨기기
+    *
+    * */
+    private fun editTextListener(){
+        binding.etNickname.setOnKeyListener { v , keyCode, event ->
+            if(event.action == KeyEvent.ACTION_DOWN
+                && keyCode == KeyEvent.KEYCODE_ENTER)
+            {
+                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etNickname.windowToken,0)
+                true
+            }
+
+            false
+        }
+    }
+
+
+
+    /*
+    *
+    *       뒤로가기 버튼
+    *
+    * */
+    private fun clickBackBtn(){
+        val fragment = activity?.supportFragmentManager
+        fragment?.popBackStack()
     }
 }
 

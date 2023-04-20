@@ -29,20 +29,9 @@ class EmailLoginActivity : AppCompatActivity() {
         binding = ActivityEmailLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
         val tran:FragmentTransaction = supportFragmentManager
             .beginTransaction()
             .add(R.id.container_fragment, LoginMainFragment())
         tran.commit()
-
     }
-
-
-
-
-
-
-
 }

@@ -49,9 +49,6 @@ import retrofit2.Response
 class LoginMainFragment : Fragment() {
 
     lateinit var binding : FragmentLoginMainBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,24 +61,23 @@ class LoginMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         binding.btnSignup.setOnClickListener { clickSignUp() }
         binding.btnLogin.setOnClickListener { clickLogin() }
         binding.etPass.setOnKeyListener(listener)
-
 
         val keyHash:String = Utility.getKeyHash(requireContext())
         Log.i("keyhash",keyHash)
     }
 
+
+    /*
+    *
+    *       회원가입 후, 로그인 기능
+    *
+    * */
     private fun clickLogin(){
-        /*
-        *       firebase 에서 유저 정보 가져와서 비교 후 로그인
-        * */
         var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firebase.collection("user")
-
 
         userRef.whereEqualTo("email",binding.etId.text.toString())
             .whereEqualTo("password",binding.etPass.text.toString())
@@ -105,6 +101,13 @@ class LoginMainFragment : Fragment() {
                 }
             }
     }
+
+
+    /*
+    *
+    *       회원가입 버튼
+    *
+    * */
     private fun clickSignUp(){
         var tran: FragmentTransaction? = activity?.supportFragmentManager
             ?.beginTransaction()
@@ -124,5 +127,4 @@ class LoginMainFragment : Fragment() {
         }
         false
     }
-
 }

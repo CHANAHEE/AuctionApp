@@ -29,29 +29,36 @@ import com.google.firebase.storage.StorageReference
 class MyProfileEditActivity : AppCompatActivity() {
 
     lateinit var binding : ActivityMyProfileEditBinding
+    val DEFAULT_PROFILE = 0
+    val CHANGED_PROFILE = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyProfileEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        Log.i("alertdl","다이얼로그 띄우기")
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.civProfile.setOnClickListener { clickProfileImage() }
 
         binding.civProfile.tag = DEFAULT_PROFILE
 
         Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(binding.civProfile)
-        //loadProfileFromFirestore(G.userAccount.id)
         binding.etNickname.setText(G.nickName)
+        //loadProfileFromFirestore(G.userAccount.id)
     }
-
-    val DEFAULT_PROFILE = 0
-    val CHANGED_PROFILE = 1
-
 
 
     /*
@@ -72,16 +79,9 @@ class MyProfileEditActivity : AppCompatActivity() {
             val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
             val fileName = "profile/IMG_" + G.userAccount.id + ".jpg"
             val imgRef: StorageReference =
-                firebaseStorage.getReference("$fileName")
+                firebaseStorage.getReference(fileName)
 
-            imgRef.putFile(it.data?.data!!).addOnSuccessListener(OnSuccessListener<Any?> {
-
-            })
-                .addOnFailureListener(
-                    OnFailureListener {
-                        Log.i("test1212",it.toString())
-
-                    })
+            imgRef.putFile(it.data?.data!!)
         }
     }
     /*
