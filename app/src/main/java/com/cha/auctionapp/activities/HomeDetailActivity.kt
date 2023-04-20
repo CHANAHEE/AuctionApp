@@ -92,7 +92,7 @@ class HomeDetailActivity : AppCompatActivity() {
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationName.text = item.tradingplace
                 }
-
+//adfh
                 // 이미지 정보
                 var imageListString = item.image.split(",")
                 var imageListUri: MutableList<PagerItem> = mutableListOf()
