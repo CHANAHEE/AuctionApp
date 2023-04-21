@@ -36,9 +36,9 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         var item: AuctionPagerItem = items[position]
 
 
-        holder.binding.tvId.text = item.nickname
-        holder.binding.tvDescription.text = item.description
-        Glide.with(context).load(item.image).into(holder.binding.civProfile)
+//        holder.binding.tvId.text = item.
+//        holder.binding.tvDescription.text = item.description
+//        Glide.with(context).load(item.image).into(holder.binding.civProfile)
        // holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
         // 동영상 촬영 클릭 이벤트

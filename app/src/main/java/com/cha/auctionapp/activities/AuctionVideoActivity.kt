@@ -24,6 +24,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.AspectRatio
+import androidx.camera.core.AspectRatio.RATIO_16_9
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraX
 import androidx.camera.core.Preview
@@ -220,10 +222,12 @@ class AuctionVideoActivity : AppCompatActivity() {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
 
-            binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            binding.previewView.scaleType = PreviewView.ScaleType.FIT_CENTER
+
 
             // Preview
             val preview = Preview.Builder()
+                .setTargetAspectRatio(RATIO_16_9)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.previewView.surfaceProvider)
