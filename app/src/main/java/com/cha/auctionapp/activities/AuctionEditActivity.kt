@@ -8,6 +8,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultCallback
@@ -18,10 +21,15 @@ import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
 import com.cha.auctionapp.databinding.ActivityAuctionEditBinding
+import com.cha.auctionapp.model.MessageItem
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -29,6 +37,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.text.DecimalFormat
 
 class AuctionEditActivity : AppCompatActivity() {
 
@@ -61,6 +70,7 @@ class AuctionEditActivity : AppCompatActivity() {
             if(hasFocus) binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF000000"))
             else binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#4A000000"))
         }
+        binding.etPrice.addTextChangedListener(watcher)
     }
 
 
@@ -70,7 +80,11 @@ class AuctionEditActivity : AppCompatActivity() {
     *       완료 버튼
     *
     * */
+    lateinit var dialog: AlertDialog
     private fun clickCompleteBtn() {
+
+        dialog = AlertDialog.Builder(this).setCancelable(false).setMessage("업로드 중 . . .").create()
+        dialog.show()
 
         // 보낼 일반 String 데이터
         var title = binding.etTitle.text.toString()
@@ -78,7 +92,7 @@ class AuctionEditActivity : AppCompatActivity() {
         var price = binding.etPrice.text.toString()
         var description = binding.etDecription.text.toString()
         var location = binding.tvPositionName.text.toString()
-        var videopath = intent.getStringExtra("video")
+
 
         var dataPart: HashMap<String,String> = hashMapOf()
         dataPart.put("title",title)
@@ -88,31 +102,48 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname", G.nickName)
         dataPart.put("location", G.location)
-        dataPart.put("profile", G.userAccount.id)
+        dataPart.put("id", G.userAccount.id)
 
-        // 보낼 비디오 데이터
+        uploadVideoToStorage(dataPart)
+    }
 
-        val file: File = File(videopath)
-        val body = file.asRequestBody("video/*".toMediaTypeOrNull())
-        var fileVideoPart = MultipartBody.Part.createFormData("video",file.name,body)
 
-        /*
-        *       Retrofit 작업 시작
-        * */
-        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-        var retrofitService = retrofit.create(RetrofitService::class.java)
-        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart,fileVideoPart)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
-                finish()
+
+    /*
+    *
+    *       Storage 에 비디오 업로드
+    *
+    * */
+    private fun uploadVideoToStorage(dataPart: HashMap<String,String>) {
+        var videoUri = Uri.parse(intent.getStringExtra("video"))
+        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+        val imgRef: StorageReference =
+            firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
+        imgRef.putFile(videoUri).addOnSuccessListener(OnSuccessListener<Any?> {
+            imgRef.downloadUrl.addOnSuccessListener {
+                dataPart.put("video", it.toString())
+
+                var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+                var retrofitService = retrofit.create(RetrofitService::class.java)
+                var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
+                call.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
+                        dialog.dismiss()
+                        finish()
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
+                    }
+                })
+
             }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
-            }
+        }).addOnFailureListener(OnFailureListener {
+            Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
         })
     }
+
 
 
 
@@ -132,6 +163,8 @@ class AuctionEditActivity : AppCompatActivity() {
                 binding.tvCategory.setTextColor(resources.getColor(R.color.black,theme))
             }).create().show()
     }
+
+
 
 
     /*
@@ -158,6 +191,32 @@ class AuctionEditActivity : AppCompatActivity() {
             }
         }
     }
+
+
+
+    /*
+    *
+    *       가격 입력시, 화폐 단위 변경
+    *
+    * */
+    private val decimalFormat = DecimalFormat("#,###")
+    private var result: String = ""
+
+    private val watcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+        override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if(!TextUtils.isEmpty(charSequence.toString()) && charSequence.toString() != result){
+                result = decimalFormat.format(charSequence.toString().replace(",","").toDouble())
+                binding.etPrice.setText(result);
+                binding.etPrice.setSelection(result.length);
+            }
+        }
+        override fun afterTextChanged(p0: Editable?) {
+        }
+    }
+
+
 
 
     /*

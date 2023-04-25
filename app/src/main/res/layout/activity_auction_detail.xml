@@ -116,6 +116,42 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"/>
 
+
+    <RelativeLayout
+        android:id="@+id/relative_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_description"
+        android:background="@drawable/bg_location_select"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/tv_description"
+        android:layout_alignRight="@id/view1"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/map_location"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_location_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장소 이름"
+            android:layout_toRightOf="@id/iv_location"
+            android:textSize="18sp"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"/>
+
+    </RelativeLayout>
+
+
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"

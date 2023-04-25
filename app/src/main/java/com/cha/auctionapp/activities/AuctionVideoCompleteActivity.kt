@@ -36,6 +36,7 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
         var videoUri = Uri.parse(intent.getStringExtra("video"))
+        Log.i("test123scbv",videoUri.toString())
         var videopath = getRealPathFromUri(videoUri)
 
         binding.videoview.setVideoURI(videoUri)
@@ -56,7 +57,7 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
 
         binding.videoview.setOnCompletionListener { binding.videoview.start() }
 
-        binding.btnComplete.setOnClickListener { startActivity(Intent(this,AuctionEditActivity::class.java).putExtra("video",videopath)) }
+        binding.btnComplete.setOnClickListener { startActivity(Intent(this,AuctionEditActivity::class.java).putExtra("video",videoUri.toString())) }
         binding.btnBack.setOnClickListener { finish() }
 
     }

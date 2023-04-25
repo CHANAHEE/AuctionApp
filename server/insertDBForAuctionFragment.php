@@ -9,15 +9,15 @@
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
     $id=   $_POST['id'];
+    $video=     $_POST['video'];
 
+    // $file=      $_FILES['video'];
+    // $srcName=   $file['name'];   
+    // $tmpName=   $file['tmp_name'];
 
-    $file=      $_FILES['video'];
-    $srcName=   $file['name'];   
-    $tmpName=   $file['tmp_name'];
-
-    // 이미지 파일을 영구적으로 저장하기 위해 임시저장소에서 이동을 시키자. 
-    $dstName =  "./video/".date('YmdHis').$srcName;
-    move_uploaded_file($tmpName,$dstName);
+    // // 이미지 파일을 영구적으로 저장하기 위해 임시저장소에서 이동을 시키자. 
+    // $dstName =  "./video/".date('YmdHis').$srcName;
+    // move_uploaded_file($tmpName,$dstName);
 
 
 
@@ -39,7 +39,8 @@
     mysqli_query($db,"set names utf8");
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
-    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$dstName' )";
+    //$sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$dstName' )";
+    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$video')";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";
