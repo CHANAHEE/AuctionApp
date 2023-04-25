@@ -39,6 +39,7 @@
         android:paddingLeft="16dp"
         android:maxWidth="200dp"/>
 
+
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"

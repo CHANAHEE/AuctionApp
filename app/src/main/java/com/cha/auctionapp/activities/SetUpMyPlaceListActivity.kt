@@ -29,7 +29,16 @@ class SetUpMyPlaceListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySetUpMyPlaceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init(){
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

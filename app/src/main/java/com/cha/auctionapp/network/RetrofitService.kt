@@ -1,12 +1,15 @@
 package com.cha.auctionapp.network
 
 import com.cha.auctionapp.model.AuctionPagerItem
+import com.cha.auctionapp.model.CategoryItem
+import com.cha.auctionapp.model.CategorySearchItem
 import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
 import com.cha.auctionapp.model.MainItem
+import com.cha.auctionapp.model.MyPostListItem
 import com.cha.auctionapp.model.NidUserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -48,8 +51,10 @@ interface RetrofitService {
 
     // Auction 관련
     @Multipart
-    @POST("Server/insertDBForCommunityFragment.php")
+    @POST("Server/insertDBForAuctionFragment.php")
     fun postDataToServerForAuctionFragment(@PartMap dataPart: HashMap<String,String>, @Part video: MultipartBody.Part?) : Call<String>
+
+
     /*
     *       서버에서 데이터 받아오기
     * */
@@ -58,6 +63,12 @@ interface RetrofitService {
     fun getDataFromServerForHomeFragment(@Query("location") query: String) : Call<MutableList<MainItem>>
     @GET("Server/loadDBForHomeDetail.php")
     fun getDataFromServerForHomeDetail(@Query("index") query: String) : Call<MutableList<HomeDetailItem>>
+    @GET("Server/loadDBForCategory.php")
+    fun getDataFromServerForCategory(@Query("location") query: String, @Query("category") query2: String) : Call<MutableList<CategorySearchItem>>
+    @GET("Server/loadDBForMyPostList.php")
+    fun getDataFromServerForMyPostList(@Query("id") query: String) : Call<MutableList<MyPostListItem>>
+    @GET("Server/loadDBForSearchHomeFragment.php")
+    fun getSearchDataFromServerForHomeFragment(@Query("word") query: String) : Call<MutableList<MainItem>>
 
     // Community 관련
     @GET("Server/loadDBForCommunityFragment.php")
@@ -66,6 +77,8 @@ interface RetrofitService {
     fun getDataFromServerForCommunityDetail(@Query("index") query: String) : Call<MutableList<CommunityDetailItem>>
     @GET("Server/loadDBForCommunityDetailComments.php")
     fun getDataFromServerForCommunityDetailComments(@Query("index") query: String) : Call<MutableList<CommentsItem>>
+    @GET("Server/loadDBForSearchCommunityFragment.php")
+    fun getSearchDataFromServerForCommunityFragment(@Query("word") query: String) : Call<MutableList<CommunityPostItem>>
 
     // Auction 관련
     @GET("Server/loadDBForAuctionFragment.php")

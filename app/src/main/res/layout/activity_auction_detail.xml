@@ -7,23 +7,25 @@
     tools:context="com.cha.auctionapp.activities.AuctionDetailActivity">
 
     <RelativeLayout
-        android:id="@+id/container_pager"
+        android:id="@+id/container_video"
         android:layout_width="match_parent"
         android:layout_height="280dp">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
+
+        <VideoView
+            android:id="@+id/videoview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/teal_700"/>
+            android:layout_height="match_parent"/>
 
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_back"
+            app:tint="@color/white"
             android:background="@null"
-            android:layout_margin="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
             />
 
         <TextView
@@ -41,29 +43,12 @@
 
     </RelativeLayout>
 
-
-    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/dots_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dotsColor="#248513"
-        app:selectedDotColor="@color/brand"
-        app:dotsCornerRadius="8dp"
-        app:dotsSize="8dp"
-        app:dotsSpacing="4dp"
-        app:dotsWidthFactor="2.5"
-        app:progressMode="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@id/container_pager"
-        android:padding="20dp"
-        />
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_profile"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@mipmap/ic_launcher_round"
-        android:layout_below="@id/container_pager"
+        android:layout_below="@id/container_video"
         android:layout_margin="20dp"/>
 
     <TextView

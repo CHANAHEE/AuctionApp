@@ -72,4 +72,14 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"/>
 
+    <TextView
+        android:id="@+id/tv_none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/brandfont"
+        android:layout_centerInParent="true"
+        android:text="게시물이 없습니다."
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
 </RelativeLayout>

@@ -4,20 +4,20 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toFile
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -25,11 +25,9 @@ import com.cha.auctionapp.databinding.ActivitySellingEditBinding
 import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -37,6 +35,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.text.DecimalFormat
 
 
 class SellingEditActivity : AppCompatActivity() {
@@ -48,7 +47,10 @@ class SellingEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySellingEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -57,26 +59,23 @@ class SellingEditActivity : AppCompatActivity() {
         binding.categoryRelative.setOnClickListener { clickCategory() }
         binding.selectPosRelative.setOnClickListener { clickSelectPos() }
         binding.btnImage.setOnClickListener { clickPicture() }
+        items = mutableListOf()
+        binding.recycler.adapter = PictureAdapter(this, items)
 
+        binding.etPrice.addTextChangedListener(watcher)
         binding.etPrice.setOnFocusChangeListener { v, hasFocus ->
             if(hasFocus) binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF000000"))
             else binding.ivWon.imageTintList = ColorStateList.valueOf(Color.parseColor("#4A000000"))
         }
 
-        items = mutableListOf()
-        binding.recycler.adapter = PictureAdapter(this, items)
-
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
         userRef.document(G.userAccount.id).get().addOnSuccessListener {
-
             flag = it.get("profile").toString()
-
             return@addOnSuccessListener
         }
     }
-
 
     /*
     *
@@ -87,24 +86,44 @@ class SellingEditActivity : AppCompatActivity() {
         var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
         launcherPictureSelect.launch(intent)
     }
-
+//    private fun clickPicture() {
+//        var intent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("image/*").putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+//        launcherPictureSelect.launch(intent)
+//    }
     var launcherPictureSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-                for(i in 0 until size){
-                    Log.i("Hello2","$i")
-                    items.add(PictureItem(clipData.getItemAt(i).uri))
-                }
+                for(i in 0 until size) items.add(PictureItem(clipData.getItemAt(i).uri))
                 binding.recycler.adapter?.notifyDataSetChanged()
                 binding.btnImage.text = "${items.size} / 10"
-
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
 
 
+    /*
+    *
+    *       가격 입력시, 화폐 단위 변경
+    *
+    * */
+    private val decimalFormat = DecimalFormat("#,###")
+    private var result: String = ""
+
+    private val watcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+        override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if(!TextUtils.isEmpty(charSequence.toString()) && charSequence.toString() != result){
+                result = decimalFormat.format(charSequence.toString().replace(",","").toDouble())
+                binding.etPrice.setText(result);
+                binding.etPrice.setSelection(result.length);
+            }
+        }
+        override fun afterTextChanged(p0: Editable?) {
+        }
+    }
     /*
     *
     *       카테고리 선택 버튼 : 카테고리 관련 정보 넣어서 다이얼로그 띄우기
@@ -145,12 +164,15 @@ class SellingEditActivity : AppCompatActivity() {
     }
 
 
+
+
     /*
     *
     *       완료 버튼 : DB 에 글 저장
     *
     * */
     private fun clickCompleteBtn() {
+        if(isBlankData()) return
 
         // 보낼 일반 String 데이터
         var title = binding.etTitle.text.toString()
@@ -167,7 +189,7 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
-        dataPart.put("profile",G.userAccount.id)
+        dataPart.put("id",G.userAccount.id)
 
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
@@ -187,20 +209,26 @@ class SellingEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
         call.enqueue(object : Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("avzxcv",response.body().toString())
                 finish()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.i("avzxcv",t.message.toString())
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
             }
         })
     }
+
+
+
 
     /*
     *
     *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
     *
     * */
+
     fun getRealPathFromUri(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = contentResolver.query(uri, projection, null, null, null)
@@ -210,6 +238,37 @@ class SellingEditActivity : AppCompatActivity() {
         }
         return null
     }
+
+
+    /*
+    *
+    *       입력 데이터 체크
+    *
+    * */
+    private fun isBlankData(): Boolean{
+        if(items.size == 0){
+            Snackbar.make(binding.root,"상품에 대한 사진은 최소 1장이 필요합니다.",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        else if(binding.etTitle.text.toString().isBlank()) {
+            binding.etTitle.requestFocus()
+            Snackbar.make(binding.root,"제목을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.tvCategory.text.toString() == "카테고리"){
+            Snackbar.make(binding.root,"카테고리를 선택해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.etPrice.text.toString().isBlank()){
+            binding.etPrice.requestFocus()
+            Snackbar.make(binding.root,"가격을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }else if(binding.etDecription.text.toString().isBlank()){
+            binding.etDecription.requestFocus()
+            Snackbar.make(binding.root,"상품에 대한 설명을 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        else return false
+    }
+
 
     /*
     *

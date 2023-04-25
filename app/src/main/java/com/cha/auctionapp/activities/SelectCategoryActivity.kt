@@ -15,14 +15,16 @@ class SelectCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-
         items = mutableListOf()
-        items.add(CategoryItem(R.drawable._001computer,"디지털기기"))
+        items.add(CategoryItem(R.drawable._001computer,"디지털 기기"))
         items.add(CategoryItem(R.drawable._002furniture,"가구"))
         items.add(CategoryItem(R.drawable._003malecloth,"남성의류"))
         items.add(CategoryItem(R.drawable._004femalecloth,"여성의류"))

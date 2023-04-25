@@ -1,8 +1,6 @@
 package com.cha.auctionapp.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,59 +11,70 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.fragments.HomeFragment
 import com.cha.auctionapp.R
+import com.cha.auctionapp.adapters.PagerAdapter
+import com.cha.auctionapp.adapters.ProductAdapter
 import com.cha.auctionapp.databinding.ActivityMainBinding
-import com.cha.auctionapp.databinding.HeaderLayoutBinding
 import com.cha.auctionapp.fragments.AuctionFragment
 import com.cha.auctionapp.fragments.ChatFragment
 import com.cha.auctionapp.fragments.CommunityFragment
+import com.cha.auctionapp.model.HomeDetailItem
+import com.cha.auctionapp.model.MainItem
+import com.cha.auctionapp.model.PagerItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.Calendar
-import java.util.Date
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
     val binding:ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     lateinit var popupMenu:PopupMenu
 
+    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int = 0
+    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int = 2
 
-    private val POPUP_MENU_MY_FIRST_PLACE_ITEM_ID :Int? = 0
-    private val POPUP_MENU_MY_SECOND_PLACE_ITEM_ID :Int? = 1
-    private val POPUP_MENU_SET_PLACE_ITEM_ID :Int? = 2
-
+    lateinit var searchItems: MutableList<MainItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        init()
+    }
+
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init() {
+        getProfileURLFromFirestore(G.userAccount.id)
+        searchItems = mutableListOf()
 
         HomeFragment()
         CommunityFragment()
         AuctionFragment()
         ChatFragment()
 
-        // 팝업메뉴 만들어 놓기. 그래서 처음 설정값을 정해두기
         setUpPopUpMenu()
-
-        // 프래그먼트 초기값 설정
         setUpFragment()
 
         binding.bnv.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener {
@@ -74,12 +83,36 @@ class MainActivity : AppCompatActivity() {
             return@OnItemSelectedListener true
         })
 
-        setNavigationDrawer()
+
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
         binding.ibSearch.setOnClickListener { clickEditSearch() }
         binding.ibCategory.setOnClickListener { clickCategoryBtn() }
     }
 
+
+    /*
+    *
+    *       전역으로 쓰일 프로필 다운로드 URL 받아오기
+    *
+    * */
+    private fun getProfileURLFromFirestore(id: String){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+
+        val imgRef = rootRef.child("profile/IMG_$id.jpg")
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            G.profileImg = p0
+            Log.i("15eeee","$p0")
+            setNavigationDrawer()
+        }.addOnFailureListener {
+            G.profileImg = getURLForResource(R.drawable.default_profile)
+            setNavigationDrawer()
+        }
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
+    }
 
     /*
     *
@@ -92,6 +125,11 @@ class MainActivity : AppCompatActivity() {
             tran.beginTransaction().replace(R.id.container_fragment,CommunityFragment()).commit()
             binding.appbar.visibility = View.GONE
             binding.bnv.selectedItemId = R.id.community_tab
+            return
+        }else if(intent.getStringExtra("AuctionDetail") == "AuctionDetail"){
+            tran.beginTransaction().replace(R.id.container_fragment,AuctionFragment()).commit()
+            binding.appbar.visibility = View.GONE
+            binding.bnv.selectedItemId = R.id.auction_tab
             return
         }
         tran.beginTransaction()
@@ -123,10 +161,7 @@ class MainActivity : AppCompatActivity() {
     *       카테고리 버튼 클릭
     *
     * */
-    private fun clickCategoryBtn() {
-        startActivity(Intent(this, SelectCategoryActivity::class.java))
-
-    }
+    private fun clickCategoryBtn() = startActivity(Intent(this, SelectCategoryActivity::class.java))
 
 
     /*
@@ -148,7 +183,7 @@ class MainActivity : AppCompatActivity() {
 
                     binding.btnSelectTown.visibility = View.VISIBLE
                     binding.etSearch.visibility = View.INVISIBLE
-                    binding.etSearch.setText("")
+                    //binding.etSearch.setText("")
                 }
             }
 
@@ -160,11 +195,8 @@ class MainActivity : AppCompatActivity() {
                     val imm : InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(binding.etSearch.windowToken,0)
                     binding.containerFragment.requestFocus()
-                    /*
-                    *
-                    *       검색 결과 처리 작업
-                    *
-                    * */
+                    searchItemFromServer()
+                    binding.etSearch.setText("")
                     true
                 }
 
@@ -178,7 +210,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+     /*
+     *
+     *       검색 결과 처리 작업
+     *
+     * */
+    private fun searchItemFromServer(){
+         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+         val retrofitService = retrofit.create(RetrofitService::class.java)
+         Log.i("test1234444",binding.etSearch.text.toString())
+         val call: Call<MutableList<MainItem>> = retrofitService.getSearchDataFromServerForHomeFragment(binding.etSearch.text.toString())
+         call.enqueue(object : Callback<MutableList<MainItem>> {
+             override fun onResponse(
+                 call: Call<MutableList<MainItem>>,
+                 response: Response<MutableList<MainItem>>
+             ) {
+                 searchItems = response.body()!!
+                 Log.i("test1234444",searchItems.size.toString())
 
+                 (supportFragmentManager.findFragmentById(R.id.container_fragment) as HomeFragment).setData(searchItems)
+             }
+             override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
+             }
+         })
+    }
 
 
     /*
@@ -259,13 +314,12 @@ class MainActivity : AppCompatActivity() {
         binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
         val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
 
-        //Glide.with(this).load(G.profile).error(R.drawable.default_profile).into(profile)
-        loadProfileFromFirestore(G.userAccount.id,profile)
+        Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(profile)
 
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{
-                    var intent = Intent(this,MyProfileEditActivity::class.java)
+                    var intent = Intent(this,MyProfileEditActivity::class.java).putExtra("Home","Home")
                     profileLauncher.launch(intent)
                 }
             }
@@ -284,23 +338,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-    private fun loadProfileFromFirestore(profile: String,view: CircleImageView){
-        val firebaseStorage = FirebaseStorage.getInstance()
-        val rootRef = firebaseStorage.reference
 
-        val imgRef = rootRef.child("IMG_$profile.jpg")
-        if (imgRef != null) {
-            // 파일 참조 객체로 부터 이미지의 다운로드 URL 얻어오자.
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(this@MainActivity).load(p0).error(R.drawable.default_profile).into(view)
-                }
-            }).addOnFailureListener {
-                Log.i("test12344",it.toString())
-            }
-        }
-    }
 
     /*
     *
@@ -314,14 +352,13 @@ class MainActivity : AppCompatActivity() {
                 var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
                 var userRef: CollectionReference = firestore.collection("user")
 
-                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profile",G.profile.toString())
+                userRef.document(G.userAccount.id).update("nickname",G.nickName,"profileImage",G.profileImg)
 
                 binding.nav.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_nickname).text = G.nickName
-                Glide.with(this).load(G.profile).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
+                Glide.with(this).load(G.profileImg).into(binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile))
             }
         }
     }
-
 
 
     /*

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AuctionApp</string>
+    <string name="app_name">밍글</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">열렸음</string>
@@ -15,6 +15,8 @@
     <string name="selling_immediate">즉시 판매</string>
     <string name="selling_edit_bid">경매로 올리기</string>
     <string name="auction_edit_title">경매 글쓰기</string>
+    <string name="my_fav_list">관 심 목 록</string>
+    <string name="my_post_list">내 판매글 </string>
 
 
     <string-array name="category_item">

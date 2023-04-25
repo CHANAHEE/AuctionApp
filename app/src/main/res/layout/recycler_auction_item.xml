@@ -4,6 +4,27 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:id="@+id/linear_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:gravity="end">
+
+
+        <ImageButton
+            android:id="@+id/ib_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/camera_auction"
+            app:tint="@color/white"
+            android:background="@null"
+            android:layout_marginRight="15dp"/>
+
+    </LinearLayout>
+
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoview"
         android:layout_width="match_parent"
@@ -11,16 +32,24 @@
         app:controller_layout_id="@layout/exo_player_control_view"
         app:show_buffering="always"
         app:show_shuffle_button="true"
+        android:layout_below="@id/linear_bar"
         app:show_timeout="100"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_auction"
+        android:layout_below="@id/linear_bar"/>
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_profile"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@mipmap/ic_launcher_round"
-        android:layout_above="@id/tv_description"
-        android:layout_alignLeft="@id/tv_description"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:id="@+id/tv_id"
@@ -31,18 +60,18 @@
         android:layout_marginLeft="10dp"
         android:textStyle="bold"
         android:fontFamily="@font/brandfont"
-        android:textColor="#C1C1C1"
+        android:textColor="#FFFFFF"
         android:text="ID"/>
 
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_bid"
-        android:layout_alignLeft="@id/btn_bid"
+        android:layout_alignLeft="@id/tv_id"
+        android:layout_below="@id/tv_id"
         android:layout_marginBottom="10dp"
         android:fontFamily="@font/brandfont"
-        android:textColor="#C1C1C1"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:lines="1"
         android:maxEms="15"
@@ -52,32 +81,73 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_bid"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:background="@drawable/bg_btn"
         android:backgroundTint="#8D4CAF50"
         android:fontFamily="@font/brandfont"
         android:textColor="@color/white"
-        android:textSize="17sp"
-        android:text="입  찰  하  기"
+        android:textSize="13sp"
+        android:text="입  찰"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
         android:textStyle="bold"/>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_edit"
+    <ImageButton
+        android:id="@+id/ib_fav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
-        app:backgroundTint="@color/brand"
-        android:src="@drawable/edit_text"
+        android:src="@drawable/heart_outline"
         app:tint="@color/white"
-        app:fabSize="normal"
+        android:background="@null"
+        android:layout_marginRight="15dp"
+        android:layout_above="@id/tv_fav_size"
+        android:layout_alignParentRight="true"
         />
+
+    <TextView
+        android:id="@+id/tv_fav_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/ib_fav"
+        android:layout_alignRight="@id/ib_fav"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:fontFamily="@font/brandfont"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_above="@id/btn_bid"
+        android:text="76"/>
+
+    <ImageButton
+        android:id="@+id/ib_comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/comment"
+        app:tint="@color/white"
+        android:background="@null"
+        android:layout_marginRight="15dp"
+        android:layout_above="@id/tv_comments_size"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/tv_comments_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/ib_comments"
+        android:layout_alignRight="@id/ib_comments"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:fontFamily="@font/brandfont"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_above="@id/ib_fav"
+        android:text="12"/>
 
 
 </RelativeLayout>

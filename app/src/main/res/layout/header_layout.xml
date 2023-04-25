@@ -19,6 +19,7 @@
         android:textColor="#979494"
         android:layout_below="@id/iv_nav_profile"
         android:textStyle="bold"
+        android:fontFamily="@font/brandfont"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="8dp"/>
     <TextView
@@ -27,6 +28,8 @@
         android:layout_height="wrap_content"
         android:text="android@google.com"
         android:textColor="#979494"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
         android:layout_below="@id/tv_nav_nickname"
         android:layout_marginLeft="8dp"/>
 

@@ -7,24 +7,29 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.activities.HomeDetailActivity
 import com.cha.auctionapp.databinding.RecyclerCommunityItemBinding
+import com.cha.auctionapp.databinding.RecyclerSearchByCategoryItemBinding
 import com.cha.auctionapp.model.CommunityPostItem
+import com.cha.auctionapp.model.HomeDetailItem
+import com.cha.auctionapp.model.MyPostListItem
 
-class MyPostListAdapter(var context:Context, var items:MutableList<CommunityPostItem>) : Adapter<MyPostListAdapter.VH>() {
+class MyPostListAdapter(var context:Context, var items:MutableList<MyPostListItem>) : Adapter<MyPostListAdapter.VH>() {
 
-    inner class VH(var binding:RecyclerCommunityItemBinding) : ViewHolder(binding.root)
+    inner class VH(var binding:RecyclerSearchByCategoryItemBinding) : ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerCommunityItemBinding.inflate(LayoutInflater.from(context),parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = VH(RecyclerSearchByCategoryItemBinding.inflate(LayoutInflater.from(context),parent,false))
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.binding.tvTitle.text = items[position].title
-        holder.binding.tvContents.text = items[position].description
-        holder.binding.tvLocation.text = items[position].location
-        holder.binding.tvFavSize.text = items[position].fav.toString()
-        holder.binding.tvCommentsSize.text = items[position].comments.toString()
-        Glide.with(context).load(items[position].image).into(holder.binding.ivImage)
+        var item = items[position]
+        var baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + item.image.split(",")[0]
+        Glide.with(context).load(baseAddr).into(holder.binding.ivMainImg)
+        holder.binding.tvTitle.text = item.title
+        holder.binding.tvLocationName.text = item.location
+        holder.binding.tvPrice.text = item.price
+        holder.binding.root.tag = item.idx
 
         /*
         *
@@ -32,12 +37,7 @@ class MyPostListAdapter(var context:Context, var items:MutableList<CommunityPost
         *
         * */
         holder.itemView.setOnClickListener {
-            /*
-            *       Intent 에게 position 값을 넘겨줘야 할듯.
-            *       넘겨준 position 값을 토대로, Detail 액티비티에서 서버에 저장된 커뮤니티 작성글을 불러오자.
-            * */
-            context.startActivity(Intent(context,
-                com.cha.auctionapp.activities.CommunityDetailActivity::class.java))
+            context.startActivity(Intent(context, HomeDetailActivity::class.java).putExtra("index",holder.binding.root.tag.toString()))
         }
     }
 }

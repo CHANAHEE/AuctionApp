@@ -2,32 +2,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:paddingLeft="10dp">
-    <ImageView
-        android:id="@+id/iv_main_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:src="@color/brand"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="10dp">
+        <ImageView
+            android:id="@+id/iv_main_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:src="@color/brand"/>
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="글 제목"
+        android:text="아이폰 11pro MAX 64기가"
         android:textSize="15sp"
+        android:layout_toRightOf="@id/cv_image"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:layout_toRightOf="@id/iv_main_img"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="7dp"/>
 
     <TextView
         android:id="@+id/tv_location_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="동네 이름"
+        android:text="왕십리 도선동"
         android:textSize="10sp"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
@@ -39,19 +51,20 @@
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="가격"
+        android:text="250,000원"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
-        android:textSize="13sp"
+        android:textSize="17sp"
         android:textColor="@color/black"
         android:layout_below="@id/tv_location_name"
         android:layout_alignLeft="@id/tv_location_name"
         android:layout_marginTop="10dp"/>
 
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E8E8E8"
-        android:layout_below="@id/iv_main_img"
+        android:layout_below="@id/cv_image"
         android:layout_marginTop="10dp"/>
 </RelativeLayout>

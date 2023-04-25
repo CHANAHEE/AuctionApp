@@ -22,23 +22,34 @@
         android:layout_toLeftOf="@id/civ_profile"
         android:layout_marginRight="16dp"/>
 
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello message"
+            android:background="@drawable/bg_messagebox"
+            android:layout_marginTop="3dp"
+            android:layout_alignRight="@id/tv_name"
+            android:layout_below="@id/tv_name"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:maxWidth="200dp"/>
+
     <TextView
-        android:id="@+id/tv_msg"
+        android:id="@+id/tv_checked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello message"
-        android:layout_alignRight="@id/tv_name"
-        android:layout_below="@id/tv_name"
-        android:background="@drawable/bg_messagebox"
-        android:layout_marginTop="3dp"
-        android:fontFamily="@font/brandfont"
-        android:textStyle="bold"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingRight="16dp"
-        android:paddingLeft="16dp"
-        android:maxWidth="200dp"/>
-
+        android:text="1"
+        android:layout_toLeftOf="@id/tv_msg"
+        android:layout_above="@id/tv_time"
+        android:layout_marginRight="6dp"
+        android:textColor="#51BD3F"
+        android:textSize="10dp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"

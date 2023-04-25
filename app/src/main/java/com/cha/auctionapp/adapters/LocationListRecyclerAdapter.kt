@@ -7,24 +7,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
-import com.cha.auctionapp.activities.LoginActivity
+import com.cha.auctionapp.activities.EmailLoginActivity
+import com.cha.auctionapp.activities.SNSLoginActivity
 import com.cha.auctionapp.activities.MainActivity
-import com.cha.auctionapp.activities.MyProfileEditActivity
 import com.cha.auctionapp.activities.SetUpMyPlaceListActivity
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
 import com.cha.auctionapp.databinding.RecyclerLocationListBinding
 import com.cha.auctionapp.model.Location
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.Date
+import com.google.firebase.storage.FirebaseStorage
 
 
 class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
@@ -56,10 +52,13 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
 
         Log.i("test12311","onBindView")
-        if(context is LoginActivity) {
+        if(context is EmailLoginActivity) {
             holder.itemView.setOnClickListener {
-                bindingFrag.tvLocationSetUpPlace.text = holder.binding.tvLocationName.text
-                Log.i("test12311","로그인 액티비티로부터..")
+                G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
+                val list = G.location.split(" ")
+                G.location = list[list.lastIndex - 1]
+                G.userAccount.id = "${G.userAccount.email}${G.nickName}"
+                bindingFrag.tvLocationSetUpPlace.text = G.location
             }
         }
         else{
@@ -70,14 +69,15 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
                 G.location = it.findViewById<TextView>(R.id.tv_location_name).text.toString()
                 val list = G.location.split(" ")
                 G.location = list[list.lastIndex - 1]
+
                 when(activity.intent.getStringExtra("Community")){
                     "Community"->{
-                        saveUserInfo()
+                        loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티로부터..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Community","Community"))
                     }
                     else->{
-                        saveUserInfo()
+                        loadProfileFromFirestore(G.userAccount.id)
                         Log.i("test12311","커뮤니티 액티비티가 아닌..")
                         context.startActivity(Intent(context,MainActivity::class.java).putExtra("Home","Home"))
                     }
@@ -92,6 +92,7 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
 
 
     private fun saveUserInfo(){
+
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
 
@@ -100,8 +101,26 @@ class LocationListRecyclerAdapter() : Adapter<LocationListRecyclerAdapter.VH>(){
         user.put("email",G.userAccount?.email!!)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
-        user.put("profile",G.profile.toString())
+        user.put("profileImage",G.profileImg)
 
         userRef.document(G.userAccount?.id!!).set(user)
+    }
+
+    private fun loadProfileFromFirestore(profile: String){
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val rootRef = firebaseStorage.reference
+        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
+
+        imgRef.downloadUrl.addOnSuccessListener { p0 ->
+            G.profileImg = p0
+            saveUserInfo()
+        }.addOnFailureListener {
+            G.profileImg = getURLForResource(R.drawable.default_profile)
+            saveUserInfo()
+        }
+    }
+
+    private fun getURLForResource(resId: Int): Uri {
+        return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 }

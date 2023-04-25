@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.LocationListRecyclerAdapter
 import com.cha.auctionapp.databinding.FragmentSignUpSetUpPlaceBinding
@@ -32,17 +33,10 @@ class SignUpSetUpPlaceFragment : Fragment() {
     val binding by lazy { FragmentSignUpSetUpPlaceBinding.inflate(layoutInflater) }
     var searchPlaceByAddressResponse: KakaoSearchItemByAddress? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        var keyHash = Utility.getKeyHash(requireContext())
-        Log.i("keyHash",keyHash)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -57,8 +51,12 @@ class SignUpSetUpPlaceFragment : Fragment() {
         }
     }
 
+
+
     /*
+    *
     *       위치 제공 퍼미션 런처
+    *
     * */
     var permissionLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission(),
         object : ActivityResultCallback<Boolean> {
@@ -71,12 +69,13 @@ class SignUpSetUpPlaceFragment : Fragment() {
             }
         })
 
+
+
     /*
     *
     *      검색어 기반으로 위치 찾아오기
     *
     * */
-
     private fun requestMyLocation(){
         val retrofit: Retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
@@ -86,9 +85,7 @@ class SignUpSetUpPlaceFragment : Fragment() {
                     call: Call<KakaoSearchItemByAddress>,
                     response: Response<KakaoSearchItemByAddress>
                 ) {
-
                     searchPlaceByAddressResponse = response.body()
-
                     binding.recycler.adapter = LocationListRecyclerAdapter(requireContext(),
                         searchPlaceByAddressResponse?.documents!!,binding)
                 }
@@ -100,14 +97,11 @@ class SignUpSetUpPlaceFragment : Fragment() {
     }
 
 
-
-    private fun clickBackBtn(){
-        val fragment = activity?.supportFragmentManager
-        fragment?.popBackStack()
-    }
-
-
-
+    /*
+    *
+    *       주소 입력 완료 시, 키보드 숨기기
+    *
+    * */
     private fun editTextListener(){
         binding.etAddress.setOnKeyListener { v , keyCode, event ->
             if(event.action == KeyEvent.ACTION_DOWN
@@ -115,9 +109,6 @@ class SignUpSetUpPlaceFragment : Fragment() {
             {
                 val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.etAddress.windowToken,0)
-                /*
-                *       여기에서 검색 결과 리사이클러뷰에 띄워주기 / 리사이클러뷰에서는 아이템 선택 리스너를 통해 tv 에 넣어주기
-                * */
                 requestMyLocation()
                 true
             }
@@ -125,6 +116,12 @@ class SignUpSetUpPlaceFragment : Fragment() {
         }
     }
 
+
+    /*
+    *
+    *       동네 선택 후, 닉네임 설정 화면으로
+    *
+    * */
     private fun clickNextBtn(){
         
         if(binding.tvLocationSetUpPlace.text == "") {
@@ -133,19 +130,25 @@ class SignUpSetUpPlaceFragment : Fragment() {
                 "동네를 선택 해주세요", Snackbar.LENGTH_SHORT).show()
             return
         }
-        
-        var fragment = SignUpSetNickNameFragment()
-        var bundle = Bundle()
-        bundle.putString("location",binding.tvLocationSetUpPlace.text.toString())
-        bundle.putString("email",arguments?.getString("email"))
-        bundle.putString("password",arguments?.getString("password"))
-        fragment.arguments = bundle
+
+        G.location = binding.tvLocationSetUpPlace.text.toString()
         val tran:FragmentTransaction? =
             activity?.
             supportFragmentManager?.
             beginTransaction()?.
-            replace(R.id.container_fragment,fragment)?.addToBackStack(null)
+            replace(R.id.container_fragment,SignUpSetNickNameFragment())?.addToBackStack(null)
 
         tran?.commit()
+    }
+
+
+    /*
+    *
+    *       뒤로가기 버튼
+    *
+    * */
+    private fun clickBackBtn(){
+        val fragment = activity?.supportFragmentManager
+        fragment?.popBackStack()
     }
 }
