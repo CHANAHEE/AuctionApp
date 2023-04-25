@@ -110,8 +110,10 @@ data class PictureCommunityDetailItem(var path: String)
 *
 * */
 data class AuctionPagerItem(
-    var video: Uri,
-    var description: String
+    var idx: Int,
+    var video: String,
+    var description: String,
+    var id: String
 )
 
 data class AuctionDetailItem(
@@ -121,7 +123,8 @@ data class AuctionDetailItem(
     var description: String,
     var tradingplace: String,
     var location: String,
-    var video: Uri,
+    var video: String,
+    var id: String
 )
 
 /*

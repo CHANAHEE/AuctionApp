@@ -1,5 +1,6 @@
 package com.cha.auctionapp.network
 
+import com.cha.auctionapp.model.AuctionDetailItem
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.cha.auctionapp.model.CategoryItem
 import com.cha.auctionapp.model.CategorySearchItem
@@ -52,7 +53,7 @@ interface RetrofitService {
     // Auction 관련
     @Multipart
     @POST("Server/insertDBForAuctionFragment.php")
-    fun postDataToServerForAuctionFragment(@PartMap dataPart: HashMap<String,String>, @Part video: MultipartBody.Part?) : Call<String>
+    fun postDataToServerForAuctionFragment(@PartMap dataPart: HashMap<String,String>) : Call<String>
 
 
     /*
@@ -82,5 +83,8 @@ interface RetrofitService {
 
     // Auction 관련
     @GET("Server/loadDBForAuctionFragment.php")
-    fun getDataFromServerForAuctionFragment(@Query("index") query: String) : Call<MutableList<AuctionPagerItem>>
+    fun getDataFromServerForAuctionFragment() : Call<MutableList<AuctionPagerItem>>
+
+    @GET("Server/loadDBForAuctionDetail.php")
+    fun getDataFromServerForAuctionDetail(@Query("index") query: String) : Call<MutableList<AuctionDetailItem>>
 }

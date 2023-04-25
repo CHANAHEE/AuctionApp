@@ -2,6 +2,7 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,12 +11,16 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.AuctionVideoActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
 import com.cha.auctionapp.model.AuctionPagerItem
+import com.cha.auctionapp.model.CommunityDetailItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPagerItem>) : Adapter<AuctionPagerAdapter.VH>() {
 
@@ -37,18 +42,16 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
 
 //        holder.binding.tvId.text = item.
-//        holder.binding.tvDescription.text = item.description
+
+        loadProfileFromFirestore(item,holder)
+        holder.binding.tvDescription.text = item.description
 //        Glide.with(context).load(item.image).into(holder.binding.civProfile)
-       // holder.binding.fabEdit.setOnClickListener {context.startActivity(Intent(context,AuctionEditActivity::class.java))}
 
-        // 동영상 촬영 클릭 이벤트
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }
-
-        // BottomSheet 1번 구현
-        holder.binding.btnBid.setOnClickListener { clickBidBtn(holder) }
-
+        holder.binding.btnBid.setOnClickListener { clickBidBtn(position) }
         holder.binding.ibFav.setOnClickListener { clickFavBtn() }
         holder.binding.ibComments.setOnClickListener { clickCommentsBtn() }
+
         // Exoplayer 구현
         exoPlayer(item,holder)
 
@@ -58,12 +61,27 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
     /*
     *
+    *       프로필 정보 받아오기
+    *
+    * */
+    private fun loadProfileFromFirestore(item: AuctionPagerItem, holder: VH){
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
+
+        userRef.document(item.id).get().addOnSuccessListener {
+            holder.binding.tvId.text = it.get("nickname").toString()
+            Glide.with(context).load(it.get("profileImage")).error(R.drawable.default_profile).into(holder.binding.civProfile)
+            return@addOnSuccessListener
+        }
+    }
+
+    /*
+    *
     *       동영상 촬영 클릭 이벤트 : 촬영할 수 있게 해주기
     *
     * */
-    private fun filmingVideo() {
-        context.startActivity(Intent(context, AuctionVideoActivity::class.java))
-    }
+    private fun filmingVideo() = context.startActivity(Intent(context, AuctionVideoActivity::class.java))
+
 
 
 
@@ -72,12 +90,8 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *       입찰 버튼 클릭 이벤트
     *
     * */
-    private fun clickBidBtn(holder: VH){
+    private fun clickBidBtn(position: Int) = context.startActivity(Intent(context,AuctionDetailActivity::class.java).putExtra("index",items[position].idx.toString()))
 
-        context.startActivity(Intent(context,AuctionDetailActivity::class.java))
-
-
-    }
 
 
     private fun clickFavBtn(){
@@ -101,12 +115,11 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *
     * */
     private fun exoPlayer(item: AuctionPagerItem,holder: VH){
-        Log.i("pagerExo","${holder.layoutPosition} 번 뷰홀더")
-        var mediaItem: MediaItem = MediaItem.fromUri(item.video!!)
+        var mediaItem: MediaItem = MediaItem.fromUri(item.video)
         holder.binding.videoview.player = holder.exoPlayer
         holder.exoPlayer.prepare()
         holder.exoPlayer.setMediaItem(mediaItem)
-        holder.exoPlayer.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+        holder.exoPlayer.repeatMode
     }
 
 

@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.AuctionPagerAdapter
 import com.cha.auctionapp.databinding.FragmentAuctionBinding
 import com.cha.auctionapp.model.AuctionPagerItem
@@ -36,6 +37,8 @@ import retrofit2.Response
 class AuctionFragment : Fragment() {
 
     lateinit var binding: FragmentAuctionBinding
+    lateinit var items: MutableList<AuctionPagerItem>
+
     override fun onStart() {
         super.onStart()
         var activity = activity as MainActivity
@@ -49,27 +52,28 @@ class AuctionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentAuctionBinding.inflate(inflater,container,false)
         return binding.root
     }
 
-    var videoUri =
-        Uri.parse("https://www.shutterstock.com/shutterstock/videos/1084218295/preview/stock-footage-futuristic-animated-concept-big-data-center-chief-technology-officer-using-laptop-standing-in.webm")
-
-    lateinit var items: MutableList<AuctionPagerItem>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items = mutableListOf()
-        items.add(AuctionPagerItem(videoUri,"안녕하세요 처음뵙겠습니다"))
+        items.add(AuctionPagerItem(0,"https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm","첫번째 쇼츠를 올려주세요", G.userAccount.id))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
     }
 
     override fun onResume() {
         super.onResume()
-        //loadDataFromServer()
+        loadDataFromServer()
     }
 
+
+    /*
+    *
+    *       MainActivity 의 UI 흰색으로 변경
+    *
+    * */
     override fun onDestroy() {
         super.onDestroy()
         var activity = activity as MainActivity
@@ -77,27 +81,31 @@ class AuctionFragment : Fragment() {
         WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = true
         activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
     }
+
+
+
+
+    /*
+    *
+    *       서버에서 데이터 받아오기
+    *
+    * */
     private fun loadDataFromServer(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        val call: Call<MutableList<AuctionPagerItem>> = retrofitService.getDataFromServerForAuctionFragment(activity?.intent?.getStringExtra("index")!!)
+        val call: Call<MutableList<AuctionPagerItem>> = retrofitService.getDataFromServerForAuctionFragment()
         call.enqueue(object : Callback<MutableList<AuctionPagerItem>> {
             override fun onResponse(
                 call: Call<MutableList<AuctionPagerItem>>,
                 response: Response<MutableList<AuctionPagerItem>>
             ) {
-                // 데이터 받아와서 어댑터에 뿌리기
                 items = response.body()!!
-                binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
+                if(items.size != 0) binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
             }
 
             override fun onFailure(call: Call<MutableList<AuctionPagerItem>>, t: Throwable) {
-                Log.i("test01","${t.message}")
+                Log.i("test01","ERROR : ${t.message}")
             }
         })
     }
-
-
-
-
 }
