@@ -11,6 +11,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Rational
+import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
 import android.view.Surface.ROTATION_0
@@ -24,11 +26,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.camera2.interop.Camera2CameraInfo
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.AspectRatio.RATIO_16_9
+import androidx.camera.core.AspectRatio.Ratio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraX
 import androidx.camera.core.Preview
+import androidx.camera.core.UseCase
+import androidx.camera.core.impl.CaptureConfig
+import androidx.camera.core.impl.OptionsBundle
+import androidx.camera.core.impl.PreviewConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
@@ -222,16 +230,15 @@ class AuctionVideoActivity : AppCompatActivity() {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
 
-            binding.previewView.scaleType = PreviewView.ScaleType.FIT_CENTER
-
+            //binding.previewView.scaleType = PreviewView.ScaleType.FIT_CENTER
 
             // Preview
             val preview = Preview.Builder()
-                .setTargetAspectRatio(RATIO_16_9)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.previewView.surfaceProvider)
                 }
+
 
 
 //            binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
@@ -241,7 +248,9 @@ class AuctionVideoActivity : AppCompatActivity() {
             val recorder = Recorder.Builder()
                 .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
                 .build()
+
             videoCapture = VideoCapture.withOutput(recorder)
+
 
 
             // Select back camera as a default
@@ -251,27 +260,27 @@ class AuctionVideoActivity : AppCompatActivity() {
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
                 // Bind use cases to camera
                 val camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture)
-                val orientationEventListener = object : OrientationEventListener(this) {
-                    override fun onOrientationChanged(orientation: Int) {
-                        if (orientation == ORIENTATION_UNKNOWN) return
 
-                        val rotation = when (orientation) {
-                            in 45 until 135 -> Surface.ROTATION_270
-                            in 135 until 225 -> Surface.ROTATION_180
-                            in 225 until 315 -> Surface.ROTATION_90
-                            else -> Surface.ROTATION_0
-                        }
-
-                        preview.targetRotation = rotation
-                        videoCapture!!.targetRotation = rotation
-                    }
-                }
+//                val orientationEventListener = object : OrientationEventListener(this) {
+//                    override fun onOrientationChanged(orientation: Int) {
+//                        if (orientation == ORIENTATION_UNKNOWN) return
+//
+//                        val rotation = when (orientation) {
+//                            in 45 until 135 -> Surface.ROTATION_270
+//                            in 135 until 225 -> Surface.ROTATION_180
+//                            in 225 until 315 -> Surface.ROTATION_90
+//                            else -> Surface.ROTATION_0
+//                        }
+//
+//                        preview.targetRotation = rotation
+//                        videoCapture!!.targetRotation = rotation
+//                    }
+//                }
 
 // OrientationEventListener를 등록합니다.
-                orientationEventListener.enable()
+//                orientationEventListener.enable()
 
                 Log.i("adiofbnre",preview.camera!!.cameraInfo.sensorRotationDegrees.toString())
             } catch(exc: Exception) {

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "344450460221-p4o8n6un1aq1dcqga8srqtdj491d8msf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cha.auctionapp",
+            "certificate_hash": "aaba7976bf693cd8adfa73bded15af4c1b321aa1"
+          }
+        },
+        {
           "client_id": "344450460221-qk651rt97qdjvng5cu3gojdcj53n1qvd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -22,7 +30,7 @@
           }
         },
         {
-          "client_id": "344450460221-jb8i959vj3qo8vejptqq95t1e6ouebak.apps.googleusercontent.com",
+          "client_id": "344450460221-ijtkke9p0umqth69sk48e31ntqg9vbsq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "344450460221-jb8i959vj3qo8vejptqq95t1e6ouebak.apps.googleusercontent.com",
+              "client_id": "344450460221-ijtkke9p0umqth69sk48e31ntqg9vbsq.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
