@@ -100,6 +100,7 @@ class AuctionFragment : Fragment() {
                 response: Response<MutableList<AuctionPagerItem>>
             ) {
                 items = response.body()!!
+                if(activity == null || !isAdded) return
                 if(items.size != 0) binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
             }
 

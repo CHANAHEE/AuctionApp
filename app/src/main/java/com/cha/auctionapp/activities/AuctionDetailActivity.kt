@@ -2,30 +2,26 @@ package com.cha.auctionapp.activities
 
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
-import com.cha.auctionapp.adapters.PagerAdapter
 import com.cha.auctionapp.databinding.ActivityAuctionDetailBinding
 import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheet2Binding
 import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheetBinding
 import com.cha.auctionapp.model.AppDatabase
 import com.cha.auctionapp.model.AuctionDetailItem
-import com.cha.auctionapp.model.HomeDetailItem
-import com.cha.auctionapp.model.PagerItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -67,7 +63,6 @@ class AuctionDetailActivity : AppCompatActivity() {
 
         bidTimer()
         loadDataFromServer()
-        // status bar 투명으로 만들기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         else window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
     }
@@ -98,7 +93,6 @@ class AuctionDetailActivity : AppCompatActivity() {
 
                 binding.videoview.setVideoURI(Uri.parse(item.video))
                 binding.videoview.start()
-
                 // 장소 정보
                 if(item.tradingplace != ""){
                     binding.relativeLocation.visibility = View.VISIBLE
@@ -112,6 +106,7 @@ class AuctionDetailActivity : AppCompatActivity() {
             }
         })
     }
+
 
     /*
     *

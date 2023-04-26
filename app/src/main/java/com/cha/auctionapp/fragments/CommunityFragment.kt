@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -48,7 +49,12 @@ class CommunityFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCommunityBinding.inflate(LayoutInflater.from(context),container,false)
+        try {
+            binding = FragmentCommunityBinding.inflate(LayoutInflater.from(context),container,false)
+            return binding.root
+        }catch (e: Exception){
+
+        }
         return binding.root
     }
 
@@ -81,19 +87,27 @@ class CommunityFragment : Fragment() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call: Call<MutableList<CommunityPostItem>> = retrofitService.getDataFromServerForCommunityFragment(G.location)
-        call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
-            override fun onResponse(
-                call: Call<MutableList<CommunityPostItem>>,
-                response: Response<MutableList<CommunityPostItem>>
-            ) {
-                communityItems = response.body()!!
-                binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
-            }
+        
+        try {
 
-            override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
-                Log.i("test01","${t.message}")
-            }
-        })
+            call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
+                override fun onResponse(
+                    call: Call<MutableList<CommunityPostItem>>,
+                    response: Response<MutableList<CommunityPostItem>>
+                ) {
+                    communityItems = response.body()!!
+                    if(activity == null || !isAdded) return
+                    binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
+                }
+
+                override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
+                    Log.i("test01","${t.message}")
+                }
+            })
+        }catch (e: Exception){
+            Toast.makeText(context, "커뮤니티 네트워크 작업 실패", Toast.LENGTH_SHORT).show()
+        }
+
     }
     /*
     *
@@ -201,17 +215,23 @@ class CommunityFragment : Fragment() {
         val retrofitService = retrofit.create(RetrofitService::class.java)
         Log.i("test1234444",binding.etSearch.text.toString())
         val call: Call<MutableList<CommunityPostItem>> = retrofitService.getSearchDataFromServerForCommunityFragment(binding.etSearch.text.toString())
-        call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
-            override fun onResponse(
-                call: Call<MutableList<CommunityPostItem>>,
-                response: Response<MutableList<CommunityPostItem>>
-            ) {
-                searchItems = response.body()!!
-                binding.recycler.adapter = CommunityAdapter(requireContext(),searchItems)
-            }
-            override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
-            }
-        })
+
+        try {
+            call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
+                override fun onResponse(
+                    call: Call<MutableList<CommunityPostItem>>,
+                    response: Response<MutableList<CommunityPostItem>>
+                ) {
+                    searchItems = response.body()!!
+                    binding.recycler.adapter = CommunityAdapter(requireContext(),searchItems)
+                }
+                override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
+                }
+            })
+        }catch (e: Exception){
+            Toast.makeText(context, "검색 실패", Toast.LENGTH_SHORT).show()
+        }
+
     }
     /*
     *

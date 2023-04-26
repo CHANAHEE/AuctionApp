@@ -315,7 +315,7 @@ class MainActivity : AppCompatActivity() {
         val profile = binding.nav.getHeaderView(0).findViewById<CircleImageView>(R.id.iv_nav_profile)
 
         Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(profile)
-
+        Log.i("adfobn",G.profileImg.toString())
         binding.nav.getHeaderView(0).findViewById<View>(R.id.btn_edit_profile).setOnClickListener {
             when(it.id){
                 R.id.btn_edit_profile->{

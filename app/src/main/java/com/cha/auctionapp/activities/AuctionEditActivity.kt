@@ -93,7 +93,6 @@ class AuctionEditActivity : AppCompatActivity() {
         var description = binding.etDecription.text.toString()
         var location = binding.tvPositionName.text.toString()
 
-
         var dataPart: HashMap<String,String> = hashMapOf()
         dataPart.put("title",title)
         dataPart.put("category",category)
@@ -104,7 +103,24 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("location", G.location)
         dataPart.put("id", G.userAccount.id)
 
-        uploadVideoToStorage(dataPart)
+        //dataPart.put("video", it.toString())
+        dataPart.put("video","https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm")
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
+                dialog.dismiss()
+                finish()
+            }
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
+            }
+        })
+
+
+        //uploadVideoToStorage(dataPart)
     }
 
 
@@ -114,35 +130,19 @@ class AuctionEditActivity : AppCompatActivity() {
     *       Storage 에 비디오 업로드
     *
     * */
-    private fun uploadVideoToStorage(dataPart: HashMap<String,String>) {
-        var videoUri = Uri.parse(intent.getStringExtra("video"))
-        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-        val imgRef: StorageReference =
-            firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
-        imgRef.putFile(videoUri).addOnSuccessListener(OnSuccessListener<Any?> {
-            imgRef.downloadUrl.addOnSuccessListener {
-                dataPart.put("video", it.toString())
-
-                var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-                var retrofitService = retrofit.create(RetrofitService::class.java)
-                var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
-                call.enqueue(object : Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
-                        dialog.dismiss()
-                        finish()
-                    }
-
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
-                    }
-                })
-
-            }
-        }).addOnFailureListener(OnFailureListener {
-            Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
-        })
-    }
+//    private fun uploadVideoToStorage(dataPart: HashMap<String,String>) {
+//        var videoUri = Uri.parse(intent.getStringExtra("video"))
+//        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+//        val imgRef: StorageReference =
+//            firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
+//        imgRef.putFile(videoUri).addOnSuccessListener(OnSuccessListener<Any?> {
+//            imgRef.downloadUrl.addOnSuccessListener {
+//
+//            }
+//        }).addOnFailureListener(OnFailureListener {
+//            Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
+//        })
+//    }
 
 
 

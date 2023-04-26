@@ -9,13 +9,18 @@
     <RelativeLayout
         android:id="@+id/container_video"
         android:layout_width="match_parent"
-        android:layout_height="280dp">
+        android:layout_height="280dp"
+        android:background="#505050">
 
 
         <VideoView
             android:id="@+id/videoview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
 
         <ImageButton
             android:id="@+id/btn_back"
@@ -58,6 +63,7 @@
         android:text="판매자 ID"
         android:layout_toRightOf="@id/civ_profile"
         android:layout_alignTop="@id/civ_profile"
+        android:fontFamily="@font/brandfont"
         android:textSize="17sp"
         android:textStyle="bold"
         android:layout_marginTop="5dp"
@@ -70,6 +76,7 @@
         android:text="동네 이름"
         android:layout_toRightOf="@id/civ_profile"
         android:layout_below="@id/tv_id"
+        android:fontFamily="@font/brandfont"
         android:textSize="13sp"
         android:layout_marginTop="5dp"
         />
@@ -91,6 +98,7 @@
         android:layout_height="wrap_content"
         android:text="상품명"
         android:textSize="20sp"
+        android:fontFamily="@font/brandfont"
         android:layout_below="@id/view1"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
@@ -101,6 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="카테고리"
+        android:fontFamily="@font/brandfont"
         android:textSize="12sp"
         android:layout_below="@id/tv_item_name"
         android:layout_marginTop="5dp"
@@ -112,6 +121,7 @@
         android:layout_height="wrap_content"
         android:text="상품내용"
         android:textSize="15sp"
+        android:fontFamily="@font/brandfont"
         android:layout_below="@id/tv_category"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"/>
