@@ -119,7 +119,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         holder.binding.videoview.player = holder.exoPlayer
         holder.exoPlayer.prepare()
         holder.exoPlayer.setMediaItem(mediaItem)
-        holder.exoPlayer.repeatMode
+        holder.exoPlayer.repeatMode = ExoPlayer.REPEAT_MODE_ALL
     }
 
 

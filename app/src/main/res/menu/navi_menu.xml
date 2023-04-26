@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_my_post_list" android:title="@string/my_post_list" android:icon="@drawable/ic_action_name"/>
+    <item android:id="@+id/menu_my_community_post_list" android:title="@string/my_community_list" android:icon="@drawable/comment"/>
+    <item android:id="@+id/menu_my_bid_list" android:title="@string/my_bid_list" android:icon="@drawable/hammer"/>
+    <item android:id="@+id/menu_my_bid_complete_list" android:title="@string/my_bid_complete_list" android:icon="@drawable/hammer"/>
 
-    <item android:id="@+id/menu_my_fav_list" android:title="@string/my_fav_list"  android:icon="@drawable/bg_fav" />
-    <item android:id="@+id/menu_my_post_list" android:title="@string/my_post_list" android:icon="@drawable/comment"/>
+    <item android:id="@+id/menu_my_fav_list" android:title="찜 목록"   android:icon="@drawable/bg_fav" >
+        <menu>
+            <item android:id="@+id/menu_home_fav_list" android:title="@string/home_fav_list"/>
+            <item android:id="@+id/menu_community_fav_list" android:title="@string/community_fav_list"/>
+            <item android:id="@+id/menu_auction_fav_list" android:title="@string/auction_fav_list"/>
+        </menu>
+    </item>
 
 </menu>

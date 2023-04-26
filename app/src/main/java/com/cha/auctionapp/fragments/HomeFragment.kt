@@ -56,18 +56,25 @@ class HomeFragment : Fragment() {
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call: Call<MutableList<MainItem>> = retrofitService.getDataFromServerForHomeFragment(G.location)
         Log.i("test19",G.location)
-        call.enqueue(object : Callback<MutableList<MainItem>>{
-            override fun onResponse(
-                call: Call<MutableList<MainItem>>,
-                response: Response<MutableList<MainItem>>
-            ) {
-                mainItem = response.body()!!
-                binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
-            }
+        
+        try {
+            call.enqueue(object : Callback<MutableList<MainItem>>{
+                override fun onResponse(
+                    call: Call<MutableList<MainItem>>,
+                    response: Response<MutableList<MainItem>>
+                ) {
+                    mainItem = response.body()!!
+                    if(activity == null || !isAdded) return
+                    binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
+                }
 
-            override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
-                Log.i("test01","${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
+                    Log.i("test01","${t.message}")
+                }
+            })
+        }catch (e: Exception){
+            Toast.makeText(context, "HomeFragment 네트워크 작업 실패", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }

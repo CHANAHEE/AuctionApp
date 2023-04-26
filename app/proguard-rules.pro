@@ -79,3 +79,5 @@
 
 -keep class net.daum.**
 -keep class net.daum.** { *; }
+-keep class com.kakao.sdk.** { *; }
+

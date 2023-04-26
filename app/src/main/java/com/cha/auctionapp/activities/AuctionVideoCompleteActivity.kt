@@ -39,7 +39,7 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
         Log.i("test123scbv",videoUri.toString())
         var videopath = getRealPathFromUri(videoUri)
 
-        binding.videoview.setVideoURI(videoUri)
+        binding.videoview.setVideoPath(videopath)
         var rotation = getImageOrientation(videopath!!)
         Log.i("rotateTest",rotation.toString())
         binding.videoview.setOnPreparedListener {
@@ -50,8 +50,8 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
                 Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
             val height =
                 Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
-            retriever.release()
 
+            retriever.release()
             Log.i("videoTest3","$width : $height")
         }
 

@@ -174,6 +174,9 @@ class SellingEditActivity : AppCompatActivity() {
     private fun clickCompleteBtn() {
         if(isBlankData()) return
 
+        var dialog = AlertDialog.Builder(this).setCancelable(false).setMessage("업로드 중 . . .").create()
+        dialog.show()
+
         // 보낼 일반 String 데이터
         var title = binding.etTitle.text.toString()
         var category = binding.tvCategory.text.toString()
@@ -210,6 +213,7 @@ class SellingEditActivity : AppCompatActivity() {
         call.enqueue(object : Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.i("avzxcv",response.body().toString())
+                dialog.dismiss()
                 finish()
             }
 

@@ -31,7 +31,7 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         holder.binding.tvCommentsDetail.text = item.description
         holder.binding.tvOtherId.text = item.nickname
         holder.binding.tvOtherTownName.text = item.location
-        if(item.placeinfo != ""){
+        if(item.placeinfo.isNotBlank()){
             holder.binding.relativeLocation.visibility = View.VISIBLE
             holder.binding.tvLocationName.text = item.placeinfo
         }

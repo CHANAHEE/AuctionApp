@@ -10,6 +10,8 @@ import com.cha.auctionapp.model.CommunityPostItem
 import com.cha.auctionapp.model.HomeDetailItem
 import com.cha.auctionapp.model.KakaoSearchItemByAddress
 import com.cha.auctionapp.model.MainItem
+import com.cha.auctionapp.model.MyAuctionPostList
+import com.cha.auctionapp.model.MyCommunityPostList
 import com.cha.auctionapp.model.MyPostListItem
 import com.cha.auctionapp.model.NidUserInfoResponse
 import okhttp3.MultipartBody
@@ -80,11 +82,14 @@ interface RetrofitService {
     fun getDataFromServerForCommunityDetailComments(@Query("index") query: String) : Call<MutableList<CommentsItem>>
     @GET("Server/loadDBForSearchCommunityFragment.php")
     fun getSearchDataFromServerForCommunityFragment(@Query("word") query: String) : Call<MutableList<CommunityPostItem>>
+    @GET("Server/loadDBForMyCommunityPostList.php")
+    fun getDataFromServerForMyCommunityPostList(@Query("id") query: String) : Call<MutableList<MyCommunityPostList>>
 
     // Auction 관련
     @GET("Server/loadDBForAuctionFragment.php")
     fun getDataFromServerForAuctionFragment() : Call<MutableList<AuctionPagerItem>>
-
     @GET("Server/loadDBForAuctionDetail.php")
     fun getDataFromServerForAuctionDetail(@Query("index") query: String) : Call<MutableList<AuctionDetailItem>>
+    @GET("Server/loadDBForMyAuctionPostList.php")
+    fun getDataFromServerForMyAuctionPostList(@Query("id") query: String) : Call<MutableList<MyAuctionPostList>>
 }

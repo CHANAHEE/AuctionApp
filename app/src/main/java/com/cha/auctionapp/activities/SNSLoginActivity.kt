@@ -57,7 +57,7 @@ class SNSLoginActivity : AppCompatActivity() {
     private fun init() {
         val keyHash:String = Utility.getKeyHash(this)
         Log.i("keyhash",keyHash)
-
+        Log.i("kakaoLogin","릴리즈 모드 시작")
         // 내 위치 정보 제공에 대한 동적 퍼미션 요청
         if( checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
             // 퍼미션 요청 대행사 이용 - 계약 체결
@@ -179,10 +179,12 @@ class SNSLoginActivity : AppCompatActivity() {
     *
     * */
     private fun kakaoLogin() {
+        Log.i("kakaoLogin","로그인 시작")
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT)
             } else if (token != null) {
+                Log.i("kakaoLogin","로그인 에러 없음")
                 UserApiClient.instance.me { user, error ->
                     if(user != null){
                         val pref: SharedPreferences = getSharedPreferences("Data",

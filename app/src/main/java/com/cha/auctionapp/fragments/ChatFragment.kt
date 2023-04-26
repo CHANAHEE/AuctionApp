@@ -13,6 +13,7 @@ import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.ChatListAdapter
 import com.cha.auctionapp.databinding.FragmentChatBinding
 import com.cha.auctionapp.model.ChatListItem
+import com.cha.auctionapp.model.ChatRoomInfo
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.MessageItem
 import com.google.firebase.firestore.CollectionReference
@@ -59,21 +60,33 @@ class ChatFragment : Fragment() {
                 var snapshot = document.document
                 var map = snapshot.data
 
+                var productIndex = map.get("productIndex").toString()
+                var lastMessage = map.get("message").toString()
+                var nickname = map.get("otherNickname").toString()
+                var profileImage = map.get("otherProfileImage").toString()
+                var time = map.get("time").toString()
+                var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
+
                 if(G.userAccount.id == map.get("id").toString()){
-                    var lastMessage = map.get("message").toString()
-                    var nickname = map.get("otherNickname").toString()
-                    var profileImage = map.get("otherProfileImage").toString()
-                    var time = map.get("time").toString()
                     var otherID = map.get("otherID").toString()
-                    chatListItem.add(ChatListItem(nickname, profileImage, lastMessage, time,otherID))
+                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
+                        ChatRoomInfo(
+                            chatRoomInfo["titleProductInfo"].toString(),
+                            chatRoomInfo["locationProductInfo"].toString(),
+                            chatRoomInfo["priceProductInfo"].toString(),
+                            chatRoomInfo["imageProductInfo"].toString()
+                        )
+                    ))
                     binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
                 }else if(G.userAccount.id == map.get("otherID").toString()){
-                    var lastMessage = map.get("message").toString()
-                    var nickname = map.get("nickname").toString()
-                    var profileImage = map.get("profileImage").toString()
-                    var time = map.get("time").toString()
                     var otherID = map.get("id").toString()
-                    chatListItem.add(ChatListItem(nickname, profileImage, lastMessage, time,otherID))
+                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
+                        ChatRoomInfo(
+                            chatRoomInfo["titleProductInfo"].toString(),
+                            chatRoomInfo["locationProductInfo"].toString(),
+                            chatRoomInfo["priceProductInfo"].toString(),
+                            chatRoomInfo["imageProductInfo"].toString()
+                        )))
                     binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
                 }
             }
