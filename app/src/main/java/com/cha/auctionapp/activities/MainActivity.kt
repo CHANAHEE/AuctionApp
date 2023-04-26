@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
@@ -327,11 +328,28 @@ class MainActivity : AppCompatActivity() {
 
         binding.nav.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.menu_my_fav_list->{
-                    startActivity(Intent(this,MyFavoriteListActivity::class.java))
-                }
+
                 R.id.menu_my_post_list->{
-                    startActivity(Intent(this,MyPostListActivity::class.java))
+                    startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mypost"))
+                }
+                R.id.menu_my_community_post_list->{
+                    startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mycommunity"))
+                }
+                R.id.menu_my_bid_list->{
+                    startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mybidpost"))
+                }
+                R.id.menu_my_bid_complete_list->{
+                    Toast.makeText(this, "낙찰목록 구현 예정", Toast.LENGTH_SHORT).show()
+                    //startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mybidcomplete"))
+                }
+                R.id.menu_home_fav_list->{
+                    startActivity(Intent(this,MyFavoriteListActivity::class.java).putExtra("navigation","myfav"))
+                }
+                R.id.menu_community_fav_list->{
+                    startActivity(Intent(this,MyFavoriteListActivity::class.java).putExtra("navigation","mycommunityfav"))
+                }
+                R.id.menu_auction_fav_list->{
+                    startActivity(Intent(this,MyFavoriteListActivity::class.java).putExtra("navigation","myauctionfav"))
                 }
             }
             binding.drawerLayout.closeDrawer(binding.nav)

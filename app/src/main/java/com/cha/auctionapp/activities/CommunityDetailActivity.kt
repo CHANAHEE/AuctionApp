@@ -11,14 +11,18 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.CommentsAdapter
 import com.cha.auctionapp.adapters.PictureCommunityDetailAdapter
 import com.cha.auctionapp.databinding.ActivityCommunityDetailBinding
+import com.cha.auctionapp.model.AppDatabase
 import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
+import com.cha.auctionapp.model.MyCommunityFavListItem
+import com.cha.auctionapp.model.MyFavListItem
 import com.cha.auctionapp.model.PictureCommunityDetailItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
@@ -56,9 +60,10 @@ class CommunityDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         loadDataFromServer()
+        items = mutableListOf()
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnLocation.setOnClickListener { clickLocationBtn() }
-        binding.btnFavCommunityDetail.setOnClickListener { clickFav() }
+        binding.linearFavCommunityDetail.setOnClickListener { clickFavoriteBtn() }
     }
     
     
@@ -76,8 +81,8 @@ class CommunityDetailActivity : AppCompatActivity() {
                 call: Call<MutableList<CommunityDetailItem>>,
                 response: Response<MutableList<CommunityDetailItem>>
             ) {
-                items = mutableListOf()
-                var item = response.body()!![0]
+                items = response.body()!!
+                var item = items[0]
 
                 loadProfileFromFirestore(item)
                 loadImageFiles(item)
@@ -93,6 +98,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                 }
 
                 loadCommentsDataFromServer()
+                loadMyFavItem()
             }
             override fun onFailure(call: Call<MutableList<CommunityDetailItem>>, t: Throwable) {
                 Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다",Snackbar.LENGTH_SHORT).show()
@@ -136,15 +142,93 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
     }
 
-    
+
+
     /*
-    * 
+    *
     *       찜 기능
-    * 
+    *
     * */
-    private fun clickFav(){
-        Toast.makeText(this, "커뮤니티 글 찜 기능. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    private fun loadMyFavItem(){
+        val db = Room.databaseBuilder(
+            this@CommunityDetailActivity,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+
+        val r = Runnable {
+            // Query 를 이용해서 가지고 있는 인덱스의 값이 현재 페이지와 같은지 체크해서 있으면 찜된 목록임.
+            var myFavListItem = db.MyCommunityFavListItemDAO().getAll()
+            var myFavMutable = myFavListItem.toMutableList()
+            val index = intent.getStringExtra("index")!!.toInt()
+            for(i in 0 until myFavMutable.size){
+                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
+                    binding.btnFavCommunityDetail.isSelected = true
+                    break
+                }
+            }
+        }
+        Thread(r).start()
     }
+
+    /*
+    *
+    *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
+    *
+    * */
+
+    private fun clickFavoriteBtn() {
+        val db = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+        when(binding.btnFavCommunityDetail.isSelected){
+            true->{
+                binding.btnFavCommunityDetail.isSelected = false
+                Snackbar.make(binding.root,"관심목록에서 삭제되었습니다.",Snackbar.LENGTH_SHORT).show()
+                deleteMyFavData(db)
+            }
+            else->{
+                binding.btnFavCommunityDetail.isSelected = true
+                Snackbar.make(binding.root,"관심목록에 추가되었습니다.",Snackbar.LENGTH_SHORT).show()
+                insertMyFavData(db)
+            }
+        }
+    }
+
+    private fun deleteMyFavData(db: AppDatabase){
+        val r = Runnable {
+            db.MyCommunityFavListItemDAO()
+                .delete(
+                    MyCommunityFavListItem(
+                    "${intent.getStringExtra("index")!!.toInt()}${G.userAccount.id}",
+                    intent.getStringExtra("index")!!.toInt(),
+                    items[0].title,
+                    items[0].location,
+                    items[0].description,
+                    items[0].image)
+                )
+        }
+        Thread(r).start()
+    }
+
+    private fun insertMyFavData(db: AppDatabase){
+        val r = Runnable{
+            db.MyCommunityFavListItemDAO()
+                .insert(
+                    MyCommunityFavListItem(
+                    "${intent.getStringExtra("index")!!.toInt()}${G.userAccount.id}",
+                    intent.getStringExtra("index")!!.toInt(),
+                    items[0].title,
+                    items[0].location,
+                    items[0].description,
+                    items[0].image)
+                )
+        }
+        Thread(r).start()
+    }
+
+
+
 
     /*
     *

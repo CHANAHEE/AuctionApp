@@ -101,8 +101,13 @@ data class CommentsItem(
 )
 
 data class PictureCommunityDetailItem(var path: String)
-
-
+data class MyCommunityPostList(
+    var idx: String,
+    var title: String,
+    var location: String,
+    var description: String,
+    var image: String
+)
 
 /*
 *
@@ -126,6 +131,16 @@ data class AuctionDetailItem(
     var video: String,
     var id: String
 )
+
+data class MyAuctionPostList(
+    var idx: String,
+    var title:String,
+    var location: String,
+    var description: String,
+    var time: String
+)
+
+
 
 /*
 *
@@ -169,7 +184,7 @@ data class ChatRoomInfo(
 
 /*
 *
-*       관심 목록 데이터
+*       찜한 목록 데이터
 *
 * */
 @Entity
@@ -182,9 +197,32 @@ data class MyFavListItem(
     @ColumnInfo(name = "image") var image: String
 )
 
-@Database(entities = [MyFavListItem::class], version = 2)
+@Entity
+data class MyCommunityFavListItem(
+    @PrimaryKey var idx: String,
+    @ColumnInfo(name = "index") var indexProduct: Int,
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "location") var location: String,
+    @ColumnInfo(name = "description") var description: String,
+    @ColumnInfo(name = "image") var image: String
+)
+
+@Entity
+data class MyAuctionFavListItem(
+    @PrimaryKey var idx: String,
+    @ColumnInfo(name = "index") var indexProduct: Int,
+    @ColumnInfo(name = "title") var title: String,
+    @ColumnInfo(name = "location") var location: String,
+    @ColumnInfo(name = "price") var price: String,
+    @ColumnInfo(name = "image") var image: String
+)
+
+
+@Database(entities = [MyFavListItem::class,MyCommunityFavListItem::class,MyAuctionFavListItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun myFavListItemDAO(): MyFavListItemDAO
+    abstract fun MyCommunityFavListItemDAO(): MyCommunityFavListItemDAO
+    abstract fun MyAuctionFavListItemDAO(): MyAuctionFavListItemDAO
 }
 
 @Dao
@@ -198,5 +236,30 @@ interface MyFavListItemDAO{
     @Delete
     fun delete(myFavProduct: MyFavListItem)
 }
+
+@Dao
+interface MyCommunityFavListItemDAO{
+    @Query("SELECT * FROM myCommunityFavListItem")
+    fun getAll() : List<MyCommunityFavListItem>
+
+    @Insert
+    fun insert(myCommunityFavProduct: MyCommunityFavListItem)
+
+    @Delete
+    fun delete(myCommunityFavProduct: MyCommunityFavListItem)
+}
+
+@Dao
+interface MyAuctionFavListItemDAO{
+    @Query("SELECT * FROM myauctionfavlistitem")
+    fun getAll() : List<MyAuctionFavListItem>
+
+    @Insert
+    fun insert(myAuctionFavProduct: MyAuctionFavListItem)
+
+    @Delete
+    fun delete(myAuctionFavProduct: MyAuctionFavListItem)
+}
+
 
 
