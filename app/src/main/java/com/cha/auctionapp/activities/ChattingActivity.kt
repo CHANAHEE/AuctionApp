@@ -13,10 +13,12 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.MessageAdapter
 import com.cha.auctionapp.adapters.PictureChatAdapter
 import com.cha.auctionapp.databinding.ActivityChattingBinding
+import com.cha.auctionapp.model.ChatRoomInfo
 import com.cha.auctionapp.model.MessageItem
 import com.cha.auctionapp.model.PictureItem
 import com.google.android.gms.tasks.OnFailureListener
@@ -55,6 +57,7 @@ class ChattingActivity : AppCompatActivity() {
     lateinit var chatRoomNameRef: DocumentReference
     var chatRef = firestore.collection("chat")
 
+    lateinit var baseAddr: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
@@ -93,6 +96,13 @@ class ChattingActivity : AppCompatActivity() {
                 binding.btnOption.visibility = View.VISIBLE
             }
         }
+
+        binding.tvTitleProductInfo.text = intent.getStringExtra("title")
+        binding.tvLocationNameProductInfo.text = intent.getStringExtra("location")
+        binding.tvPriceProductInfo.text = intent.getStringExtra("price")
+        baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + intent.getStringExtra("image")
+        Glide.with(this).load(baseAddr).into(binding.ivMainImgProductInfo)
+
         createFirebaseCollectionName()
         Log.i("HELLO",collectionName!!)
         chatRoomNameRef = firestore.collection("chat").document(collectionName!!)
@@ -144,6 +154,7 @@ class ChattingActivity : AppCompatActivity() {
         }
         if(collectionName == null) return
 
+        var productIndex = intent.getStringExtra("index")
         var nickname = G.nickName
         var message = binding.etMsg.text.toString()
         var id = G.userAccount.id
@@ -159,15 +170,28 @@ class ChattingActivity : AppCompatActivity() {
         if(pictureSelectedItem.isNotEmpty())
         {
             Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
-            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,documentName)
+            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,documentName,productIndex!!)
         }
         else {
             Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
 
             Log.i("4zxc","$messageIndex")
             messageIndex += 1
-            chatRef.document(collectionName!!).set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
-            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+            chatRef.document(collectionName!!).set(MessageItem(productIndex!!,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                ChatRoomInfo(
+                    binding.tvTitleProductInfo.text.toString(),
+                    binding.tvLocationNameProductInfo.text.toString(),
+                    binding.tvPriceProductInfo.text.toString(),
+                    intent.getStringExtra("image") ?: ""
+                )
+            ))
+            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(productIndex,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                ChatRoomInfo(
+                    binding.tvTitleProductInfo.text.toString(),
+                    binding.tvLocationNameProductInfo.text.toString(),
+                    binding.tvPriceProductInfo.text.toString(),
+                    intent.getStringExtra("image") ?: ""
+                )))
             //chatRoomNameRef.set(subCollectionName) -> 필드 인덱스
         }
 
@@ -185,7 +209,8 @@ class ChattingActivity : AppCompatActivity() {
                                          message: String,
                                          id: String,
                                          time: String,
-                                         documentName: Long){
+                                         documentName: Long,
+                                         productIndex: String){
 
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         var fileName = "$collectionName/${G.userAccount.id}$time/"
@@ -198,9 +223,16 @@ class ChattingActivity : AppCompatActivity() {
 
                     pictureItem.add(it)
                     if(i == pictureSelectedItem.size - 1) {
-                        chatRef.document(collectionName!!).set(MessageItem(nickname,id,message, time,G.profileImg,pictureSelectedItem,0,binding.tvLocationNameChat.text.toString(),messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+                        chatRef.document(collectionName!!).set(MessageItem(productIndex,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,binding.tvLocationNameChat.text.toString(),messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                            ChatRoomInfo(
+                                binding.tvTitleProductInfo.text.toString(),
+                                binding.tvLocationNameProductInfo.text.toString(),
+                                binding.tvPriceProductInfo.text.toString(),
+                                baseAddr
+                            )))
                         chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(
                             MessageItem(
+                                productIndex,
                                 nickname,
                                 id,
                                 message,
@@ -210,7 +242,13 @@ class ChattingActivity : AppCompatActivity() {
                                 pictureItem.size,
                                 binding.tvLocationNameChat.text.toString(),
                                 messageIndex,
-                                lastOtherMessageIndex,otherProfile,otherID,otherNickname
+                                lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                                ChatRoomInfo(
+                                    binding.tvTitleProductInfo.text.toString(),
+                                    binding.tvLocationNameProductInfo.text.toString(),
+                                    binding.tvPriceProductInfo.text.toString(),
+                                    baseAddr
+                                )
                             )
                         ).addOnFailureListener {
                         }
@@ -239,6 +277,7 @@ class ChattingActivity : AppCompatActivity() {
                 var snapshot = document.document
                 var map = snapshot.data
 
+                var productIndex = map.get("productIndex").toString()
                 var nickname = map.get("nickname").toString()
                 var id = map.get("id").toString()
                 var message = map.get("message").toString()
@@ -255,9 +294,21 @@ class ChattingActivity : AppCompatActivity() {
                 var newPictureItem = pictureItem.toMutableList()
 
                 try{
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+                    messageItem.add(MessageItem(productIndex, nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                        ChatRoomInfo(
+                            binding.tvTitleProductInfo.text.toString(),
+                            binding.tvLocationNameProductInfo.text.toString(),
+                            binding.tvPriceProductInfo.text.toString(),
+                            baseAddr
+                        )))
                 }catch (e: NumberFormatException){
-                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname))
+                    messageItem.add(MessageItem( productIndex, nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                        ChatRoomInfo(
+                            binding.tvTitleProductInfo.text.toString(),
+                            binding.tvLocationNameProductInfo.text.toString(),
+                            binding.tvPriceProductInfo.text.toString(),
+                            baseAddr
+                        )))
                 }
                 pictureItem.clear()
 
@@ -277,8 +328,8 @@ class ChattingActivity : AppCompatActivity() {
 
     private fun createFirebaseCollectionName() {
         var compareResult = G.userAccount.id.compareTo(otherID)
-        collectionName = if(compareResult > 0) G.userAccount.id + otherID
-        else if(compareResult < 0) otherID + G.userAccount.id
+        collectionName = if(compareResult > 0) G.userAccount.id + otherID + intent.getStringExtra("index")
+        else if(compareResult < 0) otherID + G.userAccount.id + intent.getStringExtra("index")
         else null
     }
 

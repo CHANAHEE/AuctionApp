@@ -133,6 +133,7 @@ data class AuctionDetailItem(
 *
 * */
 data class MessageItem(
+    var productIndex: String,
     var nickname: String = "",
     var id: String = "",
     var message: String? = "",
@@ -145,15 +146,26 @@ data class MessageItem(
     var lastOtherMessageIndex: Int,
     var otherProfileImage: String?,
     var otherID: String,
-    var otherNickname: String
+    var otherNickname: String,
+    var chatRoomInfo: ChatRoomInfo
 )
 data class ChatListItem(
+    var productIndex: String,
     var nickname: String,
     var profileImage: String?,
     var lastMessage: String,
     var time: String,
-    var OtherID: String
+    var OtherID: String,
+    var chatRoomInfo: ChatRoomInfo
 )
+
+data class ChatRoomInfo(
+    var titleProductInfo: String,
+    var locationProductInfo: String,
+    var priceProductInfo: String,
+    var imageProductInfo: String
+)
+
 
 /*
 *

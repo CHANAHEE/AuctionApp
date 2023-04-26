@@ -40,6 +40,7 @@ class HomeDetailActivity : AppCompatActivity() {
 
     lateinit var otherID: String
     lateinit var otherProfile: String
+    lateinit var imageListString: List<String>
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -79,6 +80,7 @@ class HomeDetailActivity : AppCompatActivity() {
             ) {
                 items = mutableListOf()
                 items = response.body()!!
+
                 var item = items[0]
 
                 binding.tvTownInfo.text = item.location
@@ -92,9 +94,9 @@ class HomeDetailActivity : AppCompatActivity() {
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationName.text = item.tradingplace
                 }
-//adfh
+
                 // 이미지 정보
-                var imageListString = item.image.split(",")
+                imageListString = item.image.split(",")
                 var imageListUri: MutableList<PagerItem> = mutableListOf()
                 for(i in imageListString.indices){
                     imageListUri.add(PagerItem(Uri.parse(imageListString[i])))
@@ -179,6 +181,11 @@ class HomeDetailActivity : AppCompatActivity() {
             .putExtra("otherNickname",binding.tvId.text.toString())
             .putExtra("otherProfile",otherProfile.toString())
             .putExtra("otherID",otherID)
+            .putExtra("title",binding.tvItemName.text)
+            .putExtra("price",binding.tvPrice.text)
+            .putExtra("image",imageListString[0])
+            .putExtra("location",binding.tvTownInfo.text)
+            .putExtra("index",intent.getStringExtra("index"))
         )
     }
 

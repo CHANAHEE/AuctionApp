@@ -2,6 +2,7 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -28,10 +29,17 @@ class ChatListAdapter(var context: Context, var items: MutableList<ChatListItem>
         Glide.with(context).load(item.profileImage).into(holder.binding.civProfileChatList)
 
         holder.itemView.setOnClickListener {
+            Log.i("chattingasdfasdf",item.chatRoomInfo.titleProductInfo)
             context.startActivity(Intent(context, ChattingActivity::class.java)
                 .putExtra("otherNickname",item.nickname)
                 .putExtra("otherProfile",item.profileImage)
-                .putExtra("otherID",item.OtherID))
+                .putExtra("otherID",item.OtherID)
+                .putExtra("title",item.chatRoomInfo.titleProductInfo)
+                .putExtra("price",item.chatRoomInfo.priceProductInfo)
+                .putExtra("image",item.chatRoomInfo.imageProductInfo)
+                .putExtra("location",item.chatRoomInfo.locationProductInfo)
+                .putExtra("index",item.productIndex)
+            )
 
         }
     }
