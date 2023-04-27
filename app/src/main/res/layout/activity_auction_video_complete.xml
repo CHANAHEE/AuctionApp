@@ -14,14 +14,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_video"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:layout_weight="1"
         app:cardCornerRadius="30dp">
         <RelativeLayout
             android:id="@+id/relative_video"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <VideoView
                 android:id="@+id/videoview"

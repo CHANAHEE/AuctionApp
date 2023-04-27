@@ -150,11 +150,11 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *
     * */
     private fun countDown(item: AuctionPagerItem,holder: VH){
-        Log.i("dhodkseho",item.now)
-        Log.i("dhodkseho","${item.now.toBigInteger()}")
-        Log.i("dhodkseho",Integer.valueOf(item.now).toString())
-        var remainTime = 43200000 + item.now.toInt() - System.currentTimeMillis()
-        object : CountDownTimer(remainTime,1000) {
+//        Log.i("dhodkseho",item.now)
+//        Log.i("dhodkseho","${item.now.toBigInteger()}")
+//        Log.i("dhodkseho",Integer.valueOf(item.now).toString())
+//        var remainTime = 43200000 + item.now.toInt() - System.currentTimeMillis()
+        object : CountDownTimer(43200000,1000) {
 
 
             override fun onTick(millisUntilFinished: Long) {
