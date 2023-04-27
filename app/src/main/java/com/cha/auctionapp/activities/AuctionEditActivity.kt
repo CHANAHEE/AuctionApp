@@ -101,6 +101,7 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname", G.nickName)
         dataPart.put("location", G.location)
+        dataPart.put("now",System.currentTimeMillis().toString())
         dataPart.put("id", G.userAccount.id)
 
         //dataPart.put("video", it.toString())

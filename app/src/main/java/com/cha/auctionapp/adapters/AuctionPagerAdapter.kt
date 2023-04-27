@@ -56,7 +56,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         exoPlayer(item,holder)
 
         // 경매 남은 시간 타이머
-        countDown(holder)
+        countDown(item,holder)
     }
 
     /*
@@ -149,8 +149,12 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *       올린 시간을 기준으로 12시간 후에는 게시글을 삭제시키기.
     *
     * */
-    private fun countDown(holder: VH){
-        object : CountDownTimer(43200000,1000) {
+    private fun countDown(item: AuctionPagerItem,holder: VH){
+        Log.i("dhodkseho",item.now)
+        Log.i("dhodkseho","${item.now.toBigInteger()}")
+        Log.i("dhodkseho",Integer.valueOf(item.now).toString())
+        var remainTime = 43200000 + item.now.toInt() - System.currentTimeMillis()
+        object : CountDownTimer(remainTime,1000) {
 
 
             override fun onTick(millisUntilFinished: Long) {

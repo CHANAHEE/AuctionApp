@@ -52,6 +52,48 @@ class ChatFragment : Fragment() {
 
 
 
+//    private fun getChattingInfoFromFirebase(){
+//        var firestore = FirebaseFirestore.getInstance()
+//        var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
+//            var documentChange = it.documentChanges
+//            for(document in documentChange){
+//                var snapshot = document.document
+//                var map = snapshot.data
+//
+//                var productIndex = map.get("productIndex").toString()
+//                var lastMessage = map.get("message").toString()
+//                var nickname = map.get("otherNickname").toString()
+//                var profileImage = map.get("otherProfileImage").toString()
+//                var time = map.get("time").toString()
+//                var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
+//
+//                if(G.userAccount.id == map.get("id").toString()){
+//                    var otherID = map.get("otherID").toString()
+//                    Log.i("chatlistItem","내 아이디가 id : $otherID")
+//                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
+//                        ChatRoomInfo(
+//                            chatRoomInfo["titleProductInfo"].toString(),
+//                            chatRoomInfo["locationProductInfo"].toString(),
+//                            chatRoomInfo["priceProductInfo"].toString(),
+//                            chatRoomInfo["imageProductInfo"].toString()
+//                        )
+//                    ))
+//                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+//                }else if(G.userAccount.id == map.get("otherID").toString()){
+//                    var otherID = map.get("id").toString()
+//                    Log.i("chatlistItem","내 아이디가 otherID : $otherID")
+//                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
+//                        ChatRoomInfo(
+//                            chatRoomInfo["titleProductInfo"].toString(),
+//                            chatRoomInfo["locationProductInfo"].toString(),
+//                            chatRoomInfo["priceProductInfo"].toString(),
+//                            chatRoomInfo["imageProductInfo"].toString()
+//                        )))
+//                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+//                }
+//            }
+//        }
+//    }
     private fun getChattingInfoFromFirebase(){
         var firestore = FirebaseFirestore.getInstance()
         var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
@@ -62,13 +104,15 @@ class ChatFragment : Fragment() {
 
                 var productIndex = map.get("productIndex").toString()
                 var lastMessage = map.get("message").toString()
-                var nickname = map.get("otherNickname").toString()
-                var profileImage = map.get("otherProfileImage").toString()
                 var time = map.get("time").toString()
                 var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
 
                 if(G.userAccount.id == map.get("id").toString()){
+
                     var otherID = map.get("otherID").toString()
+                    var nickname = map.get("otherNickname").toString()
+                    var profileImage = map.get("otherProfileImage").toString()
+
                     chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
                         ChatRoomInfo(
                             chatRoomInfo["titleProductInfo"].toString(),
@@ -79,7 +123,11 @@ class ChatFragment : Fragment() {
                     ))
                     binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
                 }else if(G.userAccount.id == map.get("otherID").toString()){
+
                     var otherID = map.get("id").toString()
+                    var nickname = map.get("nickname").toString()
+                    var profileImage = map.get("profileImage").toString()
+
                     chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
                         ChatRoomInfo(
                             chatRoomInfo["titleProductInfo"].toString(),
@@ -91,13 +139,6 @@ class ChatFragment : Fragment() {
                 }
             }
         }
-
-//        Log.i("chatList","chatListRef : ${chatListRef}")
-//        chatListRef.get().addOnSuccessListener {
-//            Log.i("chatList",it.documents.size.toString())
-//        }.addOnFailureListener {
-//            Log.i("chatList",it.message.toString())
-//        }
     }
 //    private fun createFirebaseCollectionName() {
 //        var compareResult = G.userAccount.id.compareTo(otherID)

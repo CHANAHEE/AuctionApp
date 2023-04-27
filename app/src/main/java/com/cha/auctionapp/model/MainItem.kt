@@ -118,7 +118,8 @@ data class AuctionPagerItem(
     var idx: Int,
     var video: String,
     var description: String,
-    var id: String
+    var id: String,
+    var now: String
 )
 
 data class AuctionDetailItem(
@@ -213,8 +214,7 @@ data class MyAuctionFavListItem(
     @ColumnInfo(name = "index") var indexProduct: Int,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "location") var location: String,
-    @ColumnInfo(name = "price") var price: String,
-    @ColumnInfo(name = "image") var image: String
+    @ColumnInfo(name = "price") var price: String
 )
 
 

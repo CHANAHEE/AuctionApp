@@ -22,9 +22,12 @@ import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheet2Binding
 import com.cha.auctionapp.databinding.FragmentAuctionDetailBottomSheetBinding
 import com.cha.auctionapp.model.AppDatabase
 import com.cha.auctionapp.model.AuctionDetailItem
+import com.cha.auctionapp.model.MyAuctionFavListItem
+import com.cha.auctionapp.model.MyCommunityFavListItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
@@ -76,7 +79,8 @@ class AuctionDetailActivity : AppCompatActivity() {
     private fun loadDataFromServer() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
+        //val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
+        val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail("14")
         call.enqueue(object : Callback<MutableList<AuctionDetailItem>> {
             override fun onResponse(
                 call: Call<MutableList<AuctionDetailItem>>,
@@ -136,34 +140,6 @@ class AuctionDetailActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-    /*
-    *
-    *       Room DB 활용한 찜기능 구현
-    *
-    * */
-    private fun loadMyFavItem(){
-        val db = Room.databaseBuilder(
-            this@AuctionDetailActivity,
-            AppDatabase::class.java, "fav-database"
-        ).build()
-
-        val r = Runnable {
-            // Query 를 이용해서 가지고 있는 인덱스의 값이 현재 페이지와 같은지 체크해서 있으면 찜된 목록임.
-            var myFavListItem = db.myFavListItemDAO().getAll()
-            var myFavMutable = myFavListItem.toMutableList()
-            val index = intent.getStringExtra("index")!!.toInt()
-            for(i in 0 until myFavMutable.size){
-                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
-                    binding.ibFav.isSelected = true
-                    break
-                }
-            }
-        }
-        Thread(r).start()
-    }
 
 
 
@@ -286,13 +262,85 @@ class AuctionDetailActivity : AppCompatActivity() {
 
 
     /*
+        *
+        *       찜 기능
+        *
+        * */
+    private fun loadMyFavItem(){
+        val db = Room.databaseBuilder(
+            this@AuctionDetailActivity,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+
+        val r = Runnable {
+            // Query 를 이용해서 가지고 있는 인덱스의 값이 현재 페이지와 같은지 체크해서 있으면 찜된 목록임.
+            var myFavListItem = db.MyAuctionFavListItemDAO().getAll()
+            var myFavMutable = myFavListItem.toMutableList()
+            val index = intent.getStringExtra("index")!!.toInt()
+            for(i in 0 until myFavMutable.size){
+                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
+                    binding.ibFav.isSelected = true
+                    break
+                }
+            }
+        }
+        Thread(r).start()
+    }
+
+    /*
     *
-    *       찜 기능
+    *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
     *
     * */
-    private fun clickFavoriteBtn() { binding.ibFav.isSelected = !binding.ibFav.isSelected }
 
+    private fun clickFavoriteBtn() {
+        val db = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+        when(binding.ibFav.isSelected){
+            true->{
+                binding.ibFav.isSelected = false
+                Snackbar.make(binding.root,"관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).show()
+                deleteMyFavData(db)
+            }
+            else->{
+                binding.ibFav.isSelected = true
+                Snackbar.make(binding.root,"관심목록에 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
+                insertMyFavData(db)
+            }
+        }
+    }
 
+    private fun deleteMyFavData(db: AppDatabase){
+        val r = Runnable {
+            db.MyAuctionFavListItemDAO()
+                .delete(
+                    MyAuctionFavListItem(
+                        "${intent.getStringExtra("index")!!.toInt()}${G.userAccount.id}",
+                        intent.getStringExtra("index")!!.toInt(),
+                        items[0].title,
+                        items[0].location,
+                        items[0].description)
+                )
+        }
+        Thread(r).start()
+    }
+
+    private fun insertMyFavData(db: AppDatabase){
+        val r = Runnable{
+            db.MyAuctionFavListItemDAO()
+                .insert(
+                    MyAuctionFavListItem(
+                        "${intent.getStringExtra("index")!!.toInt()}${G.userAccount.id}",
+                        intent.getStringExtra("index")!!.toInt(),
+                        items[0].title,
+                        items[0].location,
+                        items[0].description)
+                )
+        }
+        Thread(r).start()
+    }
 
     /*
     *
