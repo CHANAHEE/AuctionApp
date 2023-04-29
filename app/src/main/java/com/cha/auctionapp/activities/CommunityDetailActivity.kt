@@ -41,6 +41,9 @@ class CommunityDetailActivity : AppCompatActivity() {
     lateinit var items: MutableList<CommunityDetailItem>
     lateinit var commentsItem: MutableList<CommentsItem>
 
+    var latitude: String = ""
+    var longitude: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityDetailBinding.inflate(layoutInflater)
@@ -64,6 +67,8 @@ class CommunityDetailActivity : AppCompatActivity() {
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnLocation.setOnClickListener { clickLocationBtn() }
         binding.linearFavCommunityDetail.setOnClickListener { clickFavoriteBtn() }
+
+
     }
     
     
@@ -92,9 +97,9 @@ class CommunityDetailActivity : AppCompatActivity() {
                 binding.tvMyTownName.text = item.location
                 Log.i("communityCheck",item.place_info.toString())
                 if(item.place_info?.isNotBlank() == true){
-                    Log.i("communityCheck",item.place_info.toString())
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationNameCommunityDetail.text = item.place_info
+                    binding.relativeLocation.setOnClickListener { clickLocation(item) }
                 }
 
                 loadCommentsDataFromServer()
@@ -170,12 +175,13 @@ class CommunityDetailActivity : AppCompatActivity() {
         Thread(r).start()
     }
 
+
+
     /*
     *
     *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
     *
     * */
-
     private fun clickFavoriteBtn() {
         val db = Room.databaseBuilder(
             this,
@@ -247,6 +253,8 @@ class CommunityDetailActivity : AppCompatActivity() {
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
         dataPart.put("id",G.userAccount.id)
+        dataPart.put("latitude",latitude)
+        dataPart.put("longitude",longitude)
 
         /*
         *       Retrofit 작업 시작
@@ -314,12 +322,29 @@ class CommunityDetailActivity : AppCompatActivity() {
                 RESULT_OK->{
                     binding.relativeLocationComments.visibility = View.VISIBLE
                     binding.tvLocationNameCommunityDetailComments.text = it.data?.getStringExtra("position")
+                    latitude = it.data?.getStringExtra("latitude")!!
+                    longitude = it.data?.getStringExtra("longitude")!!
                     binding.btnCancelCommentsLocation.setOnClickListener {
                         binding.relativeLocationComments.visibility = View.GONE
                         binding.tvLocationNameCommunityDetailComments.text = ""
                     }
                 }
             }
+    }
+
+
+
+    /*
+    *
+    *       장소 정보 클릭 이벤트 (메인글)
+    *
+    * */
+    private fun clickLocation(item: CommunityDetailItem) {
+        startActivity(Intent(this@CommunityDetailActivity,SelectPositionActivity::class.java)
+            .putExtra("showLocation","showLocation")
+            .putExtra("latitude",item.latitude)
+            .putExtra("longitude",item.longitude)
+            .putExtra("title",item.place_info))
     }
 
 

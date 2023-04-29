@@ -1,6 +1,7 @@
 package com.cha.auctionapp.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
+import com.cha.auctionapp.activities.SelectPositionActivity
 import com.cha.auctionapp.model.MessageItem
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
@@ -168,6 +170,14 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
             Glide.with(context).load(item.profileImage).error(R.drawable.default_profile)
                 .into(holder.profile)
             holder.location.text = item.location
+            holder.itemView.setOnClickListener {
+                context.startActivity(
+                    Intent(context, SelectPositionActivity::class.java)
+                    .putExtra("showLocation","showLocation")
+                    .putExtra("latitude",item.latitude)
+                    .putExtra("longitude",item.longitude)
+                    .putExtra("title",item.location))
+            }
         }
     }
 }

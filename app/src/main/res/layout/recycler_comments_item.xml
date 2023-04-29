@@ -43,6 +43,7 @@
         android:layout_below="@id/tv_other_town_name"
         android:layout_marginTop="10dp"
         android:textSize="13sp"
+        android:fontFamily="@font/brandfont"
         android:text="댓글 내용"/>
 
     <RelativeLayout

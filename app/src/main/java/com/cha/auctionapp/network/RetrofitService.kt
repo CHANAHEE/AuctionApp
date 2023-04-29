@@ -43,7 +43,6 @@ interface RetrofitService {
     @Multipart
     @POST("Server/insertDBForHomeFragment.php")
     fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
-
     // Community 관련
     @Multipart
     @POST("Server/insertDBForCommunityFragment.php")
@@ -51,7 +50,6 @@ interface RetrofitService {
     @Multipart
     @POST("Server/insertDBForCommunityFragmentComments.php")
     fun postDataToServerForCommunityDetailComments(@PartMap dataPart: HashMap<String,String>) : Call<String>
-
     // Auction 관련
     @Multipart
     @POST("Server/insertDBForAuctionFragment.php")

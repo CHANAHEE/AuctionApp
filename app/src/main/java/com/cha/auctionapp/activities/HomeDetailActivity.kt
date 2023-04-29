@@ -93,6 +93,7 @@ class HomeDetailActivity : AppCompatActivity() {
                 if(item.tradingplace != ""){
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationName.text = item.tradingplace
+                    binding.relativeLocation.setOnClickListener { clickLocation(item) }
                 }
 
                 // 이미지 정보
@@ -111,6 +112,22 @@ class HomeDetailActivity : AppCompatActivity() {
             }
         })
     }
+
+
+    /*
+    *
+    *       장소 정보 클릭 이벤트
+    *
+    * */
+    private fun clickLocation(item: HomeDetailItem) {
+        startActivity(Intent(this@HomeDetailActivity,SelectPositionActivity::class.java)
+            .putExtra("showLocation","showLocation")
+            .putExtra("latitude",item.latitude)
+            .putExtra("longitude",item.longitude)
+            .putExtra("title",item.tradingplace))
+    }
+
+
 
     /*
     *

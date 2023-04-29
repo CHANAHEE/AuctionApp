@@ -1,6 +1,7 @@
 package com.cha.auctionapp.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.R
+import com.cha.auctionapp.activities.SelectPositionActivity
 import com.cha.auctionapp.databinding.RecyclerCommentsItemBinding
 import com.cha.auctionapp.model.CommentsItem
 import com.google.android.gms.tasks.OnSuccessListener
@@ -34,6 +36,7 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
         if(item.placeinfo.isNotBlank()){
             holder.binding.relativeLocation.visibility = View.VISIBLE
             holder.binding.tvLocationName.text = item.placeinfo
+            holder.binding.relativeLocation.setOnClickListener { clickLocation(item) }
         }
 
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -44,23 +47,14 @@ class CommentsAdapter(var context: Context, var items: MutableList<CommentsItem>
             Glide.with(context).load(it.get("profileImage")).error(R.drawable.default_profile).into(holder.binding.civOtherProfile)
             return@addOnSuccessListener
         }
-
-        //loadProfileFromFirestore(holder,item)
     }
 
-
-    private fun loadProfileFromFirestore(holder: VH, item: CommentsItem){
-        val firebaseStorage = FirebaseStorage.getInstance()
-        val rootRef = firebaseStorage.reference
-
-        val imgRef = rootRef.child( "profile/IMG_" + item.id + ".jpg")
-        if (imgRef != null) {
-            imgRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri?> {
-                override fun onSuccess(p0: Uri?) {
-                    Glide.with(context).load(p0).error(R.drawable.default_profile).into(holder.binding.civOtherProfile)
-                }
-            }).addOnFailureListener {
-            }
-        }
+    private fun clickLocation(item: CommentsItem){
+        context.startActivity(
+            Intent(context, SelectPositionActivity::class.java)
+            .putExtra("showLocation","showLocation")
+            .putExtra("latitude",item.latitude)
+            .putExtra("longitude",item.longitude)
+            .putExtra("title",item.placeinfo))
     }
 }

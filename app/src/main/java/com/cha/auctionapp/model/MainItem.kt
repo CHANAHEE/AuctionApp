@@ -45,7 +45,9 @@ data class HomeDetailItem(
     var nickname: String,
     var location: String,
     var id: String,
-    var image: String
+    var image: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class CategorySearchItem(
@@ -86,10 +88,11 @@ data class CommunityDetailItem(
     var description: String,
     var place_info: String?,
     var image: String,
-
     var nickname: String,
     var location: String,
     var id: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class CommentsItem(
@@ -97,7 +100,9 @@ data class CommentsItem(
     var placeinfo: String,
     var nickname: String,
     var location: String,
-    var id: String
+    var id: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class PictureCommunityDetailItem(var path: String)
@@ -130,7 +135,9 @@ data class AuctionDetailItem(
     var tradingplace: String,
     var location: String,
     var video: String,
-    var id: String
+    var id: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class MyAuctionPostList(
@@ -163,7 +170,9 @@ data class MessageItem(
     var otherProfileImage: String?,
     var otherID: String,
     var otherNickname: String,
-    var chatRoomInfo: ChatRoomInfo
+    var chatRoomInfo: ChatRoomInfo,
+    var latitude: String,
+    var longitude: String
 )
 data class ChatListItem(
     var productIndex: String,

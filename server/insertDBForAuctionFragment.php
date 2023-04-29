@@ -11,6 +11,8 @@
     $id=   $_POST['id'];
     $video=     $_POST['video'];
     $now = $_POST['now'];
+    $latitude=  $_POST['latitude'];
+    $longitude= $_POST['longitude'];
     // $file=      $_FILES['video'];
     // $srcName=   $file['name'];   
     // $tmpName=   $file['tmp_name'];
@@ -40,7 +42,7 @@
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
     //$sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$dstName' )";
-    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$video')";
+    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video,latitude,longitude) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$video','$latitude','$longitude')";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

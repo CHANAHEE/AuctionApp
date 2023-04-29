@@ -2,6 +2,7 @@ package com.cha.auctionapp.activities
 
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
@@ -79,8 +80,8 @@ class AuctionDetailActivity : AppCompatActivity() {
     private fun loadDataFromServer() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        //val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
-        val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail("14")
+        val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
+        //val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail("17")
         call.enqueue(object : Callback<MutableList<AuctionDetailItem>> {
             override fun onResponse(
                 call: Call<MutableList<AuctionDetailItem>>,
@@ -101,6 +102,7 @@ class AuctionDetailActivity : AppCompatActivity() {
                 if(item.tradingplace != ""){
                     binding.relativeLocation.visibility = View.VISIBLE
                     binding.tvLocationName.text = item.tradingplace
+                    binding.relativeLocation.setOnClickListener { clickLocation(item) }
                 }
 
                 loadProfileFromFirebase()
@@ -111,6 +113,19 @@ class AuctionDetailActivity : AppCompatActivity() {
         })
     }
 
+    /*
+    *
+    *       장소 정보 클릭 이벤트
+    *
+    * */
+    private fun clickLocation(item: AuctionDetailItem) {
+        startActivity(
+            Intent(this@AuctionDetailActivity,SelectPositionActivity::class.java)
+            .putExtra("showLocation","showLocation")
+            .putExtra("latitude",item.latitude)
+            .putExtra("longitude",item.longitude)
+            .putExtra("title",item.tradingplace))
+    }
 
     /*
     *
