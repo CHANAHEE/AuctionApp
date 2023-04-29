@@ -181,8 +181,14 @@ class MyProfileEditActivity : AppCompatActivity() {
     * */
     var isExistNickname = true
     private fun certifyNickname(){
+        if(binding.etNickname.text.toString() == G.nickName) {
+            isExistNickname = false
+            return
+        }
+
         var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firebase.collection("user")
+
 
         userRef.whereEqualTo("nickname",binding.etNickname.text.toString()).get().addOnSuccessListener {
             if(it.documents.size > 0) {
