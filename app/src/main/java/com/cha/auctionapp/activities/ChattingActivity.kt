@@ -266,7 +266,7 @@ class ChattingActivity : AppCompatActivity() {
                             time,
                             G.profileImg,
                             pictureSelectedItem,
-                            0,
+                            pictureItem.size,
                             binding.tvLocationNameChat.text.toString(),
                             messageIndex,
                             lastOtherMessageIndex,

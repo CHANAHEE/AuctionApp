@@ -101,9 +101,18 @@ class ChatFragment : Fragment() {
             for(document in documentChange){
                 var snapshot = document.document
                 var map = snapshot.data
-
                 var productIndex = map.get("productIndex").toString()
                 var lastMessage = map.get("message").toString()
+                Log.i("asdfasdfzxc",(map.get("message").toString() == "").toString())
+                Log.i("asdfasdfzxc", map.get("imageSize").toString())
+                Log.i("asdfasdfzxc", (map.get("imageSize").toString() != "0").toString())
+                Log.i("asdfasdfzxc", (map.get("location").toString() != "").toString())
+                if(map.get("message").toString() == "" && map.get("imageSize").toString() != "0"){
+                    lastMessage = "사진을 보냈습니다"
+                }else if(map.get("message").toString() == "" && map.get("location").toString() != ""){
+                    lastMessage = "지도 : ${map.get("location").toString()}"
+                }
+
                 var time = map.get("time").toString()
                 var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
 
