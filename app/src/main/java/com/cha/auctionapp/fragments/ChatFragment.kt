@@ -1,5 +1,6 @@
 package com.cha.auctionapp.fragments
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -20,81 +21,37 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import okhttp3.internal.notify
 import java.lang.NumberFormatException
 
 class ChatFragment : Fragment() {
 
     lateinit var binding: FragmentChatBinding
 
-
-    lateinit var chatListItem: MutableList<ChatListItem>
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        chatListItem = mutableListOf()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+    }
+
+    override fun onResume() {
+        super.onResume()
         getChattingInfoFromFirebase()
     }
 
 
-
-//    private fun getChattingInfoFromFirebase(){
-//        var firestore = FirebaseFirestore.getInstance()
-//        var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
-//            var documentChange = it.documentChanges
-//            for(document in documentChange){
-//                var snapshot = document.document
-//                var map = snapshot.data
-//
-//                var productIndex = map.get("productIndex").toString()
-//                var lastMessage = map.get("message").toString()
-//                var nickname = map.get("otherNickname").toString()
-//                var profileImage = map.get("otherProfileImage").toString()
-//                var time = map.get("time").toString()
-//                var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
-//
-//                if(G.userAccount.id == map.get("id").toString()){
-//                    var otherID = map.get("otherID").toString()
-//                    Log.i("chatlistItem","내 아이디가 id : $otherID")
-//                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
-//                        ChatRoomInfo(
-//                            chatRoomInfo["titleProductInfo"].toString(),
-//                            chatRoomInfo["locationProductInfo"].toString(),
-//                            chatRoomInfo["priceProductInfo"].toString(),
-//                            chatRoomInfo["imageProductInfo"].toString()
-//                        )
-//                    ))
-//                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
-//                }else if(G.userAccount.id == map.get("otherID").toString()){
-//                    var otherID = map.get("id").toString()
-//                    Log.i("chatlistItem","내 아이디가 otherID : $otherID")
-//                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
-//                        ChatRoomInfo(
-//                            chatRoomInfo["titleProductInfo"].toString(),
-//                            chatRoomInfo["locationProductInfo"].toString(),
-//                            chatRoomInfo["priceProductInfo"].toString(),
-//                            chatRoomInfo["imageProductInfo"].toString()
-//                        )))
-//                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
-//                }
-//            }
-//        }
-//    }
     private fun getChattingInfoFromFirebase(){
+        var chatListItem: MutableList<ChatListItem> = mutableListOf()
         var firestore = FirebaseFirestore.getInstance()
         var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
             var documentChange = it.documentChanges
@@ -103,10 +60,6 @@ class ChatFragment : Fragment() {
                 var map = snapshot.data
                 var productIndex = map.get("productIndex").toString()
                 var lastMessage = map.get("message").toString()
-                Log.i("asdfasdfzxc",(map.get("message").toString() == "").toString())
-                Log.i("asdfasdfzxc", map.get("imageSize").toString())
-                Log.i("asdfasdfzxc", (map.get("imageSize").toString() != "0").toString())
-                Log.i("asdfasdfzxc", (map.get("location").toString() != "").toString())
                 if(map.get("message").toString() == "" && map.get("imageSize").toString() != "0"){
                     lastMessage = "사진을 보냈습니다"
                 }else if(map.get("message").toString() == "" && map.get("location").toString() != ""){
@@ -130,7 +83,9 @@ class ChatFragment : Fragment() {
                             chatRoomInfo["imageProductInfo"].toString()
                         )
                     ))
-                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                    //binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                    binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+
                 }else if(G.userAccount.id == map.get("otherID").toString()){
 
                     var otherID = map.get("id").toString()
@@ -144,57 +99,12 @@ class ChatFragment : Fragment() {
                             chatRoomInfo["priceProductInfo"].toString(),
                             chatRoomInfo["imageProductInfo"].toString()
                         )))
-                    binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                    //binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
+                    binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+
                 }
             }
         }
     }
-//    private fun createFirebaseCollectionName() {
-//        var compareResult = G.userAccount.id.compareTo(otherID)
-//        collectionName = if(compareResult > 0) G.userAccount.id + otherID
-//        else if(compareResult < 0) otherID + G.userAccount.id
-//        else null
-//    }
 }
-//            for (documentChange in documentChanges) {
-//
-//                var snapshot = documentChange.document
-//                var map = snapshot.data
-//
-//                var nickname = map.get("nickname").toString()
-//                var id = map.get("id").toString()
-//                var message = map.get("message").toString()
-//                var time = map.get("time").toString()
-//                var profileImage = Uri.parse(map.get("profileImage").toString())
-//                var image = map.get("image") as MutableList<*>
-//                var imageSize: String? = map.get("imageSize").toString()
-//                var location = map.get("location").toString()
-//                var messageIndex = map.get("messageIndex").toString()
-//
-//                for(i in 0 until image.size){
-//                    pictureItem.add(Uri.parse(image[i].toString()))
-//                }
-//                var newPictureItem = pictureItem.toMutableList()
-//
-//                try{
-//                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex))
-//                }catch (e: NumberFormatException){
-//                    messageItem.add(MessageItem( nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex))
-//                }
-//                pictureItem.clear()
-//            }
-//            binding.recycler.adapter?.notifyItemInserted(messageItem.size)
-//            binding.recycler.scrollToPosition(messageItem.size-1)
 
-
-
-//
-//    private fun loadProfileFromFirestore(item: ChatListItem){
-//        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-//        var userRef: CollectionReference = firestore.collection("user")
-//
-//        userRef.document(item.id).get().addOnSuccessListener {
-//
-//            return@addOnSuccessListener
-//        }
-//    }
