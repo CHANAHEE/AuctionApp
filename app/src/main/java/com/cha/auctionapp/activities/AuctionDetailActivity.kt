@@ -106,7 +106,7 @@ class AuctionDetailActivity : AppCompatActivity() {
                 }
 
                 loadProfileFromFirebase()
-                //loadMyFavItem()
+                loadMyFavItem()
             }
             override fun onFailure(call: Call<MutableList<AuctionDetailItem>>, t: Throwable) {
             }

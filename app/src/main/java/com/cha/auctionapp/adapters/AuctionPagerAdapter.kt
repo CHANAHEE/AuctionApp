@@ -10,15 +10,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.AuctionVideoActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
+import com.cha.auctionapp.model.AppDatabase
 import com.cha.auctionapp.model.AuctionPagerItem
 import com.cha.auctionapp.model.CommunityDetailItem
+import com.cha.auctionapp.model.MyAuctionFavListItem
+import com.cha.auctionapp.model.MyCommunityFavListItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -40,16 +46,13 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     override fun onBindViewHolder(holder: VH, position: Int) {
         var item: AuctionPagerItem = items[position]
 
-
-//        holder.binding.tvId.text = item.
-
         loadProfileFromFirestore(item,holder)
         holder.binding.tvDescription.text = item.description
-//        Glide.with(context).load(item.image).into(holder.binding.civProfile)
 
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }
         holder.binding.btnBid.setOnClickListener { clickBidBtn(position) }
-        holder.binding.ibFav.setOnClickListener { clickFavBtn() }
+        holder.binding.ibFav.setOnClickListener { loadMyFavItem(position,holder) }
+        holder.binding.relativeFav.setOnClickListener { clickFavoriteBtn(holder) }
         holder.binding.ibComments.setOnClickListener { clickCommentsBtn() }
 
         // Exoplayer 구현
@@ -94,9 +97,90 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
 
 
-    private fun clickFavBtn(){
-        Toast.makeText(context, "좋아요 버튼. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    /*
+    *
+    *       찜 기능
+    *
+    * */
+    private fun loadMyFavItem(position: Int,holder: VH){
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+
+        val r = Runnable {
+            // Query 를 이용해서 가지고 있는 인덱스의 값이 현재 페이지와 같은지 체크해서 있으면 찜된 목록임.
+            var myFavListItem = db.MyAuctionFavListItemDAO().getAll()
+            var myFavMutable = myFavListItem.toMutableList()
+            val index = items[position].idx
+            for(i in 0 until myFavMutable.size){
+                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
+                    holder.binding.ibFav.isSelected = true
+                    break
+                }
+            }
+        }
+        Thread(r).start()
     }
+
+
+
+    /*
+    *
+    *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
+    *
+    * */
+    private fun clickFavoriteBtn(holder: VH) {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "fav-database"
+        ).build()
+        when(holder.binding.ibFav.isSelected){
+            true->{
+                holder.binding.ibFav.isSelected = false
+                Snackbar.make(holder.binding.root,"관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).show()
+                deleteMyFavData(db)
+            }
+            else->{
+                holder.binding.ibFav.isSelected = true
+                Snackbar.make(holder.binding.root,"관심목록에 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
+                insertMyFavData(db)
+            }
+        }
+    }
+
+    private fun deleteMyFavData(db: AppDatabase){
+        val r = Runnable {
+            db.MyAuctionFavListItemDAO()
+                .delete(
+                    MyAuctionFavListItem(
+                        "${items[0].idx}${G.userAccount.id}",
+                        items[0].idx,
+                        items[0].title,
+                        items[0].location,
+                        items[0].description)
+                )
+        }
+        Thread(r).start()
+    }
+
+    private fun insertMyFavData(db: AppDatabase){
+        val r = Runnable{
+            db.MyAuctionFavListItemDAO()
+                .insert(
+                    MyAuctionFavListItem(
+                        "${items[0].idx}${G.userAccount.id}",
+                        items[0].idx,
+                        items[0].title,
+                        items[0].location,
+                        items[0].description)
+                )
+        }
+        Thread(r).start()
+    }
+
+
+
 
     private fun clickCommentsBtn(){
         Toast.makeText(context, "댓글 정보. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()

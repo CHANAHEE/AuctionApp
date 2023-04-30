@@ -59,7 +59,7 @@ class AuctionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         items = mutableListOf()
-        items.add(AuctionPagerItem(0,"https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm","첫번째 쇼츠를 올려주세요", G.userAccount.id,"0"))
+        items.add(AuctionPagerItem(0,"https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm","HI","공릉1동","첫번째 쇼츠를 올려주세요", G.userAccount.id,"0"))
         binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
         binding.refreshLayout.setOnRefreshListener { clickRefresh() }
     }

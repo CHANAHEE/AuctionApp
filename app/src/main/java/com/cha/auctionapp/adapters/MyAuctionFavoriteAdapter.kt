@@ -28,7 +28,7 @@ class MyAuctionFavoriteAdapter(var context:Context, var items:MutableList<MyAuct
 
         holder.binding.tvTitle.text = item.title
         holder.binding.tvLocation.text = item.location
-        holder.binding.tvContents.text = item.price
+        holder.binding.tvContents.text = item.description
 
         holder.itemView.setOnClickListener { context.startActivity(Intent(context,AuctionDetailActivity::class.java).putExtra("index",item.indexProduct.toString())) }
     }
