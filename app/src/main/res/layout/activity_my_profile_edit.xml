@@ -45,24 +45,38 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-
         android:src="@drawable/default_profile"
         android:layout_below="@id/appbar"
         android:layout_marginTop="40dp"/>
 
-
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_delete_profile"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:padding="4dp"
+        android:background="@drawable/bg_btn"
+        android:backgroundTint="#B3B3B3"
+        android:fontFamily="@font/brandfont"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:text="프 로 필  삭 제"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/civ_profile"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tv_nick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/civ_profile"
+        android:layout_below="@id/btn_delete_profile"
         android:text="닉네임"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="10dp"/>
 
 
     <EditText

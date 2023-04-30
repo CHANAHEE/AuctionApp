@@ -52,13 +52,29 @@ class MyProfileEditActivity : AppCompatActivity() {
 
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.civProfile.setOnClickListener { clickProfileImage() }
-
+        binding.btnDeleteProfile.setOnClickListener { clickDeleteProfile() }
         binding.civProfile.tag = DEFAULT_PROFILE
 
         Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(binding.civProfile)
         binding.etNickname.setText(G.nickName)
         //loadProfileFromFirestore(G.userAccount.id)
     }
+
+
+    /*
+    *
+    *       프로필 삭제 기능
+    *
+    * */
+    private fun clickDeleteProfile() {
+        AlertDialog.Builder(this).setMessage("프로필을 삭제하시겠습니까?").setPositiveButton("확 인",DialogInterface.OnClickListener { dialog, which ->
+            binding.civProfile.tag = DEFAULT_PROFILE
+            Glide.with(this).load(R.drawable.default_profile).into(binding.civProfile)
+        }).setCancelable(false).setNegativeButton("취 소",DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+        }).show()
+    }
+
 
 
     /*
@@ -160,7 +176,10 @@ class MyProfileEditActivity : AppCompatActivity() {
             setResult(RESULT_OK, intent)
             launcherActivity.launch(Intent(this,SetUpMyPlaceListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
-        else setResult(RESULT_OK,intent)
+        else if(intent.getStringExtra("Home") == "Home"){
+            setResult(RESULT_OK,intent)
+            finish()
+        }
     }
     private fun getProfileURLFromFirestore(id: String){
         val firebaseStorage = FirebaseStorage.getInstance()
