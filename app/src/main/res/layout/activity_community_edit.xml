@@ -57,6 +57,7 @@
         android:paddingLeft="5dp"
         android:hint="제목"
         android:maxEms="15"
+        android:maxLength="20"
         android:textSize="20sp"
         android:inputType="text"
         android:textColorHint="#4A000000"
