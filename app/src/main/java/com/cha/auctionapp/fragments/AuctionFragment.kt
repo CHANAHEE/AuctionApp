@@ -101,6 +101,7 @@ class AuctionFragment : Fragment() {
             ) {
                 items = response.body()!!
                 if(activity == null || !isAdded) return
+                items.sortByDescending { it.idx }
                 if(items.size != 0) binding.pager.adapter = AuctionPagerAdapter(requireContext(), items)
             }
 

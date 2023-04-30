@@ -97,6 +97,9 @@ class CommunityFragment : Fragment() {
                 ) {
                     communityItems = response.body()!!
                     if(activity == null || !isAdded) return
+                    communityItems.sortByDescending {
+                        it.idx
+                    }
                     binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
                 }
 

@@ -65,6 +65,9 @@ class HomeFragment : Fragment() {
                 ) {
                     mainItem = response.body()!!
                     if(activity == null || !isAdded) return
+                    mainItem.sortByDescending {
+                        it.idx
+                    }
                     binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
                 }
 
