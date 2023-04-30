@@ -293,7 +293,7 @@ class AuctionDetailActivity : AppCompatActivity() {
             var myFavMutable = myFavListItem.toMutableList()
             val index = intent.getStringExtra("index")!!.toInt()
             for(i in 0 until myFavMutable.size){
-                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
+                if("$index${G.userAccount.id}" == myFavMutable[i].idx) {
                     binding.ibFav.isSelected = true
                     break
                 }

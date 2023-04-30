@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/view3"
+    android:padding="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_other_profile"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/ic_launcher_round"/>
+
+    <TextView
+        android:id="@+id/tv_other_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/civ_other_profile"
+        android:layout_alignTop="@id/civ_other_profile"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/brandfont"
+        android:textStyle="bold"
+        android:textSize="10sp"
+        android:textColor="#777777"
+        android:text="ID"/>
+
+    <TextView
+        android:id="@+id/tv_other_town_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_other_id"
+        android:textSize="7sp"
+        android:layout_alignBottom="@id/tv_other_id"
+        android:textStyle="bold"
+        android:textColor="#777777"
+        android:fontFamily="@font/brandfont"
+        android:layout_marginLeft="10dp"
+        android:text="동네 이름"/>
+
+    <TextView
+        android:id="@+id/tv_comments_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/civ_other_profile"
+        android:layout_alignLeft="@id/tv_other_id"
+        android:layout_below="@id/tv_other_town_name"
+        android:layout_marginTop="10dp"
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/brandfont"
+        android:text="댓글 내용"/>
+
+</RelativeLayout>

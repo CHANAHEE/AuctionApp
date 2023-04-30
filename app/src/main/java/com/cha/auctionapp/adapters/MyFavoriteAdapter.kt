@@ -27,7 +27,7 @@ class MyFavoriteAdapter(var context:Context, var items:MutableList<MyFavListItem
         Glide.with(context).load(baseAddr).into(holder.binding.ivMainImg)
         holder.binding.tvTitle.text = item.title
         holder.binding.tvLocationName.text = item.location
-        holder.binding.tvPrice.text = item.price
+        holder.binding.tvPrice.text = "${item.price} 원"
 
         holder.itemView.setOnClickListener { context.startActivity(Intent(context,HomeDetailActivity::class.java).putExtra("index",item.indexProduct.toString())) }
     }

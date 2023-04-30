@@ -6,8 +6,11 @@ import android.net.Uri
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.room.Room
@@ -16,17 +19,25 @@ import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.activities.AuctionVideoActivity
 import com.cha.auctionapp.activities.AuctionDetailActivity
+import com.cha.auctionapp.databinding.FragmentAuctionCommentsBottomSheetBinding
 import com.cha.auctionapp.databinding.RecyclerAuctionItemBinding
 import com.cha.auctionapp.model.AppDatabase
 import com.cha.auctionapp.model.AuctionPagerItem
+import com.cha.auctionapp.model.CommentsItem
 import com.cha.auctionapp.model.CommunityDetailItem
 import com.cha.auctionapp.model.MyAuctionFavListItem
 import com.cha.auctionapp.model.MyCommunityFavListItem
+import com.cha.auctionapp.network.RetrofitHelper
+import com.cha.auctionapp.network.RetrofitService
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPagerItem>) : Adapter<AuctionPagerAdapter.VH>() {
 
@@ -47,13 +58,13 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
         var item: AuctionPagerItem = items[position]
 
         loadProfileFromFirestore(item,holder)
+        loadMyFavItem(position,holder)
         holder.binding.tvDescription.text = item.description
 
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }
         holder.binding.btnBid.setOnClickListener { clickBidBtn(position) }
-        holder.binding.ibFav.setOnClickListener { loadMyFavItem(position,holder) }
-        holder.binding.relativeFav.setOnClickListener { clickFavoriteBtn(holder) }
-        holder.binding.ibComments.setOnClickListener { clickCommentsBtn() }
+        holder.binding.relativeFav.setOnClickListener { clickFavoriteBtn(holder,position) }
+        holder.binding.ibComments.setOnClickListener { clickCommentsBtn(holder,position) }
 
         // Exoplayer 구현
         exoPlayer(item,holder)
@@ -114,7 +125,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             var myFavMutable = myFavListItem.toMutableList()
             val index = items[position].idx
             for(i in 0 until myFavMutable.size){
-                if("$index${G.userAccount.id}" == "${myFavMutable[i].idx}") {
+                if("$index${G.userAccount.id}" == myFavMutable[i].idx) {
                     holder.binding.ibFav.isSelected = true
                     break
                 }
@@ -130,7 +141,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     *       찜 버튼 이벤트 : 찜을 하면 DB 에 정보를 저장시키고, 관심목록에 추가할 수 있도록 한다.
     *
     * */
-    private fun clickFavoriteBtn(holder: VH) {
+    private fun clickFavoriteBtn(holder: VH,position: Int) {
         val db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "fav-database"
@@ -139,41 +150,41 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
             true->{
                 holder.binding.ibFav.isSelected = false
                 Snackbar.make(holder.binding.root,"관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).show()
-                deleteMyFavData(db)
+                deleteMyFavData(db,position)
             }
             else->{
                 holder.binding.ibFav.isSelected = true
                 Snackbar.make(holder.binding.root,"관심목록에 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
-                insertMyFavData(db)
+                insertMyFavData(db,position)
             }
         }
     }
 
-    private fun deleteMyFavData(db: AppDatabase){
+    private fun deleteMyFavData(db: AppDatabase,position: Int){
         val r = Runnable {
             db.MyAuctionFavListItemDAO()
                 .delete(
                     MyAuctionFavListItem(
-                        "${items[0].idx}${G.userAccount.id}",
-                        items[0].idx,
-                        items[0].title,
-                        items[0].location,
-                        items[0].description)
+                        "${items[position].idx}${G.userAccount.id}",
+                        items[position].idx,
+                        items[position].title,
+                        items[position].location,
+                        items[position].description)
                 )
         }
         Thread(r).start()
     }
 
-    private fun insertMyFavData(db: AppDatabase){
+    private fun insertMyFavData(db: AppDatabase,position: Int){
         val r = Runnable{
             db.MyAuctionFavListItemDAO()
                 .insert(
                     MyAuctionFavListItem(
-                        "${items[0].idx}${G.userAccount.id}",
-                        items[0].idx,
-                        items[0].title,
-                        items[0].location,
-                        items[0].description)
+                        "${items[position].idx}${G.userAccount.id}",
+                        items[position].idx,
+                        items[position].title,
+                        items[position].location,
+                        items[position].description)
                 )
         }
         Thread(r).start()
@@ -182,11 +193,77 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
 
 
-    private fun clickCommentsBtn(){
-        Toast.makeText(context, "댓글 정보. 추후 업데이트 예정", Toast.LENGTH_SHORT).show()
+    private fun clickCommentsBtn(holder: VH, position: Int){
+        var dialog = BottomSheetDialog(context)
+        var binding = FragmentAuctionCommentsBottomSheetBinding.inflate(LayoutInflater.from(context),holder.binding.bottomsheetContainer,false)
+
+        dialog.setContentView(binding.root)
+        dialog.show()
+
+
+        loadCommentsDataFromServer(binding,position)
+        binding.btnSend.setOnClickListener { clickSendBtn(binding,position) }
+        binding.bottomsheetClose.setOnClickListener { dialog.dismiss() }
+    }
+
+    private fun clickSendBtn(binding: FragmentAuctionCommentsBottomSheetBinding,position: Int) {
+        // 보낼 일반 String 데이터
+        var description = binding.etMsg.text.toString()
+
+        var dataPart: HashMap<String,String> = hashMapOf()
+        dataPart.put("idx",items[position].idx.toString())
+        dataPart.put("description",description)
+        dataPart.put("nickname",G.nickName)
+        dataPart.put("location",G.location)
+        dataPart.put("id",G.userAccount.id)
+
+        /*
+        *       Retrofit 작업 시작
+        * */
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<String> = retrofitService.postDataToServerForAuctionPagerComments(dataPart)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("asdveqrg",response.body().toString())
+                /*
+                *       서버에 올리는 작업이 성공한다면.. 바로 뿌려줘야 한다. 여기서 다시 서버에 있는 걸 불러와..? 그래야지 다른 사람들도 보지.
+                *
+                * */
+                loadCommentsDataFromServer(binding,position)
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
+            }
+        })
+        val imm : InputMethodManager = context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etMsg.windowToken,0)
+        binding.etMsg.setText("")
+        binding.etMsg.clearFocus()
     }
 
 
+    /*
+    *
+    *       댓글 정보 서버에서 가져오기
+    *
+    * */
+    private fun loadCommentsDataFromServer(binding: FragmentAuctionCommentsBottomSheetBinding,position: Int){
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<MutableList<CommentsItem>> = retrofitService.getDataFromServerForAuctionComments(items[position].idx.toString())
+        call.enqueue(object : Callback<MutableList<CommentsItem>> {
+            override fun onResponse(call: Call<MutableList<CommentsItem>>, response: Response<MutableList<CommentsItem>>) {
+                Log.i("acxcbadbrqer",response.body().toString())
+                binding.recycler.adapter = AuctionCommentsAdapter(context,response.body()!!)
+            }
+
+            override fun onFailure(call: Call<MutableList<CommentsItem>>, t: Throwable) {
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
+            }
+        })
+    }
 
 
 
