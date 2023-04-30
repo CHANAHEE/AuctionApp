@@ -100,6 +100,7 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
 
+        binding.cvProductInfo.setOnClickListener { startActivity(Intent(this,HomeDetailActivity::class.java).putExtra("index",intent.getStringExtra("index"))) }
         binding.tvTitleProductInfo.text = intent.getStringExtra("title")
         binding.tvLocationNameProductInfo.text = intent.getStringExtra("location")
         binding.tvPriceProductInfo.text = intent.getStringExtra("price")
