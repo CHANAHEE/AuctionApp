@@ -38,8 +38,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainItem = mutableListOf()
         binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
-
         binding.fabEdit.setOnClickListener { startActivity(Intent(context,SellingEditActivity::class.java)) }
+        binding.refreshLayout.setOnRefreshListener { clickRefresh() }
     }
 
     fun setData(items: MutableList<MainItem>){
@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
                         it.idx
                     }
                     binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
+                    binding.refreshLayout.isRefreshing = false
                 }
 
                 override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {
@@ -78,6 +79,13 @@ class HomeFragment : Fragment() {
         }catch (e: Exception){
             Toast.makeText(context, "HomeFragment 네트워크 작업 실패", Toast.LENGTH_SHORT).show()
         }
-
     }
+
+
+    /*
+    *
+    *       리프레시
+    *
+    * */
+    private fun clickRefresh() = loadData()
 }

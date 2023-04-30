@@ -67,8 +67,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnLocation.setOnClickListener { clickLocationBtn() }
         binding.linearFavCommunityDetail.setOnClickListener { clickFavoriteBtn() }
-
-
+        binding.refreshLayout.setOnRefreshListener { clickRefresh() }
     }
     
     
@@ -295,6 +294,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         call.enqueue(object : Callback<MutableList<CommentsItem>>{
             override fun onResponse(call: Call<MutableList<CommentsItem>>, response: Response<MutableList<CommentsItem>>) {
                 binding.recycler2.adapter = CommentsAdapter(this@CommunityDetailActivity,response.body()!!)
+                binding.refreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call<MutableList<CommentsItem>>, t: Throwable) {
@@ -346,6 +346,15 @@ class CommunityDetailActivity : AppCompatActivity() {
             .putExtra("longitude",item.longitude)
             .putExtra("title",item.place_info))
     }
+
+
+
+    /*
+    *
+    *       리프레시
+    *
+    * */
+    private fun clickRefresh() = loadCommentsDataFromServer()
 
 
     /*

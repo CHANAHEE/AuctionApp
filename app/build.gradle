@@ -111,4 +111,7 @@ dependencies {
 
     // 카메라 버튼 library
     implementation 'com.github.iammert:CameraVideoButton:0.2'
+
+    // 새로고침 layout library
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 }

@@ -68,6 +68,7 @@ class CommunityFragment : Fragment() {
         binding.fab.setOnClickListener{ startActivity(Intent(context,CommunityEditActivity::class.java)) }
         binding.ibSearch.setOnClickListener { clickSearch(it) }
         binding.btnSelectTown.setOnClickListener { clickMyPlace() }
+        binding.refreshLayout.setOnRefreshListener { clickRefresh() }
 
         searchItems = mutableListOf()
         setUpPopupMenu()
@@ -101,6 +102,7 @@ class CommunityFragment : Fragment() {
                         it.idx
                     }
                     binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
+                    binding.refreshLayout.isRefreshing = false
                 }
 
                 override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
@@ -248,5 +250,12 @@ class CommunityFragment : Fragment() {
         }
     }
 
+
+    /*
+    *
+    *       리프레시
+    *
+    * */
+    private fun clickRefresh() = loadDataFromServer()
 
 }

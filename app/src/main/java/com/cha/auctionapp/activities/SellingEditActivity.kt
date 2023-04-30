@@ -44,8 +44,8 @@ class SellingEditActivity : AppCompatActivity() {
     lateinit var items: MutableList<PictureItem>
     lateinit var flag: String
 
-    lateinit var latitude: String
-    lateinit var longitude: String
+    var latitude: String = ""
+    var longitude: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
