@@ -61,13 +61,16 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        getProfileURLFromFirestore(G.userAccount.id)
+    }
     /*
     *
     *       초기화 작업
     *
     * */
     private fun init() {
-        getProfileURLFromFirestore(G.userAccount.id)
         searchItems = mutableListOf()
 
         HomeFragment()

@@ -194,6 +194,7 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
+        Log.i("qerbrbq",G.userAccount.id)
         dataPart.put("id",G.userAccount.id)
         dataPart.put("latitude",latitude)
         dataPart.put("longitude",longitude)

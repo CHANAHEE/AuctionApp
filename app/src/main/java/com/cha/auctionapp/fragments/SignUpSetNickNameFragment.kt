@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -98,13 +99,16 @@ class SignUpSetNickNameFragment : Fragment() {
         var userRef: CollectionReference = firestore.collection("user")
         G.profileImg = getURLForResource(R.drawable.default_profile)
 
+        val id = userRef.document().id
         var user = mutableMapOf<String,Any>()
         user.put("email",G.userAccount.email)
         user.put("password",G.password)
         user.put("location",G.location)
         user.put("nickname",G.nickName)
-        user.put("profile",G.profileImg)
-        userRef.document().set(user)
+        user.put("profileImage",G.profileImg)
+        user.put("id",id)
+        userRef.document(id).set(user)
+
     }
     private fun getURLForResource(resId: Int): Uri {
         return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
