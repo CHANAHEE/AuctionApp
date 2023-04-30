@@ -342,8 +342,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mybidpost"))
                 }
                 R.id.menu_my_bid_complete_list->{
-                    Toast.makeText(this, "낙찰목록 구현 예정", Toast.LENGTH_SHORT).show()
-                    //startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mybidcomplete"))
+                    startActivity(Intent(this,MyPostListActivity::class.java).putExtra("navigation","mybidcomplete"))
                 }
                 R.id.menu_home_fav_list->{
                     startActivity(Intent(this,MyFavoriteListActivity::class.java).putExtra("navigation","myfav"))

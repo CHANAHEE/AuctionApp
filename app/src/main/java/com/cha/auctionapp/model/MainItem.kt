@@ -133,11 +133,13 @@ data class AuctionDetailItem(
     var title: String,
     var category: String,
     var price: String,
+    var last: String,
     var description: String,
     var tradingplace: String,
     var location: String,
     var video: String,
     var id: String,
+    var now: String,
     var latitude: String,
     var longitude: String
 )

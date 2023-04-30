@@ -56,7 +56,7 @@ class MyPostListActivity : AppCompatActivity() {
             "mypost"        -> loadMyPostList(retrofitService)
             "mycommunity"   -> loadMyCommunityPostList(retrofitService)
             "mybidpost"     -> loadMyBidPostList(retrofitService)
-            "mybidcomplete" -> Toast.makeText(this, "낙찰목록 구현 예정", Toast.LENGTH_SHORT).show()
+            "mybidcomplete" -> loadMyBidCompleteList(retrofitService)
         }
     }
 
@@ -142,13 +142,15 @@ class MyPostListActivity : AppCompatActivity() {
     *
     * */
     private fun loadMyBidCompleteList(retrofitService: RetrofitService) {
-        val call: Call<MutableList<MyAuctionPostList>> = retrofitService.getDataFromServerForMyAuctionPostList(G.userAccount.id)
+        val call: Call<MutableList<MyAuctionPostList>> = retrofitService.getDataFromServerForMyAuctionCompleteList(G.userAccount.id)
         call.enqueue(object : Callback<MutableList<MyAuctionPostList>> {
             override fun onResponse(
                 call: Call<MutableList<MyAuctionPostList>>,
                 response: Response<MutableList<MyAuctionPostList>>
             ) {
+
                 myAuctionPostlistItems = response.body()!!
+                Log.i("ebqerb",myAuctionPostlistItems.toString())
                 if(myAuctionPostlistItems.isNotEmpty()) binding.tvNone.visibility = View.GONE
                 binding.recycler.adapter = MyAuctionCompleteListAdapter(this@MyPostListActivity,myAuctionPostlistItems)
             }

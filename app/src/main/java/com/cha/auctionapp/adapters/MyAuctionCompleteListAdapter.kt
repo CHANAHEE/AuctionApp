@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.cha.auctionapp.activities.AuctionDetailActivity
 import com.cha.auctionapp.activities.HomeDetailActivity
 import com.cha.auctionapp.databinding.RecyclerCommunityItemBinding
 import com.cha.auctionapp.databinding.RecyclerSearchByCategoryItemBinding
@@ -34,11 +35,11 @@ class MyAuctionCompleteListAdapter(var context:Context, var items:MutableList<My
 
         /*
         *
-        *       CommunityDetail 로 이동
+        *       AuctionDetail 로 이동
         *
         * */
         holder.itemView.setOnClickListener {
-            context.startActivity(Intent(context, HomeDetailActivity::class.java).putExtra("index",holder.binding.root.tag.toString()))
+            context.startActivity(Intent(context, AuctionDetailActivity::class.java).putExtra("index",holder.binding.root.tag.toString()))
         }
     }
 }

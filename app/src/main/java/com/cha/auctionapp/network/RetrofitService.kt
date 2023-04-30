@@ -38,7 +38,6 @@ interface RetrofitService {
     /*
     *       서버로 데이터 전송
     * */
-
     // Home 관련
     @Multipart
     @POST("Server/insertDBForHomeFragment.php")
@@ -57,6 +56,9 @@ interface RetrofitService {
     @Multipart
     @POST("Server/insertDBForAuctionPagerComments.php")
     fun postDataToServerForAuctionPagerComments(@PartMap dataPart: HashMap<String,String>) : Call<String>
+    @GET("Server/updateDBForAuctionDetail.php")
+    fun updateDataForAuctionDetail(@Query("price") query: String, @Query("index") query2: String, @Query("last") query3: String) : Call<String>
+
 
     /*
     *       서버에서 데이터 받아오기
@@ -92,6 +94,8 @@ interface RetrofitService {
     fun getDataFromServerForAuctionDetail(@Query("index") query: String) : Call<MutableList<AuctionDetailItem>>
     @GET("Server/loadDBForMyAuctionPostList.php")
     fun getDataFromServerForMyAuctionPostList(@Query("id") query: String) : Call<MutableList<MyAuctionPostList>>
+    @GET("Server/loadDBForMyAuctionCompleteList.php")
+    fun getDataFromServerForMyAuctionCompleteList(@Query("id") query: String) : Call<MutableList<MyAuctionPostList>>
     @GET("Server/loadDBForAuctionComments.php")
     fun getDataFromServerForAuctionComments(@Query("index") query: String) : Call<MutableList<CommentsItem>>
 }

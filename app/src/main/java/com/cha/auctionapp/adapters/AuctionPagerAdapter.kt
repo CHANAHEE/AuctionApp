@@ -81,7 +81,6 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
     private fun loadProfileFromFirestore(item: AuctionPagerItem, holder: VH){
         var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         var userRef: CollectionReference = firestore.collection("user")
-
         userRef.document(item.id).get().addOnSuccessListener {
             holder.binding.tvId.text = it.get("nickname").toString()
             Glide.with(context).load(it.get("profileImage")).error(R.drawable.default_profile).into(holder.binding.civProfile)

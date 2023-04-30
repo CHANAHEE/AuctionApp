@@ -232,6 +232,22 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_chat"
+            android:layout_width="110dp"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_btn"
+            android:fontFamily="@font/brandfont"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="채 팅 하 기"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 
