@@ -2,6 +2,7 @@ package com.cha.auctionapp.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.CountDownTimer
 import android.util.Log
@@ -63,7 +64,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
 
         holder.binding.ibCamera.setOnClickListener { filmingVideo() }
         holder.binding.btnBid.setOnClickListener { clickBidBtn(position) }
-        holder.binding.relativeFav.setOnClickListener { clickFavoriteBtn(holder,position) }
+        holder.binding.ibFav.setOnClickListener { clickFavoriteBtn(holder,position) }
         holder.binding.ibComments.setOnClickListener { clickCommentsBtn(holder,position) }
 
         // Exoplayer 구현
@@ -328,6 +329,9 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
                 /*
                 *       게시글 삭제
                 * */
+                holder.binding.btnBid.text = "경매 종료"
+                holder.binding.btnBid.backgroundTintList = ColorStateList.valueOf(R.color.unable)
+                holder.binding.btnBid.isEnabled = false
             }
         }.start()
     }

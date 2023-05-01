@@ -102,6 +102,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/btn_bid"
         android:layout_alignParentRight="true"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:gravity="center">
         <ImageButton
             android:id="@+id/ib_fav"
@@ -119,7 +121,6 @@
             android:textStyle="bold"
             android:fontFamily="@font/brandfont"
             android:textColor="#FFFFFF"
-            android:layout_marginBottom="15dp"
             android:layout_alignRight="@id/ib_fav"
             android:layout_alignLeft="@id/ib_fav"
             android:layout_below="@id/ib_fav"
@@ -133,10 +134,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/relative_fav"
         android:layout_alignParentRight="true"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:gravity="center">
         <ImageButton
             android:id="@+id/ib_comments"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:src="@drawable/comment"
             app:tint="@color/white"
@@ -153,7 +156,6 @@
             android:textStyle="bold"
             android:fontFamily="@font/brandfont"
             android:textColor="#FFFFFF"
-            android:layout_marginBottom="15dp"
             android:layout_marginTop="5dp"
             android:text="12"/>
     </RelativeLayout>

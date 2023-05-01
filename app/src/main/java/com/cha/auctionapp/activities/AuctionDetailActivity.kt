@@ -324,7 +324,6 @@ class AuctionDetailActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
-        //val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail("17")
         call.enqueue(object : Callback<MutableList<AuctionDetailItem>> {
             override fun onResponse(
                 call: Call<MutableList<AuctionDetailItem>>,
@@ -347,6 +346,10 @@ class AuctionDetailActivity : AppCompatActivity() {
                             .putExtra("index",intent.getStringExtra("index"))
                         )
                     }
+                }else{
+                    binding.btnBid.text = "낙찰 완료"
+                    binding.btnBid.backgroundTintList = ColorStateList.valueOf(R.color.unable)
+                    binding.btnBid.isEnabled = false
                 }
             }
             override fun onFailure(call: Call<MutableList<AuctionDetailItem>>, t: Throwable) {
