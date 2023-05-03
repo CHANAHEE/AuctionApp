@@ -72,6 +72,7 @@ class MyPostListActivity : AppCompatActivity() {
                 call: Call<MutableList<MyPostListItem>>,
                 response: Response<MutableList<MyPostListItem>>
             ) {
+                binding.tvAppbarTitle.text = "내 판매글 목록"
                 myPostlistItems = response.body()!!
                 if(myPostlistItems.isNotEmpty()) binding.tvNone.visibility = View.GONE
                 binding.recycler.adapter = MyPostListAdapter(this@MyPostListActivity,myPostlistItems)
@@ -97,6 +98,7 @@ class MyPostListActivity : AppCompatActivity() {
                 call: Call<MutableList<MyCommunityPostList>>,
                 response: Response<MutableList<MyCommunityPostList>>
             ) {
+                binding.tvAppbarTitle.text = "내 커뮤니티 글 목록"
                 myCommunityPostlistItems = response.body()!!
                 if(myCommunityPostlistItems.isNotEmpty()) binding.tvNone.visibility = View.GONE
                 binding.recycler.adapter = MyCommunityPostListAdapter(this@MyPostListActivity,myCommunityPostlistItems)
@@ -122,6 +124,7 @@ class MyPostListActivity : AppCompatActivity() {
                 call: Call<MutableList<MyAuctionPostList>>,
                 response: Response<MutableList<MyAuctionPostList>>
             ) {
+                binding.tvAppbarTitle.text = "내 경매글 목록"
                 myAuctionPostlistItems = response.body()!!
                 if(myAuctionPostlistItems.isNotEmpty()) binding.tvNone.visibility = View.GONE
                 binding.recycler.adapter = MyAuctionPostListAdapter(this@MyPostListActivity,myAuctionPostlistItems)
@@ -148,7 +151,7 @@ class MyPostListActivity : AppCompatActivity() {
                 call: Call<MutableList<MyAuctionPostList>>,
                 response: Response<MutableList<MyAuctionPostList>>
             ) {
-
+                binding.tvAppbarTitle.text = "내 입찰 목록"
                 myAuctionPostlistItems = response.body()!!
                 Log.i("ebqerb",myAuctionPostlistItems.toString())
                 if(myAuctionPostlistItems.isNotEmpty()) binding.tvNone.visibility = View.GONE
@@ -160,26 +163,6 @@ class MyPostListActivity : AppCompatActivity() {
             }
         })
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

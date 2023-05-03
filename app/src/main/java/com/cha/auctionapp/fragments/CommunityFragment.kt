@@ -88,9 +88,7 @@ class CommunityFragment : Fragment() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call: Call<MutableList<CommunityPostItem>> = retrofitService.getDataFromServerForCommunityFragment(G.location)
-        
         try {
-
             call.enqueue(object : Callback<MutableList<CommunityPostItem>> {
                 override fun onResponse(
                     call: Call<MutableList<CommunityPostItem>>,
@@ -98,13 +96,10 @@ class CommunityFragment : Fragment() {
                 ) {
                     communityItems = response.body()!!
                     if(activity == null || !isAdded) return
-                    communityItems.sortByDescending {
-                        it.idx
-                    }
+                    communityItems.sortByDescending { it.idx }
                     binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
                     binding.refreshLayout.isRefreshing = false
                 }
-
                 override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
                     Log.i("test01","${t.message}")
                 }
@@ -112,7 +107,6 @@ class CommunityFragment : Fragment() {
         }catch (e: Exception){
             Toast.makeText(context, "커뮤니티 네트워크 작업 실패", Toast.LENGTH_SHORT).show()
         }
-
     }
     /*
     *

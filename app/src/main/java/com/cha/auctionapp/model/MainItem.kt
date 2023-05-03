@@ -149,7 +149,7 @@ data class MyAuctionPostList(
     var title:String,
     var location: String,
     var description: String,
-    var time: String
+    var now: String
 )
 
 
@@ -227,7 +227,8 @@ data class MyAuctionFavListItem(
     @ColumnInfo(name = "index") var indexProduct: Int,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "location") var location: String,
-    @ColumnInfo(name = "description") var description: String
+    @ColumnInfo(name = "description") var description: String,
+    @ColumnInfo(name = "now") var now: String
 )
 
 

@@ -287,7 +287,7 @@ class AuctionDetailActivity : AppCompatActivity() {
     * */
     private fun bidTimer(item: AuctionDetailItem) {
         var remainTime = 43200000 + item.now.toLong() - System.currentTimeMillis()
-        object : CountDownTimer(10000,1000) {
+        object : CountDownTimer(remainTime,1000) {
 
             /*
             *
@@ -325,6 +325,7 @@ class AuctionDetailActivity : AppCompatActivity() {
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call: Call<MutableList<AuctionDetailItem>> = retrofitService.getDataFromServerForAuctionDetail(intent.getStringExtra("index")!!)
         call.enqueue(object : Callback<MutableList<AuctionDetailItem>> {
+            @SuppressLint("ResourceAsColor")
             override fun onResponse(
                 call: Call<MutableList<AuctionDetailItem>>,
                 response: Response<MutableList<AuctionDetailItem>>
@@ -419,7 +420,8 @@ class AuctionDetailActivity : AppCompatActivity() {
                         intent.getStringExtra("index")!!.toInt(),
                         items[0].title,
                         items[0].location,
-                        items[0].description)
+                        items[0].description,
+                        items[0].now)
                 )
         }
         Thread(r).start()
@@ -434,7 +436,8 @@ class AuctionDetailActivity : AppCompatActivity() {
                         intent.getStringExtra("index")!!.toInt(),
                         items[0].title,
                         items[0].location,
-                        items[0].description)
+                        items[0].description,
+                        items[0].now)
                 )
         }
         Thread(r).start()

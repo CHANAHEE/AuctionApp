@@ -116,6 +116,7 @@ class AuctionEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("aoirjbqoierb",response.body().toString())
                 startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
                 dialog.dismiss()
                 finish()

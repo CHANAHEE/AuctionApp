@@ -1,5 +1,6 @@
 package com.cha.auctionapp.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -169,7 +170,8 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
                         items[position].idx,
                         items[position].title,
                         items[position].location,
-                        items[position].description)
+                        items[position].description,
+                        items[0].now)
                 )
         }
         Thread(r).start()
@@ -184,7 +186,8 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
                         items[position].idx,
                         items[position].title,
                         items[position].location,
-                        items[position].description)
+                        items[position].description,
+                        items[0].now)
                 )
         }
         Thread(r).start()
@@ -325,6 +328,7 @@ class AuctionPagerAdapter(var context: Context,var items: MutableList<AuctionPag
                 holder.binding.btnBid.text = "입 찰 하 기\n\n${time}"
             }
 
+            @SuppressLint("ResourceAsColor")
             override fun onFinish() {
                 /*
                 *       게시글 삭제
