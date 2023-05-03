@@ -18,63 +18,37 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/civ_other_profile"
         android:layout_alignTop="@id/civ_other_profile"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:fontFamily="@font/brandfont"
         android:textStyle="bold"
-        android:textSize="15sp"
+        android:textSize="10sp"
+        android:textColor="#777777"
         android:text="ID"/>
 
     <TextView
         android:id="@+id/tv_other_town_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_other_id"
-        android:layout_below="@id/tv_other_id"
-        android:textSize="10sp"
+        android:layout_toRightOf="@id/tv_other_id"
+        android:textSize="7sp"
+        android:layout_alignBottom="@id/tv_other_id"
         android:textStyle="bold"
+        android:textColor="#777777"
         android:fontFamily="@font/brandfont"
+        android:layout_marginLeft="10dp"
         android:text="동네 이름"/>
 
     <TextView
         android:id="@+id/tv_comments_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/relative_location"
+        android:layout_toRightOf="@id/civ_other_profile"
+        android:layout_alignLeft="@id/tv_other_id"
         android:layout_below="@id/tv_other_town_name"
         android:layout_marginTop="10dp"
         android:textSize="13sp"
+        android:textColor="@color/white"
         android:fontFamily="@font/brandfont"
         android:text="댓글 내용"/>
-
-    <RelativeLayout
-        android:id="@+id/relative_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_comments_detail"
-        android:background="@drawable/bg_location_select"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="100dp"
-        android:padding="8dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/iv_location"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/map_location"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"/>
-
-        <TextView
-            android:id="@+id/tv_location_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_location"
-            android:textSize="12sp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"/>
-
-
-    </RelativeLayout>
 
 </RelativeLayout>

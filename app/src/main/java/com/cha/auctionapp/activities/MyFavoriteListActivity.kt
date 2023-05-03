@@ -49,10 +49,6 @@ class MyFavoriteListActivity : AppCompatActivity() {
     *
     *       Room DB 에서 찜 목록 가져오기
     *
-    *
-    *             "myfav"         ->{}
-            "mycommunityfav"->{}
-            "myauctionfav"  ->{}
     * */
     private fun loadItemListFromRoomDB(){
         val db = Room.databaseBuilder(
@@ -75,6 +71,7 @@ class MyFavoriteListActivity : AppCompatActivity() {
     *
     * */
     private fun loadMyFavItemListFromRoomDB(db: AppDatabase){
+        binding.tvAppbarTitle.text = "찜한 물건"
         val r = Runnable {
             var myFavList = db.myFavListItemDAO().getAll()
             favorItems = myFavList.toMutableList()
@@ -99,6 +96,7 @@ class MyFavoriteListActivity : AppCompatActivity() {
     *
     * */
     private fun loadMyCommunityFavItemListFromRoomDB(db: AppDatabase){
+        binding.tvAppbarTitle.text = "관심 글"
         val r = Runnable {
             var myCommunityFavList = db.MyCommunityFavListItemDAO().getAll()
             communityFavorItems = myCommunityFavList.toMutableList()
@@ -124,6 +122,7 @@ class MyFavoriteListActivity : AppCompatActivity() {
     * */
 
     private fun loadMyAuctionFavItemListFromRoomDB(db: AppDatabase){
+        binding.tvAppbarTitle.text = "관심 경매"
         val r = Runnable {
             var myAuctionFavList = db.MyAuctionFavListItemDAO().getAll()
             auctionFavorItems = myAuctionFavList.toMutableList()

@@ -10,7 +10,9 @@
     $location=   $_POST['location'];
     $id=   $_POST['id'];
     $video=     $_POST['video'];
-
+    $now = $_POST['now'];
+    $latitude=  $_POST['latitude'];
+    $longitude= $_POST['longitude'];
     // $file=      $_FILES['video'];
     // $srcName=   $file['name'];   
     // $tmpName=   $file['tmp_name'];
@@ -31,7 +33,7 @@
     $description = addslashes($description);
 
     // 데이터가 저장되는 시간을 만들어주자.
-    $now = date('Y-m-d H:i:s');
+    
 
     // // 이렇게 하면 준비가 다 끝난거임.
     // // MySQL DB 에 데이터를 저장해보자 [테이블 명 : market] 테이블은 만들었다! 
@@ -40,7 +42,7 @@
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
     //$sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$dstName' )";
-    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$video')";
+    $sql = "INSERT INTO post_auction(title,category,price,description,tradingplace,nickname,location,id,now,video,latitude,longitude) VALUES ( '$title' , '$category' , '$price' , '$description' , '$tradingplace' , '$nickname','$location','$id','$now','$video','$latitude','$longitude')";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

@@ -32,228 +32,238 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/chat_linear"
         android:layout_below="@id/appbar">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
 
             <RelativeLayout
-                android:id="@+id/my_relative"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:layout_height="wrap_content">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civ_my_profile"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@mipmap/ic_launcher_round"/>
-
-                <TextView
-                    android:id="@+id/tv_my_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/civ_my_profile"
-                    android:layout_marginLeft="20dp"
-                    android:fontFamily="@font/brandfont"
-                    android:textStyle="bold"
-                    android:textSize="17sp"
-                    android:layout_marginTop="5dp"
-                    android:text="ID"/>
-
-                <TextView
-                    android:id="@+id/tv_my_town_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_my_id"
-                    android:layout_below="@id/tv_my_id"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/brandfont"
-                    android:text="동네 이름"/>
-            </RelativeLayout>
-
-
-            <View
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#3B000000"
-                android:layout_below="@id/my_relative"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-
-
-            <TextView
-                android:id="@+id/tv_main_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/view1"
-                android:backgroundTint="#61000000"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:text="글 제목"
-                android:textSize="20sp"
-                android:textColorHint="#4A000000"
-                android:fontFamily="@font/brandfont"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_main_title"
-                android:backgroundTint="#61000000"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:text="글 내용"
-                android:textSize="13sp"
-                android:textColorHint="#4A000000"
-                android:fontFamily="@font/brandfont"
-                android:textStyle="bold"/>
-
-            <RelativeLayout
-                android:id="@+id/relative_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_description"
-                android:background="@drawable/bg_location_select"
-                android:layout_marginTop="10dp"
-                android:layout_alignLeft="@id/tv_description"
-                android:layout_alignRight="@id/tv_description"
-                android:layout_marginRight="70dp"
-                android:visibility="gone"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/iv_location"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/map_location"/>
-
-                <TextView
-                    android:id="@+id/tv_location_name_community_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/iv_location"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/brandfont"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    />
-
-
-            </RelativeLayout>
-
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/scrollview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/relative_location"
-                android:layout_alignLeft="@id/relative_location"
-                android:layout_alignRight="@id/relative_location"
-                android:visibility="gone"
-                android:layout_marginTop="20dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler"
+                <RelativeLayout
+                    android:id="@+id/my_relative"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal" />
+                    android:padding="16dp">
 
-            </androidx.core.widget.NestedScrollView>
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#61000000"
-                android:layout_below="@id/scrollview"
-                android:layout_marginTop="10dp"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/civ_my_profile"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@mipmap/ic_launcher_round"/>
 
-            <RelativeLayout
-                android:id="@+id/linear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/view2"
-                android:padding="8dp">
-                <ImageView
-                    android:id="@+id/iv_comments"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/comment"
-                    android:layout_marginLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/tv_my_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/civ_my_profile"
+                        android:layout_marginLeft="20dp"
+                        android:fontFamily="@font/brandfont"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:layout_marginTop="5dp"
+                        android:text="ID"/>
+
+                    <TextView
+                        android:id="@+id/tv_my_town_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/tv_my_id"
+                        android:layout_below="@id/tv_my_id"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:text="동네 이름"/>
+                </RelativeLayout>
+
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#3B000000"
+                    android:layout_below="@id/my_relative"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
+
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_main_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="댓  글"
+                    android:layout_below="@id/view1"
+                    android:backgroundTint="#61000000"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="글 제목"
+                    android:textSize="20sp"
+                    android:textColorHint="#4A000000"
                     android:fontFamily="@font/brandfont"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/iv_comments"
-                    android:layout_centerVertical="true"/>
+                    android:textStyle="bold"/>
 
-                <LinearLayout
-                    android:id="@+id/linear_fav_community_detail"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:padding="4dp">
+                    android:layout_below="@id/tv_main_title"
+                    android:backgroundTint="#61000000"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="글 내용"
+                    android:textSize="13sp"
+                    android:textColorHint="#4A000000"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"/>
 
-                    <ImageButton
-                        android:id="@+id/btn_fav_community_detail"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:background="@drawable/bg_fav"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="7dp"/>
+                <RelativeLayout
+                    android:id="@+id/relative_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_description"
+                    android:background="@drawable/bg_location_select"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignLeft="@id/tv_description"
+                    android:layout_alignRight="@id/tv_description"
+                    android:layout_marginRight="70dp"
+                    android:visibility="gone"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/map_location"/>
+
+                    <TextView
+                        android:id="@+id/tv_location_name_community_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/iv_location"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/brandfont"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="20dp"
+                        />
+
+
+                </RelativeLayout>
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/scrollview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relative_location"
+                    android:layout_alignLeft="@id/relative_location"
+                    android:layout_alignRight="@id/relative_location"
+                    android:visibility="gone"
+                    android:layout_marginTop="20dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal" />
+
+                </androidx.core.widget.NestedScrollView>
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#61000000"
+                    android:layout_below="@id/scrollview"
+                    android:layout_marginTop="10dp"/>
+
+                <RelativeLayout
+                    android:id="@+id/linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/view2"
+                    android:padding="8dp">
+                    <ImageView
+                        android:id="@+id/iv_comments"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/comment"
+                        android:layout_marginLeft="10dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:text="관 심"
+                        android:layout_height="wrap_content"
+                        android:text="댓  글"
                         android:fontFamily="@font/brandfont"
                         android:textStyle="bold"
                         android:layout_gravity="center"
-                        android:layout_marginRight="30dp"
-                        android:gravity="center"
-                        />
-                </LinearLayout>
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/iv_comments"
+                        android:layout_centerVertical="true"/>
 
+                    <LinearLayout
+                        android:id="@+id/linear_fav_community_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:padding="4dp">
+
+                        <ImageButton
+                            android:id="@+id/btn_fav_community_detail"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_fav"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="7dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:text="관 심"
+                            android:fontFamily="@font/brandfont"
+                            android:textStyle="bold"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="30dp"
+                            android:gravity="center"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#61000000"
+                    android:layout_below="@id/linear"/>
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_below="@id/view3"
+                    android:orientation="vertical"/>
             </RelativeLayout>
 
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#61000000"
-                android:layout_below="@id/linear"/>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_below="@id/view3"
-                android:orientation="vertical"/>
-        </RelativeLayout>
-
-
-    </ScrollView>
 
 
     <View

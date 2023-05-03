@@ -57,6 +57,7 @@
         android:paddingLeft="5dp"
         android:hint="제목"
         android:maxEms="15"
+        android:maxLength="20"
         android:textSize="20sp"
         android:inputType="text"
         android:textColorHint="#4A000000"
@@ -108,7 +109,7 @@
             android:id="@+id/tv_location_name_community_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 이름"
+            android:text=""
             android:layout_toRightOf="@id/iv_location"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"/>

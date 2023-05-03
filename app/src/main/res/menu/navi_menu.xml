@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_my_post_list" android:title="@string/my_post_list" android:icon="@drawable/ic_action_name"/>
+    <item android:id="@+id/menu_my_post_list" android:title="@string/my_post_list" android:icon="@drawable/sell"/>
     <item android:id="@+id/menu_my_community_post_list" android:title="@string/my_community_list" android:icon="@drawable/comment"/>
-    <item android:id="@+id/menu_my_bid_list" android:title="@string/my_bid_list" android:icon="@drawable/hammer"/>
-    <item android:id="@+id/menu_my_bid_complete_list" android:title="@string/my_bid_complete_list" android:icon="@drawable/hammer"/>
+    <item android:id="@+id/menu_my_bid_list" android:title="@string/my_bid_list" android:icon="@drawable/bid"/>
+    <item android:id="@+id/menu_my_bid_complete_list" android:title="@string/my_bid_complete_list" android:icon="@drawable/bidcomplete"/>
 
     <item android:id="@+id/menu_my_fav_list" android:title="찜 목록"   android:icon="@drawable/bg_fav" >
         <menu>

@@ -44,6 +44,9 @@ class ChattingActivity : AppCompatActivity() {
     var messageIndex = 0
     var lastOtherMessageIndex = 0
 
+    var latitude: String = ""
+    var longitude: String = ""
+
     lateinit var otherNickname: String
     lateinit var otherID: String
     lateinit var otherProfile: String
@@ -97,6 +100,7 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
 
+        binding.cvProductInfo.setOnClickListener { startActivity(Intent(this,HomeDetailActivity::class.java).putExtra("index",intent.getStringExtra("index"))) }
         binding.tvTitleProductInfo.text = intent.getStringExtra("title")
         binding.tvLocationNameProductInfo.text = intent.getStringExtra("location")
         binding.tvPriceProductInfo.text = intent.getStringExtra("price")
@@ -177,21 +181,53 @@ class ChattingActivity : AppCompatActivity() {
 
             Log.i("4zxc","$messageIndex")
             messageIndex += 1
-            chatRef.document(collectionName!!).set(MessageItem(productIndex!!,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+            chatRef.document(collectionName!!).set(MessageItem(
+                productIndex!!,
+                nickname,
+                id,
+                message,
+                time,
+                G.profileImg,
+                pictureSelectedItem,
+                0,
+                location,
+                messageIndex,
+                lastOtherMessageIndex,
+                otherProfile,
+                otherID,
+                otherNickname,
                 ChatRoomInfo(
                     binding.tvTitleProductInfo.text.toString(),
                     binding.tvLocationNameProductInfo.text.toString(),
                     binding.tvPriceProductInfo.text.toString(),
                     intent.getStringExtra("image") ?: ""
-                )
+                ),
+                latitude,
+                longitude
             ))
-            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(productIndex,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,location,messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(
+                productIndex,
+                nickname,
+                id,
+                message,
+                time,
+                G.profileImg,
+                pictureSelectedItem,
+                0,
+                location,
+                messageIndex,
+                lastOtherMessageIndex,
+                otherProfile,
+                otherID,
+                otherNickname,
                 ChatRoomInfo(
                     binding.tvTitleProductInfo.text.toString(),
                     binding.tvLocationNameProductInfo.text.toString(),
                     binding.tvPriceProductInfo.text.toString(),
                     intent.getStringExtra("image") ?: ""
-                )))
+                ),
+                latitude,
+                longitude))
             //chatRoomNameRef.set(subCollectionName) -> 필드 인덱스
         }
 
@@ -223,13 +259,29 @@ class ChattingActivity : AppCompatActivity() {
 
                     pictureItem.add(it)
                     if(i == pictureSelectedItem.size - 1) {
-                        chatRef.document(collectionName!!).set(MessageItem(productIndex,nickname,id,message, time,G.profileImg,pictureSelectedItem,0,binding.tvLocationNameChat.text.toString(),messageIndex ,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                        chatRef.document(collectionName!!).set(MessageItem(
+                            productIndex,
+                            nickname,
+                            id,
+                            message,
+                            time,
+                            G.profileImg,
+                            pictureSelectedItem,
+                            pictureItem.size,
+                            binding.tvLocationNameChat.text.toString(),
+                            messageIndex,
+                            lastOtherMessageIndex,
+                            otherProfile,
+                            otherID,
+                            otherNickname,
                             ChatRoomInfo(
                                 binding.tvTitleProductInfo.text.toString(),
                                 binding.tvLocationNameProductInfo.text.toString(),
                                 binding.tvPriceProductInfo.text.toString(),
                                 baseAddr
-                            )))
+                            ),
+                            latitude,
+                            longitude))
                         chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(
                             MessageItem(
                                 productIndex,
@@ -248,7 +300,9 @@ class ChattingActivity : AppCompatActivity() {
                                     binding.tvLocationNameProductInfo.text.toString(),
                                     binding.tvPriceProductInfo.text.toString(),
                                     baseAddr
-                                )
+                                ),
+                                latitude,
+                                longitude
                             )
                         ).addOnFailureListener {
                         }
@@ -287,6 +341,8 @@ class ChattingActivity : AppCompatActivity() {
                 var imageSize: String? = map.get("imageSize").toString()
                 var location = map.get("location").toString()
                 var messageIndex = map.get("messageIndex").toString()
+                latitude = map.get("latitude").toString()
+                longitude = map.get("longitude").toString()
 
                 for(i in 0 until image.size){
                     pictureItem.add(Uri.parse(image[i].toString()))
@@ -294,21 +350,52 @@ class ChattingActivity : AppCompatActivity() {
                 var newPictureItem = pictureItem.toMutableList()
 
                 try{
-                    messageItem.add(MessageItem(productIndex, nickname,id, message, time,profileImage,newPictureItem,imageSize?.toInt() ?: 0,location,messageIndex?.toInt() ?: 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                    messageItem.add(MessageItem(
+                        productIndex,
+                        nickname,
+                        id,
+                        message,
+                        time,
+                        profileImage,
+                        newPictureItem,
+                        imageSize?.toInt() ?: 0,location,
+                        messageIndex?.toInt() ?: 0,
+                        lastOtherMessageIndex,
+                        otherProfile,
+                        otherID,
+                        otherNickname,
                         ChatRoomInfo(
                             binding.tvTitleProductInfo.text.toString(),
                             binding.tvLocationNameProductInfo.text.toString(),
                             binding.tvPriceProductInfo.text.toString(),
                             baseAddr
-                        )))
+                        ),
+                        latitude,
+                        longitude))
                 }catch (e: NumberFormatException){
-                    messageItem.add(MessageItem( productIndex, nickname,id, message, time,profileImage,newPictureItem,0,location, 0,lastOtherMessageIndex,otherProfile,otherID,otherNickname,
+                    messageItem.add(MessageItem(
+                        productIndex,
+                        nickname,
+                        id,
+                        message,
+                        time,
+                        profileImage,
+                        newPictureItem,
+                        0,
+                        location,
+                        0,
+                        lastOtherMessageIndex,
+                        otherProfile,
+                        otherID,
+                        otherNickname,
                         ChatRoomInfo(
                             binding.tvTitleProductInfo.text.toString(),
                             binding.tvLocationNameProductInfo.text.toString(),
                             binding.tvPriceProductInfo.text.toString(),
                             baseAddr
-                        )))
+                        ),
+                        latitude,
+                        longitude))
                 }
                 pictureItem.clear()
 
@@ -398,6 +485,9 @@ class ChattingActivity : AppCompatActivity() {
             RESULT_OK->{
                 binding.relativeLocationChat.visibility = View.VISIBLE
                 binding.tvLocationNameChat.text = it.data?.getStringExtra("position")
+                latitude = it.data?.getStringExtra("latitude")!!
+                longitude = it.data?.getStringExtra("longitude")!!
+
                 binding.btnCancelChat.setOnClickListener {
                     binding.relativeLocationChat.visibility = View.GONE
                     binding.tvLocationNameChat.text = ""

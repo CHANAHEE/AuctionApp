@@ -32,6 +32,9 @@ class CommunityEditActivity : AppCompatActivity() {
     lateinit var binding: ActivityCommunityEditBinding
     lateinit var items: MutableList<PictureItem>
 
+    var latitude: String = ""
+    var longitude: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityEditBinding.inflate(layoutInflater)
@@ -77,6 +80,8 @@ class CommunityEditActivity : AppCompatActivity() {
         dataPart.put("nickname", G.nickName)
         dataPart.put("location",G.location)
         dataPart.put("id",G.userAccount.id)
+        dataPart.put("latitude",latitude)
+        dataPart.put("longitude",longitude)
 
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
         for(i in 0 until items.size){
@@ -194,6 +199,8 @@ class CommunityEditActivity : AppCompatActivity() {
                     binding.relativeLocation.visibility = View.GONE
                     binding.tvLocationNameCommunityEdit.text = ""
                 }
+                latitude = it.data?.getStringExtra("latitude")!!
+                longitude = it.data?.getStringExtra("longitude")!!
             }
         }
     }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:layout_gravity="bottom"
+    android:background="#1E1E1E"
+    style="@style/DialogStyle">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="댓 글"
+        android:fontFamily="@font/brandfont"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"/>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="20dp"
+        android:background="#0DFFFFFF"/>
+
+    <ImageButton
+        android:id="@+id/bottomsheet_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_action_close_comments"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#1E1E1E"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_below="@id/view1"
+        android:layout_above="@id/view2"
+        android:orientation="vertical"/>
+
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/chat_linear"
+        android:layout_marginBottom="4dp"
+        android:background="#0DFFFFFF"/>
+
+    <LinearLayout
+        android:id="@+id/chat_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="4dp">
+
+
+        <EditText
+            android:id="@+id/et_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bg_edit"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:paddingLeft="10dp"
+            android:textSize="13sp"
+            android:fontFamily="@font/brandfont"
+            android:textStyle="bold"
+            android:textColor="#CAC9C9"
+            android:textColorHint="#C1BEBE"
+            android:isScrollContainer="true"
+            android:maxLines="4"
+            android:inputType="textMultiLine|textCapSentences"
+            android:hint="댓 글   입 력 . . ." />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_send"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/send"
+            android:backgroundTint="@color/white"/>
+    </LinearLayout>
+</RelativeLayout>

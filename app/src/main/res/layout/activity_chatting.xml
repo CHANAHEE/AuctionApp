@@ -33,10 +33,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_product_info"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:contentPadding="10dp"
+        app:contentPadding="15dp"
         app:cardCornerRadius="10dp"
         android:layout_below="@id/appbar"
         android:layout_centerHorizontal="true"
@@ -49,8 +48,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_main_img"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 app:cardCornerRadius="10dp"
                 android:backgroundTint="@color/black"
                 android:layout_centerVertical="true"
@@ -66,7 +65,7 @@
                 android:id="@+id/tv_title_product_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="글 제목"
+                android:text="레노버 마우스 입니다. 가격제안 불가입니다. 확실하신가요?"
                 android:textSize="12sp"
                 android:fontFamily="@font/brandfont"
                 android:textStyle="bold"
@@ -75,7 +74,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_alignTop="@id/cv_main_img"
                 android:maxLines="1"
-                android:maxEms="10"
+                android:maxEms="20"
                 android:ellipsize="end"/>
 
             <TextView
@@ -113,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/linear"
-        android:layout_below="@id/appbar"
+        android:layout_below="@id/cv_product_info"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         app:stackFromEnd="true"/>

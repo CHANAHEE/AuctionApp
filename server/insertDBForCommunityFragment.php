@@ -7,7 +7,9 @@
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
     $id=   $_POST['id'];
-    
+    $latitude=  $_POST['latitude'];
+    $longitude= $_POST['longitude'];
+
     // @Part 로 전달된 이미지 파일을 받아주자. 
     
     for($i=0 ; $i < 10 ; $i++){
@@ -49,7 +51,7 @@
     mysqli_query($db,"set names utf8");
 
     // 저장할 데이터($name, $title, $message, $price, $dstName, $now) 를 저장하자!
-    $sql = "INSERT INTO post_community(title,image,location,place_info,description,nickname,id,now) VALUES ( '$title' , '$arrayString' , '$location' , '$placeinfo' , '$description' , '$nickname' , '$id' , '$now' )";
+    $sql = "INSERT INTO post_community(title,image,location,place_info,description,nickname,id,now,latitude,longitude) VALUES ( '$title' , '$arrayString' , '$location' , '$placeinfo' , '$description' , '$nickname' , '$id' , '$now' , '$latitude' , '$longitude')";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";

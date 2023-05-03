@@ -20,7 +20,7 @@
     <string name="home_fav_list">찜한 물건</string>
     <string name="my_post_list">내 판매 글 </string>
     <string name="my_community_list">내 커뮤니티 글 </string>
-    <string name="my_bid_complete_list">내 낙찰 물건 </string>
+    <string name="my_bid_complete_list">내 입찰 물건 </string>
     <string name="my_bid_list">내 경매 물건 </string>
 
     <string-array name="category_item">

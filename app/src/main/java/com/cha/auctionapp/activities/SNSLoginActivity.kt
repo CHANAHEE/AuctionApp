@@ -136,9 +136,14 @@ class SNSLoginActivity : AppCompatActivity() {
     val launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
         , ActivityResultCallback {
 
+
             var intent: Intent? = it.data
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
+
+            if(!task.isSuccessful) return@ActivityResultCallback
+
             val account: GoogleSignInAccount = task.result
+
 
             val pref: SharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
             var id: String = pref.getString("google","").toString()

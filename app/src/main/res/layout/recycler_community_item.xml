@@ -113,6 +113,35 @@
             android:src="@drawable/_0"/>
     </androidx.cardview.widget.CardView>
 
+    <RelativeLayout
+        android:id="@+id/relative_bid_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_bid_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="남은 경매 시간"
+            android:gravity="center"
+            android:textColor="#80040404"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_bid_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="12:00:00"
+            android:gravity="center"
+            android:textColor="#80FFFFFF"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_bid_time_title"
+            android:background="@drawable/bg_bid_time"
+            android:padding="10dp"/>
+    </RelativeLayout>
+
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"

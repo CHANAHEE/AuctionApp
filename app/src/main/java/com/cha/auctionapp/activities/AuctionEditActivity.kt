@@ -44,6 +44,9 @@ class AuctionEditActivity : AppCompatActivity() {
     lateinit var binding: ActivityAuctionEditBinding
     lateinit var items: MutableList<PictureItem>
 
+    var latitude: String = ""
+    var longitude: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionEditBinding.inflate(layoutInflater)
@@ -101,7 +104,10 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname", G.nickName)
         dataPart.put("location", G.location)
+        dataPart.put("now",System.currentTimeMillis().toString())
         dataPart.put("id", G.userAccount.id)
+        dataPart.put("latitude",latitude)
+        dataPart.put("longitude",longitude)
 
         //dataPart.put("video", it.toString())
         dataPart.put("video","https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm")
@@ -110,6 +116,7 @@ class AuctionEditActivity : AppCompatActivity() {
         var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("aoirjbqoierb",response.body().toString())
                 startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
                 dialog.dismiss()
                 finish()
@@ -177,8 +184,6 @@ class AuctionEditActivity : AppCompatActivity() {
         launcherLocationSelect.launch(intent)
     }
 
-    lateinit var latitude: String
-    lateinit var longitude: String
 
     var launcherLocationSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts
         .StartActivityForResult()

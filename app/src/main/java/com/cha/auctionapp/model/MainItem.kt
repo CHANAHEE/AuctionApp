@@ -45,7 +45,9 @@ data class HomeDetailItem(
     var nickname: String,
     var location: String,
     var id: String,
-    var image: String
+    var image: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class CategorySearchItem(
@@ -86,10 +88,11 @@ data class CommunityDetailItem(
     var description: String,
     var place_info: String?,
     var image: String,
-
     var nickname: String,
     var location: String,
     var id: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class CommentsItem(
@@ -97,7 +100,9 @@ data class CommentsItem(
     var placeinfo: String,
     var nickname: String,
     var location: String,
-    var id: String
+    var id: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class PictureCommunityDetailItem(var path: String)
@@ -117,19 +122,26 @@ data class MyCommunityPostList(
 data class AuctionPagerItem(
     var idx: Int,
     var video: String,
+    var title: String,
+    var location: String,
     var description: String,
-    var id: String
+    var id: String,
+    var now: String
 )
 
 data class AuctionDetailItem(
     var title: String,
     var category: String,
     var price: String,
+    var last: String,
     var description: String,
     var tradingplace: String,
     var location: String,
     var video: String,
-    var id: String
+    var id: String,
+    var now: String,
+    var latitude: String,
+    var longitude: String
 )
 
 data class MyAuctionPostList(
@@ -137,7 +149,7 @@ data class MyAuctionPostList(
     var title:String,
     var location: String,
     var description: String,
-    var time: String
+    var now: String
 )
 
 
@@ -162,7 +174,9 @@ data class MessageItem(
     var otherProfileImage: String?,
     var otherID: String,
     var otherNickname: String,
-    var chatRoomInfo: ChatRoomInfo
+    var chatRoomInfo: ChatRoomInfo,
+    var latitude: String,
+    var longitude: String
 )
 data class ChatListItem(
     var productIndex: String,
@@ -213,8 +227,8 @@ data class MyAuctionFavListItem(
     @ColumnInfo(name = "index") var indexProduct: Int,
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "location") var location: String,
-    @ColumnInfo(name = "price") var price: String,
-    @ColumnInfo(name = "image") var image: String
+    @ColumnInfo(name = "description") var description: String,
+    @ColumnInfo(name = "now") var now: String
 )
 
 

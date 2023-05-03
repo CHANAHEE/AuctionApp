@@ -43,6 +43,10 @@ class SellingEditActivity : AppCompatActivity() {
     lateinit var binding:ActivitySellingEditBinding
     lateinit var items: MutableList<PictureItem>
     lateinit var flag: String
+
+    var latitude: String = ""
+    var longitude: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySellingEditBinding.inflate(layoutInflater)
@@ -148,8 +152,6 @@ class SellingEditActivity : AppCompatActivity() {
         launcherLocationSelect.launch(intent)
     }
 
-    lateinit var latitude: String
-    lateinit var longitude: String
 
     var launcherLocationSelect: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts
         .StartActivityForResult()
@@ -192,7 +194,11 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
+        Log.i("qerbrbq",G.userAccount.id)
         dataPart.put("id",G.userAccount.id)
+        dataPart.put("latitude",latitude)
+        dataPart.put("longitude",longitude)
+
 
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()

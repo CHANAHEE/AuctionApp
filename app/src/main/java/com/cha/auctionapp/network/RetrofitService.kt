@@ -38,12 +38,10 @@ interface RetrofitService {
     /*
     *       서버로 데이터 전송
     * */
-
     // Home 관련
     @Multipart
     @POST("Server/insertDBForHomeFragment.php")
     fun postDataToServerForHomeFragment(@PartMap dataPart: HashMap<String,String>, @Part image: MutableList<MultipartBody.Part>) : Call<String>
-
     // Community 관련
     @Multipart
     @POST("Server/insertDBForCommunityFragment.php")
@@ -51,11 +49,15 @@ interface RetrofitService {
     @Multipart
     @POST("Server/insertDBForCommunityFragmentComments.php")
     fun postDataToServerForCommunityDetailComments(@PartMap dataPart: HashMap<String,String>) : Call<String>
-
     // Auction 관련
     @Multipart
     @POST("Server/insertDBForAuctionFragment.php")
     fun postDataToServerForAuctionFragment(@PartMap dataPart: HashMap<String,String>) : Call<String>
+    @Multipart
+    @POST("Server/insertDBForAuctionPagerComments.php")
+    fun postDataToServerForAuctionPagerComments(@PartMap dataPart: HashMap<String,String>) : Call<String>
+    @GET("Server/updateDBForAuctionDetail.php")
+    fun updateDataForAuctionDetail(@Query("price") query: String, @Query("index") query2: String, @Query("last") query3: String) : Call<String>
 
 
     /*
@@ -92,4 +94,8 @@ interface RetrofitService {
     fun getDataFromServerForAuctionDetail(@Query("index") query: String) : Call<MutableList<AuctionDetailItem>>
     @GET("Server/loadDBForMyAuctionPostList.php")
     fun getDataFromServerForMyAuctionPostList(@Query("id") query: String) : Call<MutableList<MyAuctionPostList>>
+    @GET("Server/loadDBForMyAuctionCompleteList.php")
+    fun getDataFromServerForMyAuctionCompleteList(@Query("id") query: String) : Call<MutableList<MyAuctionPostList>>
+    @GET("Server/loadDBForAuctionComments.php")
+    fun getDataFromServerForAuctionComments(@Query("index") query: String) : Call<MutableList<CommentsItem>>
 }

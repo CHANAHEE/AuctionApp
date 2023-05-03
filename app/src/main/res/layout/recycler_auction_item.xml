@@ -96,58 +96,73 @@
         android:textStyle="bold"/>
 
 
-    <ImageButton
-        android:id="@+id/ib_fav"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relative_fav"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/heart_outline"
-        app:tint="@color/white"
-        android:background="@null"
-        android:layout_marginRight="15dp"
-        android:layout_above="@id/tv_fav_size"
-        android:layout_alignParentRight="true"
-        />
-
-    <TextView
-        android:id="@+id/tv_fav_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/ib_fav"
-        android:layout_alignRight="@id/ib_fav"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:fontFamily="@font/brandfont"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="5dp"
         android:layout_above="@id/btn_bid"
-        android:text="76"/>
+        android:layout_alignParentRight="true"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/ib_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_fav"
+            android:backgroundTint="@color/white"
+            />
 
-    <ImageButton
-        android:id="@+id/ib_comments"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_fav_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:fontFamily="@font/brandfont"
+            android:textColor="#FFFFFF"
+            android:layout_alignRight="@id/ib_fav"
+            android:layout_alignLeft="@id/ib_fav"
+            android:layout_below="@id/ib_fav"
+            android:layout_marginTop="5dp"
+            android:text="76"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_comments"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/comment"
-        app:tint="@color/white"
-        android:background="@null"
-        android:layout_marginRight="15dp"
-        android:layout_above="@id/tv_comments_size"
-        android:layout_alignParentRight="true"/>
+        android:layout_above="@id/relative_fav"
+        android:layout_alignParentRight="true"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/ib_comments"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/comment"
+            app:tint="@color/white"
+            android:background="@null"/>
 
-    <TextView
-        android:id="@+id/tv_comments_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/ib_comments"
-        android:layout_alignRight="@id/ib_comments"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:fontFamily="@font/brandfont"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_above="@id/ib_fav"
-        android:text="12"/>
+        <TextView
+            android:id="@+id/tv_comments_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/ib_comments"
+            android:layout_alignRight="@id/ib_comments"
+            android:layout_below="@id/ib_comments"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:fontFamily="@font/brandfont"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="5dp"
+            android:text="12"/>
+    </RelativeLayout>
 
-
+    <FrameLayout
+        android:id="@+id/bottomsheet_container"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

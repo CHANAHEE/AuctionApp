@@ -20,6 +20,7 @@ import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivitySelectPositionBinding
 import com.cha.auctionapp.databinding.FragmentSelectPositionBottomSheetBinding
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -31,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -45,25 +48,36 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectPositionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
+    }
 
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.ivMarker.bringToFront()
         map = findViewById<View>(R.id.map)
         map.visibility = View.INVISIBLE
-        // 위치 정보 제공 퍼미션 메소드
+
+        if(intent.getStringExtra("showLocation") == "showLocation"){
+            binding.tvAppbarTitle.text = "거래 장소"
+            binding.btnComplete.visibility = View.GONE
+            binding.ivMarker.visibility = View.GONE
+
+        }else binding.ivMarker.bringToFront()
+
         locationCheckPermission()
-
-        // 내 위치 받아오기
         requestMyLocation()
-
     }
-
     private fun requestMyLocation() {
 
         var request: LocationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000).build()
+        Log.i("googleMapissue","requestMyLocation 실행")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -74,6 +88,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         ) {
             return
         }
+        Log.i("googleMapissue","위치 퍼미션 허용완료")
         providerClient.requestLocationUpdates(request,locationCallback, Looper.getMainLooper())
 
     }
@@ -82,7 +97,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
             myLocation = p0.lastLocation
-
+            Log.i("googleMapissue","로케이션 콜백받아오기 완료")
 
             providerClient.removeLocationUpdates(this)
             // 구글 맵 준비 메소드
@@ -100,18 +115,28 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
+        Log.i("googleMapissue","getReadyGoogleMap 실행")
     }
     override fun onMapReady(googleMap: GoogleMap) {
+        if(intent.getStringExtra("showLocation") == "showLocation") {
+            val position = LatLng(intent.getStringExtra("latitude")!!.toDouble(),
+                intent.getStringExtra("longitude")!!.toDouble())
+            googleMap.addMarker(MarkerOptions()
+                .position(position)
+                .title(intent.getStringExtra("title"))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_location)))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,20.0f))
+            map.visibility = View.VISIBLE
+        }else{
+            var location: LatLng = LatLng(myLocation?.latitude!!,myLocation?.longitude!!)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,20.0f))
 
-        var location: LatLng = LatLng(myLocation?.latitude!!,myLocation?.longitude!!)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,20.0f))
-        map.visibility = View.VISIBLE
-
-        binding.btnComplete.setOnClickListener {
-            myLocation?.latitude = googleMap.cameraPosition.target.latitude
-            myLocation?.longitude = googleMap.cameraPosition.target.longitude
-            clickCompleteBtn()
+            map.visibility = View.VISIBLE
+            binding.btnComplete.setOnClickListener {
+                myLocation?.latitude = googleMap.cameraPosition.target.latitude
+                myLocation?.longitude = googleMap.cameraPosition.target.longitude
+                clickCompleteBtn()
+            }
         }
     }
 
@@ -189,6 +214,13 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun afterTextChanged(s: Editable?) {
 
         }
-
     }
+
+
+    /*
+    *
+    *           선택된 장소 정보 보여주기
+    *
+    * */
+
 }

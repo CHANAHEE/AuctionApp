@@ -1,11 +1,10 @@
 <?php
     header('Content-Type:application/json; charset=utf-8');
-    $index = $_GET['index'];
-
+    $id = $_GET['id'];
     $db = mysqli_connect('localhost','tjdrjs0803','dkssud109!','tjdrjs0803');
     mysqli_query($db,"set names utf8");
 
-    $sql = "SELECT description,placeinfo,nickname,location,id,latitude,longitude FROM post_community_comments WHERE post_index='$index'";
+    $sql = "SELECT idx,title,location,description,now FROM post_auction WHERE last='$id'";
     $result = mysqli_query($db,$sql);
 
     // 결과표로 부터 총 레코드 수를 알아내자.

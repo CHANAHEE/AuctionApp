@@ -1,14 +1,11 @@
 <?php
     header('Content-Type:text/plain; charset=utf-8');
 
-    $postindex=     $_POST['idx'];
+    $post_index=     $_POST['idx'];
     $description=     $_POST['description'];
-    $placeinfo=   $_POST['placeinfo'];
     $nickname=     $_POST['nickname'];
     $location=   $_POST['location'];
     $id=   $_POST['id'];
-    $latitude=  $_POST['latitude'];
-    $longitude= $_POST['longitude'];
     
     $description = addslashes($description);
 
@@ -18,7 +15,7 @@
     
     $result = mysqli_query($db,"set names utf8");
 
-    $sql = "INSERT INTO post_community_comments(description,placeinfo,nickname,location,post_index,id,now,latitude,longitude) VALUES ( '$description' , '$placeinfo' , '$nickname' , '$location' , '$postindex' , '$id' , '$now' ,'$latitude','$longitude')";
+    $sql = "INSERT INTO post_auction_comments(post_index,description,nickname,location,id,now) VALUES ('$post_index', '$description' , '$nickname' , '$location' , '$id' , '$now')";
     $result = mysqli_query($db,$sql);
 
     if($result) echo "게시글이 업로드 되었습니다.";
