@@ -14,9 +14,6 @@ minSdk 24
 targetSdk 33
 
 ***
-
-
-***
 ## Usage
 
 
