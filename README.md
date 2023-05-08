@@ -1,11 +1,11 @@
 # Mingle
-***
+
 ## Description
 
 경매를 친숙하게. 
 동네 기반의 경매 플랫폼 '밍글' 입니다. 
 
-***
+
 ## Environment
 
 Android 
@@ -14,7 +14,7 @@ minSdk 24
 
 targetSdk 33
 
-***
+
 ## Usage
 
 
