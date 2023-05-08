@@ -1,18 +1,31 @@
 # Mingle
 
+
+
 ## Description
 
 경매를 친숙하게. 
 동네 기반의 경매 플랫폼 '밍글' 입니다. 
 
 
+
+## Function
+- 중고거래 
+- 쇼츠 기반 경매
+- 채팅
+- 동네 기반 커뮤니티 
+
+
+
 ## Environment
 
-Android 
+### Android 
 
 minSdk 24
 
 targetSdk 33
+
+
 
 
 ## Usage
