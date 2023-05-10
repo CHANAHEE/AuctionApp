@@ -21,10 +21,15 @@
 
 ## Environment
 Android ( minSdk 24 / targetSdk 33 )
+
 Kotlin
+
 MySQL
+
 PHP
+
 VS Code
+
 Firebase
 
 
