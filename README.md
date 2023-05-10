@@ -1,4 +1,4 @@
-# Mingle
+# Mingle 동네 기반 경매 앱
 
 
 
@@ -18,12 +18,14 @@
 
 
 ## Environment
-
 ### Android 
 
 minSdk 24
-
 targetSdk 33
+
+### MySQL
+### PHP
+### VS Code
 
 
 
