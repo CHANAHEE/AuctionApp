@@ -21,6 +21,7 @@
 ### Android 
 
 minSdk 24
+
 targetSdk 33
 
 ### MySQL
