@@ -114,4 +114,7 @@ dependencies {
 
     // 새로고침 layout library
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
+    // Image compress Library
+    implementation 'id.zelory:compressor:3.0.1'
 }

@@ -28,6 +28,9 @@ import com.cha.auctionapp.network.RetrofitService
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import id.zelory.compressor.Compressor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -205,29 +208,34 @@ class SellingEditActivity : AppCompatActivity() {
         for(i in 0 until items.size){
             var imagePath = getRealPathFromUri(items[i].uri)
             val file: File = File(imagePath)
-            val body = file.asRequestBody("image/*".toMediaTypeOrNull())
-            fileImagePart.add(i,MultipartBody.Part.createFormData("image${i}",file.name,body))
+            GlobalScope.launch {
+                val imageCompressed = Compressor.compress(this@SellingEditActivity,file)
+                val body = imageCompressed.asRequestBody("image/*".toMediaTypeOrNull())
+                fileImagePart.add(i,MultipartBody.Part.createFormData("image${i}",imageCompressed.name,body))
+
+                /*
+                *       Retrofit 작업 시작
+                * */
+                var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+                var retrofitService = retrofit.create(RetrofitService::class.java)
+                var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
+                call.enqueue(object : Callback<String>{
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        Log.i("avzxcv",response.body().toString())
+                        dialog.dismiss()
+                        finish()
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.i("avzxcv",t.message.toString())
+                        Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
+                    }
+                })
+            }
         }
 
 
-        /*
-        *       Retrofit 작업 시작
-        * */
-        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-        var retrofitService = retrofit.create(RetrofitService::class.java)
-        var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
-        call.enqueue(object : Callback<String>{
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.i("avzxcv",response.body().toString())
-                dialog.dismiss()
-                finish()
-            }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.i("avzxcv",t.message.toString())
-                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
-            }
-        })
     }
 
 
