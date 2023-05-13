@@ -20,6 +20,7 @@ import com.cha.auctionapp.databinding.FragmentSignUpSetNickNameBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.regex.Pattern
 
 
 class SignUpSetNickNameFragment : Fragment() {
@@ -35,11 +36,13 @@ class SignUpSetNickNameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        editTextListener()
-        binding.btnBack.setOnClickListener { clickBackBtn() }
+
         binding.btnComplete.setOnClickListener { clickCompleteBtn() }
         binding.btnCertifyNickname.setOnClickListener { clickCertifyBtn() }
         binding.etNickname.addTextChangedListener(watcher)
+
+        editTextListener()
+        binding.btnBack.setOnClickListener { clickBackBtn() }
     }
 
 
@@ -62,28 +65,6 @@ class SignUpSetNickNameFragment : Fragment() {
             G.nickName = binding.etNickname.text.toString()
             saveUserInfo()
             Snackbar.make(binding.root,"가입 완료!",Snackbar.LENGTH_SHORT).show()
-        }
-    }
-
-
-    /*
-    *
-    *       닉네임 중복체크
-    *
-    * */
-    var isExistNickname = false
-    private fun clickCertifyBtn(){
-        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
-        var userRef: CollectionReference = firebase.collection("user")
-
-        userRef.whereEqualTo("nickname",binding.etNickname.text.toString()).get().addOnSuccessListener {
-            if(it.documents.size > 0) {
-                Snackbar.make(binding.root,"이미 있는 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
-                isExistNickname = true
-            } else {
-                Snackbar.make(binding.root,"사용 가능한 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
-                isExistNickname = false
-            }
         }
     }
 
@@ -115,6 +96,31 @@ class SignUpSetNickNameFragment : Fragment() {
     }
 
 
+
+
+    /*
+    *
+    *       닉네임 중복체크
+    *
+    * */
+    var isExistNickname = false
+    private fun clickCertifyBtn(){
+        var firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firebase.collection("user")
+
+        userRef.whereEqualTo("nickname",binding.etNickname.text.toString()).get().addOnSuccessListener {
+            if(it.documents.size > 0) {
+                Snackbar.make(binding.root,"이미 있는 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
+                isExistNickname = true
+            } else {
+                Snackbar.make(binding.root,"사용 가능한 닉네임 입니다.",Snackbar.LENGTH_SHORT).show()
+                isExistNickname = false
+            }
+        }
+    }
+
+
+
     /*
     *
     *       닉네임 EditText 리스너
@@ -124,9 +130,21 @@ class SignUpSetNickNameFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s?.length!! >= 3) {
+            if(binding.etNickname.text.toString().length < 3 ){
+                binding.btnCertifyNickname.isEnabled = false
+                binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_fail,requireContext().theme))
+                binding.tvAlertNicknameLength.visibility = View.VISIBLE
+            }
+            else if(!Pattern.matches("^[a-zA-Z0-9가-힣]{3,}$",binding.etNickname.text.toString())) {
+                binding.btnCertifyNickname.isEnabled = false
+                binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_fail,requireContext().theme))
+                binding.tvAlertNicknameLength.visibility = View.GONE
+                binding.tvAlertNickname.visibility = View.VISIBLE
+            }else{
                 binding.btnCertifyNickname.isEnabled = true
-                binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.brand,requireContext().theme))
+                binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_success,requireContext().theme))
+                binding.tvAlertNicknameLength.visibility = View.GONE
+                binding.tvAlertNickname.visibility = View.GONE
             }
         }
 
