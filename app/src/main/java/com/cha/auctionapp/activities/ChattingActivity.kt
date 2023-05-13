@@ -13,6 +13,8 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.loader.content.CursorLoader
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
 import com.cha.auctionapp.adapters.MessageAdapter
@@ -30,9 +32,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlinx.coroutines.*
+import java.io.File
 import java.lang.NumberFormatException
 import java.text.NumberFormat
 
@@ -57,35 +61,67 @@ class ChattingActivity : AppCompatActivity() {
     lateinit var chatRoomNameRef: DocumentReference
     lateinit var baseAddr: String
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
+    }
+
+
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
+    private fun init(){
+        setOtherInfo()
+        setActionBarConfig()
+        initItems()
+        messageConfig()
+        setProductConfig()
+        setChatRoomName()
         loadMessage()
     }
 
     /*
-    *       초기화 작업
+    *       상대방 정보
     * */
-    private fun init(){
+    private fun setOtherInfo(){
         otherNickname = intent.getStringExtra("otherNickname")!!
         otherProfile = intent.getStringExtra("otherProfile")!!
-        Log.i("profilecheck","$otherProfile")
         otherID = intent.getStringExtra("otherID")!!
         binding.tvOtherId.text = otherNickname
+    }
 
+    /*
+    *       액션바 설정
+    * */
+    private fun setActionBarConfig(){
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
 
+    /*
+    *       메시지 아이템 초기화
+    * */
+    private fun initItems(){
         items = mutableListOf()
-        binding.recyclerPicture.adapter = PictureChatAdapter(this, items)
         messageItem = mutableListOf()
-        binding.recycler.adapter = MessageAdapter(this,messageItem)
         pictureSelectedItem = mutableListOf()
         pictureItem = mutableListOf()
+        binding.recyclerPicture.adapter = PictureChatAdapter(this, items)
+        binding.recycler.adapter = MessageAdapter(this,messageItem)
+    }
 
+    /*
+    *       메시지 보내기 설정
+    * */
+    private fun messageConfig(){
         binding.btnSend.setOnClickListener { clickSendBtn() }
         binding.btnOption.setOnClickListener { clickOptionBtn() }
         binding.etMsg.setOnFocusChangeListener { v, hasFocus ->
@@ -95,63 +131,38 @@ class ChattingActivity : AppCompatActivity() {
                 binding.btnOption.visibility = View.VISIBLE
             }
         }
+    }
 
+    /*
+    *       상품 정보 설정
+    * */
+    private fun setProductConfig(){
         binding.cvProductInfo.setOnClickListener { startActivity(Intent(this,HomeDetailActivity::class.java).putExtra("index",intent.getStringExtra("index"))) }
         binding.tvTitleProductInfo.text = intent.getStringExtra("title")
         binding.tvLocationNameProductInfo.text = intent.getStringExtra("location")
         binding.tvPriceProductInfo.text = intent.getStringExtra("price")
         baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + intent.getStringExtra("image")
         Glide.with(this).load(baseAddr).into(binding.ivMainImgProductInfo)
+    }
 
+    /*
+    *       채팅방 이름 설정
+    * */
+    private fun setChatRoomName(){
         createFirebaseCollectionName()
-        Log.i("HELLO",collectionName!!)
         chatRoomNameRef = firestore.collection("chat").document(collectionName!!)
-//        getMessageLastIndex()
-//        getLastOtherMessageIndex()
     }
 
 
-    private fun getMessageLastIndex(){
-        if(collectionName == null) return
-        var chatRef = firestore.collection(collectionName!!)
-        chatRef.get().addOnSuccessListener {
-            for(document in  it.documents){
-                if(document.get("messageIndex").toString() == "") messageIndex = 0
-                else messageIndex = document.get("messageIndex").toString().toInt()
-            }
-            Log.i("4zxc","$messageIndex")
-        }
-    }
 
 
-    private fun getLastOtherMessageIndex(){
-        if(collectionName == null) return
-        var chatRef = firestore.collection(collectionName!!)
-        chatRef.orderBy("messageIndex", Query.Direction.DESCENDING)
-            .get().addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    if(document.get("id") != G.userAccount.id){
-                        Log.i("4zxc","${document.get("id")} : ${G.userAccount.id}")
-                        lastOtherMessageIndex = document.get("messageIndex").toString().toInt()
-                        break
-                    }
-                }
-                Log.i("4zxc","$lastOtherMessageIndex")
-            }.addOnFailureListener { exception ->
-                Log.e("1234aa", "Error getting documents.", exception)
-            }
-    }
     /*
     *
     *       서버에 메시지 저장.
     *
     * */
-//
     private fun clickSendBtn(){
-        if(binding.etMsg.text.isBlank() && pictureSelectedItem.size == 0 && binding.tvLocationNameChat.text.isBlank()){
-            Snackbar.make(binding.root,"메시지를 입력해주세요",Snackbar.LENGTH_SHORT).show()
-            return
-        }
+        if(isBlankMessage()) return
         if(collectionName == null) return
 
         var productIndex = intent.getStringExtra("index")
@@ -162,20 +173,21 @@ class ChattingActivity : AppCompatActivity() {
         var minute = Calendar.getInstance().get(Calendar.MINUTE)
         var time = if(minute < 10) "$hour : 0$minute" else "$hour : $minute"
         var location = binding.tvLocationNameChat.text.toString()
-
         var documentName = System.currentTimeMillis()
 
 
-
-        if(pictureSelectedItem.isNotEmpty())
-        {
-            Log.i("pictureIssue","사진 정보가 남아있나? : ${pictureSelectedItem.size.toString()} : ${pictureSelectedItem}")
-            uploadPictureToFirestore(pictureSelectedItem,nickname,message,id,time,documentName,productIndex!!)
+        if(pictureSelectedItem.isNotEmpty()){
+            uploadPictureToFirestore(
+                pictureSelectedItem
+                ,nickname
+                ,message
+                ,id
+                ,time
+                ,documentName
+                ,productIndex!!
+            )
         }
         else {
-            Log.i("pictureIssue","사진이 안남아있네 : ${pictureSelectedItem.size}")
-
-            Log.i("4zxc","$messageIndex")
             messageIndex += 1
             chatRef.document(collectionName!!).set(MessageItem(
                 productIndex!!,
@@ -224,9 +236,18 @@ class ChattingActivity : AppCompatActivity() {
                 ),
                 latitude,
                 longitude))
-            //chatRoomNameRef.set(subCollectionName) -> 필드 인덱스
         }
+        resetAfterSendMessage()
+    }
 
+
+
+    /*
+    *
+    *       메시지 보낸 후 초기화
+    *
+    * */
+    private fun resetAfterSendMessage(){
         binding.relativeLocationChat.visibility = View.GONE
         binding.cvPicture.visibility = View.GONE
         binding.etMsg.setText("")
@@ -236,6 +257,27 @@ class ChattingActivity : AppCompatActivity() {
         items.removeAll { items -> true }
     }
 
+
+    /*
+    *
+    *       빈 메시지 체크
+    *
+    * */
+    private fun isBlankMessage(): Boolean{
+        if(binding.etMsg.text.isBlank() && pictureSelectedItem.size == 0 && binding.tvLocationNameChat.text.isBlank()){
+            Snackbar.make(binding.root,"메시지를 입력해주세요",Snackbar.LENGTH_SHORT).show()
+            return true
+        }
+        return false
+    }
+
+
+
+    /*
+    *
+    *       사진 업로드
+    *
+    * */
     private fun uploadPictureToFirestore(pictureSelectedItem: MutableList<Uri>,
                                          nickname: String,
                                          message: String,
@@ -313,20 +355,19 @@ class ChattingActivity : AppCompatActivity() {
         }
     }
 
+
+
     /*
     *
     *       메시지 불러오기
     *
     * */
-//
     private fun loadMessage() {
-        Log.i("idid","loadMessage 진입")
         firestore.collection("chat").document(collectionName!!).collection(collectionName!!).addSnapshotListener { value, error ->
             var documentChange = value?.documentChanges ?: return@addSnapshotListener
             for(document in documentChange){
                 var snapshot = document.document
                 var map = snapshot.data
-
                 var productIndex = map.get("productIndex").toString()
                 var nickname = map.get("nickname").toString()
                 var id = map.get("id").toString()
@@ -394,8 +435,6 @@ class ChattingActivity : AppCompatActivity() {
                         longitude))
                 }
                 pictureItem.clear()
-
-                Log.i("idid",map.get("id").toString())
             }
 
             binding.recycler.adapter?.notifyItemInserted(messageItem.size)
@@ -403,12 +442,12 @@ class ChattingActivity : AppCompatActivity() {
         }
     }
 
+
     /*
     *
     *       컬렉션 이름 생성 : 컬렉션이 DB 내 채팅방의 이름 -> 채팅방을 유일하게 구별 가능
     *
     * */
-
     private fun createFirebaseCollectionName() {
         var compareResult = G.userAccount.id.compareTo(otherID)
         collectionName = if(compareResult > 0) G.userAccount.id + otherID + intent.getStringExtra("index")
@@ -427,7 +466,6 @@ class ChattingActivity : AppCompatActivity() {
         binding.btnOption.visibility = View.GONE
         binding.btnOptionCancel.visibility = View.VISIBLE
         binding.etMsg.clearFocus()
-
 
         val imm: InputMethodManager =
             getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -448,7 +486,12 @@ class ChattingActivity : AppCompatActivity() {
     }
 
     private fun clickImageBtn() {
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,5-items.size)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+            .apply {
+                type = "image/*"
+            }
+            .putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,5-items.size)
+
         launcher.launch(intent)
     }
 
@@ -459,15 +502,46 @@ class ChattingActivity : AppCompatActivity() {
                 pictureItem.clear()
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-
+                var file = mutableListOf<File>()
                 for(i in 0 until size){
-                    pictureSelectedItem.add(clipData.getItemAt(i).uri)
-                    items.add(PictureItem(clipData.getItemAt(i).uri))
+                    file.add(File(getFilePathFromUri(clipData.getItemAt(i).uri)!!))
                 }
-                binding.cvPicture.visibility = View.VISIBLE
-                binding.recyclerPicture.adapter?.notifyDataSetChanged()
+
+                val uiScope = CoroutineScope(Dispatchers.Main)
+                uiScope.launch {
+                    for(i in 0 until size){
+                        val imageCompress = Compressor.compress(this@ChattingActivity,file[i])
+                        val cacheUri = FileProvider.getUriForFile(this@ChattingActivity,"com.cha.auctionapp.fileprovider",imageCompress)
+                        pictureSelectedItem.add(cacheUri)
+                        items.add(PictureItem(cacheUri))
+                    }
+                    binding.cvPicture.visibility = View.VISIBLE
+                    binding.recyclerPicture.adapter?.notifyDataSetChanged()
+                }
             }
         })
+
+
+    /*
+    *
+    *       Uri -> File 변환
+    *
+    * */
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
+    }
+
+
     @SuppressLint("SuspiciousIndentation")
     private fun clickLocationBtn(){
         var intent = Intent(this,SelectPositionActivity::class.java)
