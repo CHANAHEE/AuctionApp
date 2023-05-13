@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,7 +17,17 @@ import android.view.View
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality
+import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration
+import com.abedelazizshe.lightcompressorlibrary.config.SaveLocation
+import com.abedelazizshe.lightcompressorlibrary.config.SharedStorageConfiguration
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -30,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import id.zelory.compressor.Compressor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -47,6 +59,7 @@ class AuctionEditActivity : AppCompatActivity() {
     var latitude: String = ""
     var longitude: String = ""
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionEditBinding.inflate(layoutInflater)
@@ -60,6 +73,7 @@ class AuctionEditActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun init() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -84,6 +98,7 @@ class AuctionEditActivity : AppCompatActivity() {
     *
     * */
     lateinit var dialog: AlertDialog
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun clickCompleteBtn() {
 
         dialog = AlertDialog.Builder(this).setCancelable(false).setMessage("업로드 중 . . .").create()
@@ -109,25 +124,78 @@ class AuctionEditActivity : AppCompatActivity() {
         dataPart.put("latitude",latitude)
         dataPart.put("longitude",longitude)
 
-        //dataPart.put("video", it.toString())
-        dataPart.put("video","https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm")
-        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-        var retrofitService = retrofit.create(RetrofitService::class.java)
-        var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.i("aoirjbqoierb",response.body().toString())
-                startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
-                dialog.dismiss()
-                finish()
+
+        val source: List<Uri> = listOf(intent.getParcelableExtra("video",Uri::class.java)!!)
+
+        VideoCompressor.start(
+            context = this, // => This is required
+            uris = source, // => Source can be provided as content uris
+            isStreamable = false,
+            // THIS STORAGE
+            sharedStorageConfiguration = SharedStorageConfiguration(
+                saveAt = SaveLocation.movies, // => default is movies
+                videoName = "compressed_video" // => required name
+            ),
+            null,
+            configureWith = Configuration(
+                quality = VideoQuality.VERY_LOW,
+                isMinBitrateCheckEnabled = true,
+                videoBitrateInMbps = 5, /*Int, ignore, or null*/
+                disableAudio = false, /*Boolean, or ignore*/
+                keepOriginalResolution = false, /*Boolean, or ignore*/
+                videoWidth = 360.0, /*Double, ignore, or null*/
+                videoHeight = 480.0 /*Double, ignore, or null*/
+            ),
+            listener = object : CompressionListener {
+                override fun onProgress(index: Int, percent: Float) {
+                    // Update UI with progress value
+                    runOnUiThread {
+                    }
+                }
+
+                override fun onStart(index: Int) {
+                    Log.i("videoCompress","onStart")
+                }
+
+                override fun onSuccess(index: Int, size: Long, path: String?) {
+                    Log.i("videoCompress","onSuccess")
+                    val file = File(path!!)
+                    val videoUri = FileProvider.getUriForFile(this@AuctionEditActivity,"com.cha.auctionapp.fileprovider",file)
+                    uploadVideoToStorage(videoUri)
+
+                    dataPart.put("video", videoUri.toString())
+                    //dataPart.put("video","https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm")
+                    var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+                    var retrofitService = retrofit.create(RetrofitService::class.java)
+                    var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
+                    call.enqueue(object : Callback<String> {
+                        override fun onResponse(call: Call<String>, response: Response<String>) {
+                            Log.i("aoirjbqoierb",response.body().toString())
+                            startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
+                            dialog.dismiss()
+                            finish()
+                        }
+                        override fun onFailure(call: Call<String>, t: Throwable) {
+                            Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+
+                override fun onFailure(index: Int, failureMessage: String) {
+                    Log.i("videoCompress","onFailure")
+                }
+
+                override fun onCancelled(index: Int) {
+                    Log.i("videoCompress","onCancelled")
+                }
+
             }
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
-            }
-        })
+        )
 
 
-        //uploadVideoToStorage(dataPart)
+
+
+
     }
 
 
@@ -137,19 +205,19 @@ class AuctionEditActivity : AppCompatActivity() {
     *       Storage 에 비디오 업로드
     *
     * */
-//    private fun uploadVideoToStorage(dataPart: HashMap<String,String>) {
-//        var videoUri = Uri.parse(intent.getStringExtra("video"))
-//        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-//        val imgRef: StorageReference =
-//            firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
-//        imgRef.putFile(videoUri).addOnSuccessListener(OnSuccessListener<Any?> {
-//            imgRef.downloadUrl.addOnSuccessListener {
-//
-//            }
-//        }).addOnFailureListener(OnFailureListener {
-//            Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
-//        })
-//    }
+    private fun uploadVideoToStorage(source: Uri) {
+        val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+        val imgRef: StorageReference =
+            firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
+        imgRef.putFile(source).addOnSuccessListener(OnSuccessListener<Any?> {
+            imgRef.downloadUrl.addOnSuccessListener {
+
+            }
+        }).addOnFailureListener(OnFailureListener {
+            Log.i("testtest",it.message.toString())
+            Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
+        })
+    }
 
 
 

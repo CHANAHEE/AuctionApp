@@ -4,4 +4,7 @@
         name="cache"
         path="."
         />
+    <external-path
+        name="video"
+        path="."/>
 </paths>

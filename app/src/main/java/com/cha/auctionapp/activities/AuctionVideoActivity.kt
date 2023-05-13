@@ -117,33 +117,15 @@ class AuctionVideoActivity : AppCompatActivity() {
         binding.btnChange.setOnClickListener { switchCamera() }
         binding.civAlbum.setOnClickListener{ clickAlbum() }
         cameraExecutor = Executors.newSingleThreadExecutor()
-        requestPermission()
-        setUpvideoCaptureButton()
         checkCameraPermission()
+        //requestPermission()
+        setUpvideoCaptureButton()
         setLatestImage()
     }
 
 
 
-    /*
-    *
-    *       퍼미션 요청
-    *
-    * */
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun requestPermission(){
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            startCamera(cameraSelector)
-        } else {
-            ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        }
-    }
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
+
 
 
 
@@ -212,7 +194,7 @@ class AuctionVideoActivity : AppCompatActivity() {
                             binding.btnNext.setOnClickListener {
                                 startActivity(Intent(this,
                                 AuctionVideoCompleteActivity::class.java)
-                                .putExtra("video",recordEvent.outputResults.outputUri.toString()))
+                                .putExtra("video",recordEvent.outputResults.outputUri))
 
                                 it.visibility = View.GONE
                             }
@@ -353,7 +335,7 @@ class AuctionVideoActivity : AppCompatActivity() {
             if(it.resultCode == RESULT_OK){
                 startActivity(Intent(this,
                     AuctionVideoCompleteActivity::class.java)
-                    .putExtra("video",it.data?.data.toString()))
+                    .putExtra("video",it.data?.data))
             }
         })
 
@@ -373,11 +355,14 @@ class AuctionVideoActivity : AppCompatActivity() {
             MediaStore.Video.VideoColumns.DATE_TAKEN,
             MediaStore.Video.VideoColumns.MIME_TYPE
         )
+        Log.i("albumTest","projection : $projection")
         val cursor = baseContext.contentResolver
             .query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-                MediaStore.Video.VideoColumns.DATE_MODIFIED + " DESC")
-        //MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC"
+                null)
 
+        Log.i("albumTest","projection : $cursor")
+        //MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC"
+        //MediaStore.Video.VideoColumns.DATE_MODIFIED + " DESC"
         if (cursor!!.moveToFirst()) {
             var latestVideoUri = cursor.getString(1)
             Glide.with(this).load(latestVideoUri).error(R.color.unable).into(binding.ivAlbum)
@@ -415,17 +400,21 @@ class AuctionVideoActivity : AppCompatActivity() {
         permissions.add(Manifest.permission.CAMERA)
         permissions.add(Manifest.permission.RECORD_AUDIO)
         permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
+        permissions.add(Manifest.permission.READ_MEDIA_VIDEO)
 
         var checkResult1 = checkSelfPermission(permissions.get(0))
         var checkResult2 = checkSelfPermission(permissions.get(1))
         var checkResult3 = checkSelfPermission(permissions.get(2))
+        var checkResult4 = checkSelfPermission(permissions.get(3))
 
         if(checkResult1 == PackageManager.PERMISSION_DENIED
             || checkResult2 == PackageManager.PERMISSION_DENIED
-            || checkResult3 == PackageManager.PERMISSION_DENIED){
+            || checkResult3 == PackageManager.PERMISSION_DENIED
+            || checkResult4 == PackageManager.PERMISSION_DENIED) {
+
             var stringArr = permissions.toTypedArray()
             launcher.launch(stringArr)
-        }
+        }else if(allPermissionsGranted()) startCamera(cameraSelector)
     }
     @RequiresApi(Build.VERSION_CODES.R)
     var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
@@ -444,9 +433,29 @@ class AuctionVideoActivity : AppCompatActivity() {
             }
             else {
                 startCamera(cameraSelector)
-                Snackbar.make(binding.root,"카메라와 오디오 사용이 허용되었습니다.",Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root,"카메라,오디오 및 파일 사용이 허용되었습니다.",Snackbar.LENGTH_SHORT).show()
             }
         }
+    }
+//
+//    /*
+//    *
+//    *       퍼미션 요청
+//    *
+//    * */
+//    @RequiresApi(Build.VERSION_CODES.R)
+//    private fun requestPermission(){
+//        // Request camera permissions
+//        if (allPermissionsGranted()) {
+//            startCamera(cameraSelector)
+//        } else {
+//            ActivityCompat.requestPermissions(
+//                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+//        }
+//    }
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 }
 

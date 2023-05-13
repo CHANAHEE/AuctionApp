@@ -117,6 +117,10 @@ dependencies {
 
     // Image compress Library
     implementation 'id.zelory:compressor:3.0.1'
+    // Video compress Library
+    implementation 'com.github.AbedElazizShe:LightCompressor:1.2.3'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
     // 화면 전환효과 라이브러리
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
