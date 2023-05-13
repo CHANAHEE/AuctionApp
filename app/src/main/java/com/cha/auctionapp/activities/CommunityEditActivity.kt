@@ -1,5 +1,6 @@
 package com.cha.auctionapp.activities
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.loader.content.CursorLoader
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -19,6 +21,10 @@ import com.cha.auctionapp.model.PictureItem
 import com.cha.auctionapp.network.RetrofitHelper
 import com.cha.auctionapp.network.RetrofitService
 import com.google.android.material.snackbar.Snackbar
+import id.zelory.compressor.Compressor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -84,12 +90,20 @@ class CommunityEditActivity : AppCompatActivity() {
         dataPart.put("longitude",longitude)
 
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
+        var imagePath = mutableListOf<String>()
         for(i in 0 until items.size){
-            var imagePath = getRealPathFromUri(items[i].uri)
-            val file: File = File(imagePath)
-            val body = file.asRequestBody("image/*".toMediaTypeOrNull())
-            fileImagePart.add(i, MultipartBody.Part.createFormData("image${i}",file.name,body))
+            imagePath.add(getFilePathFromUri(items[i].uri)!!)
         }
+        var coroutine = GlobalScope.launch {
+            for(i in 0 until items.size){
+                val file: File = File(imagePath[i])
+                val imageCompressed = Compressor.compress(this@CommunityEditActivity,file)
+                val body = imageCompressed.asRequestBody("image/*".toMediaTypeOrNull())
+                fileImagePart.add(i, MultipartBody.Part.createFormData("image${i}",imageCompressed.name,body))
+            }
+        }
+
+        runBlocking { coroutine.join() }
 
 
         /*
@@ -111,17 +125,21 @@ class CommunityEditActivity : AppCompatActivity() {
 
     /*
     *
-    *       Uri -> Filepath
+    *       Uri -> File 변환
     *
     * */
-    fun getRealPathFromUri(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        if (cursor != null && cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            return cursor.getString(columnIndex)
-        }
-        return null
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
     }
 
     /*
@@ -160,6 +178,7 @@ class CommunityEditActivity : AppCompatActivity() {
         launcher.launch(intent)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     var launcher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {

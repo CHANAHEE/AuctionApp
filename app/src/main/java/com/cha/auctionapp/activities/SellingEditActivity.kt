@@ -18,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.loader.content.CursorLoader
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
 import com.cha.auctionapp.adapters.PictureAdapter
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -104,7 +106,9 @@ class SellingEditActivity : AppCompatActivity() {
             if(it.resultCode == RESULT_OK){
                 var clipData = it.data?.clipData!!
                 var size = clipData.itemCount
-                for(i in 0 until size) items.add(PictureItem(clipData.getItemAt(i).uri))
+                for(i in 0 until size) {
+                    items.add(PictureItem(clipData.getItemAt(i).uri))
+                }
                 binding.recycler.adapter?.notifyDataSetChanged()
                 binding.btnImage.text = "${items.size} / 10"
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
@@ -210,37 +214,38 @@ class SellingEditActivity : AppCompatActivity() {
 
         // 보낼 이미지 데이터들
         var fileImagePart: MutableList<MultipartBody.Part> = mutableListOf()
+        var imagePath = mutableListOf<String>()
         for(i in 0 until items.size){
-            var imagePath = getRealPathFromUri(items[i].uri)
-            val file: File = File(imagePath)
-            GlobalScope.launch {
+            imagePath.add(getFilePathFromUri(items[i].uri)!!)
+        }
+        val coroutine = GlobalScope.launch {
+            for(i in 0 until items.size){
+                val file: File = File(imagePath[i])
                 val imageCompressed = Compressor.compress(this@SellingEditActivity,file)
                 val body = imageCompressed.asRequestBody("image/*".toMediaTypeOrNull())
                 fileImagePart.add(i,MultipartBody.Part.createFormData("image${i}",imageCompressed.name,body))
-
-                /*
-                *       Retrofit 작업 시작
-                * */
-                var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
-                var retrofitService = retrofit.create(RetrofitService::class.java)
-                var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
-                call.enqueue(object : Callback<String>{
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        Log.i("avzxcv",response.body().toString())
-                        dialog.dismiss()
-                        finish()
-                    }
-
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.i("avzxcv",t.message.toString())
-                        Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
-                    }
-                })
             }
         }
 
+        runBlocking { coroutine.join() }
+        /*
+        *       Retrofit 작업 시작
+        * */
+        var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
+        var retrofitService = retrofit.create(RetrofitService::class.java)
+        var call: Call<String> = retrofitService.postDataToServerForHomeFragment(dataPart,fileImagePart)
+        call.enqueue(object : Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.i("avzxcv",response.body().toString())
+                dialog.dismiss()
+                finish()
+            }
 
-
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.i("avzxcv",t.message.toString())
+                Snackbar.make(binding.root,"서버 작업에 오류가 생겼습니다.",Snackbar.LENGTH_SHORT)
+            }
+        })
     }
 
 
@@ -248,18 +253,21 @@ class SellingEditActivity : AppCompatActivity() {
 
     /*
     *
-    *       Retrofit 으로 사진 파일 전송 시, Uri 주소가 아닌 실제 주소 필요. 변환해주는 함수
+    *       Uri -> File 변환
     *
     * */
-
-    fun getRealPathFromUri(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        if (cursor != null && cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            return cursor.getString(columnIndex)
-        }
-        return null
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
     }
 
 
