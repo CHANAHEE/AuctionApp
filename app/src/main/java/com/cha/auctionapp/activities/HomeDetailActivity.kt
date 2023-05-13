@@ -111,8 +111,6 @@ class HomeDetailActivity : AppCompatActivity() {
                 binding.pager.adapter = PagerAdapter(this@HomeDetailActivity,imageListUri)
                 binding.dotsIndicator.attachTo(binding.pager)
 
-
-
                 binding.shimmerViewContainer.stopShimmer()
                 binding.relativeHomeDetail.visibility = View.VISIBLE
                 binding.shimmerViewContainer.visibility = View.GONE
@@ -173,7 +171,6 @@ class HomeDetailActivity : AppCompatActivity() {
     *       Room DB 활용한 찜기능 구현
     *
     * */
-
     private fun loadMyFavItem(){
         val db = Room.databaseBuilder(
             this@HomeDetailActivity,

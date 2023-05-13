@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.loader.content.CursorLoader
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
@@ -24,6 +25,10 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import id.zelory.compressor.Compressor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 
 
 class MyProfileEditActivity : AppCompatActivity() {
@@ -57,7 +62,6 @@ class MyProfileEditActivity : AppCompatActivity() {
 
         Glide.with(this).load(G.profileImg).error(R.drawable.default_profile).into(binding.civProfile)
         binding.etNickname.setText(G.nickName)
-        //loadProfileFromFirestore(G.userAccount.id)
     }
 
 
@@ -83,7 +87,9 @@ class MyProfileEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickProfileImage() {
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).apply {
+            type = "image/*"
+        }
         pickLauncher.launch(intent)
     }
     var pickLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
@@ -92,29 +98,23 @@ class MyProfileEditActivity : AppCompatActivity() {
             Glide.with(this).load(it.data?.data).error(R.drawable.default_profile).into(binding.civProfile)
             binding.civProfile.tag = CHANGED_PROFILE
 
-            val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-            val fileName = "profile/IMG_" + G.userAccount.id + ".jpg"
-            val imgRef: StorageReference =
-                firebaseStorage.getReference(fileName)
+            val file = File(getFilePathFromUri(it.data!!.data)!!)
+            GlobalScope.launch {
+                val imageCompress = Compressor.compress(this@MyProfileEditActivity,file)
+                val cacheUri = FileProvider.getUriForFile(this@MyProfileEditActivity,"com.cha.auctionapp.fileprovider",imageCompress)
+                val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+                val fileName = "profile/IMG_" + G.userAccount.id + ".jpg"
+                val imgRef: StorageReference =
+                    firebaseStorage.getReference(fileName)
 
-            imgRef.putFile(it.data?.data!!)
+                imgRef.putFile(cacheUri)
+            }
         }
     }
-    /*
-    *
-    *       기본 프로필 설정
-    *
-    * */
-    private fun loadProfileFromFirestore(profile: String){
-        val firebaseStorage = FirebaseStorage.getInstance()
-        val rootRef = firebaseStorage.reference
-        val imgRef = rootRef.child("profile/IMG_$profile.jpg")
-        imgRef.downloadUrl.addOnSuccessListener { p0 ->
-            Glide.with(this@MyProfileEditActivity).load(p0).error(R.drawable.default_profile)
-                .into(binding.civProfile)
-        }.addOnFailureListener {
-        }
-    }
+
+
+
+
     /*
     *
     *       Uri -> File 변환
@@ -133,6 +133,9 @@ class MyProfileEditActivity : AppCompatActivity() {
         cursor.close()
         return result
     }
+
+
+
 
     /*
     *

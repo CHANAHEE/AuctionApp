@@ -39,28 +39,24 @@ import java.text.NumberFormat
 
 class ChattingActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityChattingBinding
-
     var messageIndex = 0
     var lastOtherMessageIndex = 0
-
     var latitude: String = ""
     var longitude: String = ""
-
+    var firestore = FirebaseFirestore.getInstance()
+    var collectionName: String? = null
+    var chatRef = firestore.collection("chat")
     lateinit var otherNickname: String
     lateinit var otherID: String
     lateinit var otherProfile: String
-
+    lateinit var binding: ActivityChattingBinding
     lateinit var items: MutableList<PictureItem>
     lateinit var messageItem: MutableList<MessageItem>
     lateinit var pictureSelectedItem: MutableList<Uri>
     lateinit var pictureItem: MutableList<Uri>
-    var firestore = FirebaseFirestore.getInstance()
-    var collectionName: String? = null
     lateinit var chatRoomNameRef: DocumentReference
-    var chatRef = firestore.collection("chat")
-
     lateinit var baseAddr: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)

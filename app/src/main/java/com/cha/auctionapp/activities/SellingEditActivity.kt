@@ -134,6 +134,9 @@ class SellingEditActivity : AppCompatActivity() {
         override fun afterTextChanged(p0: Editable?) {
         }
     }
+
+
+
     /*
     *
     *       카테고리 선택 버튼 : 카테고리 관련 정보 넣어서 다이얼로그 띄우기
@@ -200,7 +203,6 @@ class SellingEditActivity : AppCompatActivity() {
         dataPart.put("tradingplace",location)
         dataPart.put("nickname",G.nickName)
         dataPart.put("location",G.location)
-        Log.i("qerbrbq",G.userAccount.id)
         dataPart.put("id",G.userAccount.id)
         dataPart.put("latitude",latitude)
         dataPart.put("longitude",longitude)
