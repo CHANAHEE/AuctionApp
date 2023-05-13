@@ -6,256 +6,508 @@
     android:layout_height="match_parent"
     tools:context="com.cha.auctionapp.activities.AuctionDetailActivity">
 
-    <RelativeLayout
-        android:id="@+id/container_video"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:background="#505050">
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
 
-
-        <VideoView
-            android:id="@+id/videoview"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/btn_back"
+            <RelativeLayout
+                android:id="@+id/container_video_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:background="#505050">
+
+
+                <VideoView
+                    android:id="@+id/videoview_shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#9F9C9C"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true" />
+
+
+            </RelativeLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_profile_shimmer"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/container_video_shimmer"
+                android:src="#9F9C9C"
+                android:layout_margin="20dp"/>
+
+            <TextView
+                android:id="@+id/tv_id_shimmer"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:background="#9F9C9C"
+                android:layout_toRightOf="@id/civ_profile_shimmer"
+                android:layout_alignTop="@id/civ_profile_shimmer"
+                android:fontFamily="@font/brandfont"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_town_info_shimmer"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:background="#9F9C9C"
+                android:layout_toRightOf="@id/civ_profile_shimmer"
+                android:layout_below="@id/tv_id_shimmer"
+                android:fontFamily="@font/brandfont"
+                android:textSize="13sp"
+                android:layout_marginTop="5dp"
+                />
+
+            <View
+                android:id="@+id/view1_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/tv_town_info_shimmer"
+                android:background="#3C000000"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_item_name_shimmer"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="#9F9C9C"
+                android:textSize="20sp"
+                android:fontFamily="@font/brandfont"
+                android:layout_below="@id/view1_shimmer"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_category_shimmer"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:background="#9F9C9C"
+                android:fontFamily="@font/brandfont"
+                android:textSize="12sp"
+                android:layout_below="@id/tv_item_name_shimmer"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"/>
+
+            <TextView
+                android:id="@+id/tv_description_shimmer"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="#9F9C9C"
+                android:textSize="15sp"
+                android:fontFamily="@font/brandfont"
+                android:layout_below="@id/tv_category_shimmer"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"/>
+
+
+            <RelativeLayout
+                android:id="@+id/relative_location_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_description_shimmer"
+                android:background="@drawable/bg_location_select"
+                android:layout_marginTop="10dp"
+                android:layout_alignLeft="@id/tv_description_shimmer"
+                android:layout_alignRight="@id/view1_shimmer"
+                android:padding="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_location_shimmer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/map_location"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/tv_location_name_shimmer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="장소 이름"
+                    android:layout_toRightOf="@id/iv_location_shimmer"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/brandfont"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"/>
+
+            </RelativeLayout>
+
+
+            <View
+                android:id="@+id/view2_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/relative_shimmer"
+                android:background="#3C000000"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+
+            <RelativeLayout
+                android:id="@+id/relative_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_alignParentBottom="true"
+                android:padding="8dp">
+
+
+
+                <View
+                    android:id="@+id/view3_shimmer"
+                    android:layout_width="1dp"
+                    android:layout_height="50dp"
+                    android:background="#3C000000"
+                    android:layout_toRightOf="@id/ib_fav_shimmer"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/ib_fav_shimmer"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_fav"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_price_shimmer"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/view3_shimmer"
+                    android:background="#9F9C9C"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="10dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_bid_shimmer"
+                    android:layout_width="110dp"
+                    android:layout_height="35dp"
+                    android:background="#9F9C9C"
+                    android:fontFamily="@font/brandfont"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_chat_shimmer"
+                    android:layout_width="110dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_btn"
+                    android:fontFamily="@font/brandfont"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:text="채 팅 하 기"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+
+
+            <FrameLayout
+                android:id="@+id/container_bottomsheet_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/black"/>
+        </RelativeLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_auction_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/container_video"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:background="#505050">
+
+
+            <VideoView
+                android:id="@+id/videoview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true" />
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_back"
+                app:tint="@color/white"
+                android:background="@null"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="10dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_bid_time"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="12:00:00"
+                android:gravity="center"
+                android:textColor="#80FFFFFF"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_bid_time"
+                android:padding="10dp"/>
+
+        </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_profile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_below="@id/container_video"
+            android:layout_margin="20dp"/>
+
+        <TextView
+            android:id="@+id/tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_back"
-            app:tint="@color/white"
-            android:background="@null"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="10dp"
+            android:text="판매자 ID"
+            android:layout_toRightOf="@id/civ_profile"
+            android:layout_alignTop="@id/civ_profile"
+            android:fontFamily="@font/brandfont"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
             />
 
         <TextView
-            android:id="@+id/tv_bid_time"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="12:00:00"
-            android:gravity="center"
-            android:textColor="#80FFFFFF"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_bid_time"
-            android:padding="10dp"/>
-
-    </RelativeLayout>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civ_profile"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@mipmap/ic_launcher_round"
-        android:layout_below="@id/container_video"
-        android:layout_margin="20dp"/>
-
-    <TextView
-        android:id="@+id/tv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="판매자 ID"
-        android:layout_toRightOf="@id/civ_profile"
-        android:layout_alignTop="@id/civ_profile"
-        android:fontFamily="@font/brandfont"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_town_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="동네 이름"
-        android:layout_toRightOf="@id/civ_profile"
-        android:layout_below="@id/tv_id"
-        android:fontFamily="@font/brandfont"
-        android:textSize="13sp"
-        android:layout_marginTop="5dp"
-        />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/tv_town_info"
-        android:background="#3C000000"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="상품명"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandfont"
-        android:layout_below="@id/view1"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/tv_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="카테고리"
-        android:fontFamily="@font/brandfont"
-        android:textSize="12sp"
-        android:layout_below="@id/tv_item_name"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"/>
-
-    <TextView
-        android:id="@+id/tv_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="상품내용"
-        android:textSize="15sp"
-        android:fontFamily="@font/brandfont"
-        android:layout_below="@id/tv_category"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"/>
-
-
-    <RelativeLayout
-        android:id="@+id/relative_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_description"
-        android:background="@drawable/bg_location_select"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@id/tv_description"
-        android:layout_alignRight="@id/view1"
-        android:padding="12dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/iv_location"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/map_location"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"/>
-
-        <TextView
-            android:id="@+id/tv_location_name"
+            android:id="@+id/tv_town_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 이름"
-            android:layout_toRightOf="@id/iv_location"
-            android:textSize="18sp"
+            android:text="동네 이름"
+            android:layout_toRightOf="@id/civ_profile"
+            android:layout_below="@id/tv_id"
             android:fontFamily="@font/brandfont"
-            android:textStyle="bold"
-            android:layout_centerVertical="true"
+            android:textSize="13sp"
+            android:layout_marginTop="5dp"
+            />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tv_town_info"
+            android:background="#3C000000"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="상품명"
+            android:textSize="20sp"
+            android:fontFamily="@font/brandfont"
+            android:layout_below="@id/view1"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카테고리"
+            android:fontFamily="@font/brandfont"
+            android:textSize="12sp"
+            android:layout_below="@id/tv_item_name"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"/>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="상품내용"
+            android:textSize="15sp"
+            android:fontFamily="@font/brandfont"
+            android:layout_below="@id/tv_category"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"/>
 
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/relative"
-        android:background="#3C000000"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        />
+        <RelativeLayout
+            android:id="@+id/relative_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_description"
+            android:background="@drawable/bg_location_select"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@id/tv_description"
+            android:layout_alignRight="@id/view1"
+            android:padding="12dp"
+            android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/iv_location"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/map_location"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"/>
 
-    <RelativeLayout
-        android:id="@+id/relative"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp">
+            <TextView
+                android:id="@+id/tv_location_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소 이름"
+                android:layout_toRightOf="@id/iv_location"
+                android:textSize="18sp"
+                android:fontFamily="@font/brandfont"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"/>
 
+        </RelativeLayout>
 
 
         <View
-            android:id="@+id/view3"
-            android:layout_width="1dp"
-            android:layout_height="50dp"
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/relative"
             android:background="#3C000000"
-            android:layout_toRightOf="@id/ib_fav"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             />
 
-        <ImageButton
-            android:id="@+id/ib_fav"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/bg_fav"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            />
 
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view3"
-            android:text="상품가격"
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/brandfont"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"/>
+            android:padding="8dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_bid"
-            android:layout_width="110dp"
-            android:layout_height="35dp"
-            android:background="@drawable/bg_btn"
-            android:fontFamily="@font/brandfont"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:text="입 찰 하 기"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:textStyle="bold"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_chat"
-            android:layout_width="110dp"
-            android:layout_height="35dp"
-            android:background="@drawable/bg_btn"
-            android:fontFamily="@font/brandfont"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:text="채 팅 하 기"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                android:background="#3C000000"
+                android:layout_toRightOf="@id/ib_fav"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <ImageButton
+                android:id="@+id/ib_fav"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_fav"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/view3"
+                android:text="상품가격"
+                android:layout_alignParentBottom="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/brandfont"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_bid"
+                android:layout_width="110dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_btn"
+                android:fontFamily="@font/brandfont"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="입 찰 하 기"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_chat"
+                android:layout_width="110dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_btn"
+                android:fontFamily="@font/brandfont"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="채 팅 하 기"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+
+
+        <FrameLayout
+            android:id="@+id/container_bottomsheet"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:textStyle="bold"
-            android:visibility="gone"/>
+            android:backgroundTint="@color/black"/>
     </RelativeLayout>
 
-
-
-    <FrameLayout
-        android:id="@+id/container_bottomsheet"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/black"/>
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.cha.auctionapp.G
 import com.cha.auctionapp.R
@@ -40,6 +41,9 @@ class HomeFragment : Fragment() {
         binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
         binding.fabEdit.setOnClickListener { startActivity(Intent(context,SellingEditActivity::class.java)) }
         binding.refreshLayout.setOnRefreshListener { clickRefresh() }
+
+        binding.refreshLayout.visibility = View.GONE
+        binding.shimmerRecyclerView.showShimmerAdapter()
     }
 
     fun setData(items: MutableList<MainItem>){
@@ -70,6 +74,9 @@ class HomeFragment : Fragment() {
                     }
                     binding.recycler.adapter = ProductAdapter(requireContext(),mainItem)
                     binding.refreshLayout.isRefreshing = false
+
+                    binding.refreshLayout.visibility = View.VISIBLE
+                    binding.shimmerRecyclerView.visibility = View.GONE
                 }
 
                 override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {

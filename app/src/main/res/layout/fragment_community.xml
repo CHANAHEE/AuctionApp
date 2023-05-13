@@ -74,6 +74,19 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
+    <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+        android:id="@+id/shimmer_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appbar"
+        app:shimmer_demo_child_count="10"
+        app:shimmer_demo_layout="@layout/recycler_community_item_shimmer"
+        app:shimmer_demo_layout_manager_type="linear_vertical"
+        app:shimmer_demo_duration="3000"
+        app:shimmer_demo_angle="20"
+        />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"

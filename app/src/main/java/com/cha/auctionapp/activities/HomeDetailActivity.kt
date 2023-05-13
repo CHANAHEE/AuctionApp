@@ -57,6 +57,10 @@ class HomeDetailActivity : AppCompatActivity() {
         binding.btnChat.setOnClickListener { clickChatBtn() }
         loadDataFromServer()
 
+        binding.shimmerViewContainer.startShimmer()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+        binding.relativeHomeDetail.visibility = View.GONE
+
         // status bar 투명으로 만들기 : theme.xml , manifest 파일
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         else window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -80,8 +84,10 @@ class HomeDetailActivity : AppCompatActivity() {
             ) {
                 items = mutableListOf()
                 items = response.body()!!
-
                 var item = items[0]
+
+                loadProfileFromFirebase()
+                loadMyFavItem()
 
                 binding.tvTownInfo.text = item.location
                 binding.tvItemName.text = item.title
@@ -105,8 +111,12 @@ class HomeDetailActivity : AppCompatActivity() {
                 binding.pager.adapter = PagerAdapter(this@HomeDetailActivity,imageListUri)
                 binding.dotsIndicator.attachTo(binding.pager)
 
-                loadProfileFromFirebase()
-                loadMyFavItem()
+
+
+                binding.shimmerViewContainer.stopShimmer()
+                binding.relativeHomeDetail.visibility = View.VISIBLE
+                binding.shimmerViewContainer.visibility = View.GONE
+
             }
             override fun onFailure(call: Call<MutableList<HomeDetailItem>>, t: Throwable) {
             }
