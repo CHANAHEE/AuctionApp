@@ -152,7 +152,11 @@ class CommunityEditActivity : AppCompatActivity() {
     private fun clickPicture() {
         binding.etTitle.clearFocus()
         binding.etDecription.clearFocus()
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,5-items.size)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+            .putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,5-items.size)
+            .apply {
+                type = "image/*"
+            }
         launcher.launch(intent)
     }
 
@@ -167,7 +171,6 @@ class CommunityEditActivity : AppCompatActivity() {
                     items.add(PictureItem(clipData.getItemAt(i).uri))
                 }
                 binding.recycler.adapter?.notifyDataSetChanged()
-
             }
         })
 

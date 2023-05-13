@@ -90,7 +90,9 @@ class SellingEditActivity : AppCompatActivity() {
     *
     * */
     private fun clickPicture() {
-        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size)
+        var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES).putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX,10-items.size).apply {
+            type = "image/*"
+        }
         launcherPictureSelect.launch(intent)
     }
 //    private fun clickPicture() {
@@ -108,6 +110,7 @@ class SellingEditActivity : AppCompatActivity() {
                 if(items.size == 10) binding.btnImage.visibility = View.GONE
             }
         })
+
 
 
     /*
