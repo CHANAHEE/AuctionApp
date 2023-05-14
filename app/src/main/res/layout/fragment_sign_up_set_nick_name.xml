@@ -66,7 +66,23 @@
                 android:enabled="false"/>
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_alert_nickname_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear"
+            android:text="3글자 이상으로 설정해주세요"
+            android:textColor="@color/edit_fail"
+            android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/tv_alert_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear"
+            android:text="숫자와 한글, 영문자만 사용가능 합니다."
+            android:textColor="@color/edit_fail"
+            android:visibility="gone"/>
 
 
     </RelativeLayout>

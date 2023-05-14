@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.cha.auctionapp.G
@@ -70,6 +71,10 @@ class AuctionDetailActivity : AppCompatActivity() {
         binding.btnBid.setOnClickListener { clickBidBtn() }
         binding.btnBack.setOnClickListener { finish() }
 
+        binding.shimmerViewContainer.startShimmer()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+        binding.relativeAuctionDetail.visibility = View.GONE
+
         myAuctionPostlistItems = mutableListOf()
         loadDataFromServer()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -115,6 +120,11 @@ class AuctionDetailActivity : AppCompatActivity() {
                 loadMyFavItem()
                 bidTimer(item)
 
+                if(binding.shimmerViewContainer.isShimmerStarted) {
+                    binding.shimmerViewContainer.stopShimmer()
+                    binding.relativeAuctionDetail.visibility = View.VISIBLE
+                    binding.shimmerViewContainer.visibility = View.GONE
+                }
             }
             override fun onFailure(call: Call<MutableList<AuctionDetailItem>>, t: Throwable) {
             }

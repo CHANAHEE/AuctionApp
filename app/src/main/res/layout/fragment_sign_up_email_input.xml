@@ -53,6 +53,7 @@
                 android:textCursorDrawable="@drawable/edit_cursor"
                 />
 
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_certify_email"
                 android:layout_width="wrap_content"
@@ -67,27 +68,53 @@
                 android:background="@drawable/bg_btn"
                 android:enabled="false"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_alert_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear"
+            android:text="올바른 이메일 형식이 아닙니다."
+            android:fontFamily="@font/brandfont"
+            android:textColor="@color/edit_fail"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            />
 
         <EditText
             android:id="@+id/et_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/linear"
-            android:hint="비밀번호 (8자리 이상으로 입력해주세요)"
+            android:layout_below="@id/tv_alert_email"
+            android:hint="비밀번호 (숫자,문자,특수문자 포함 8~12 자리)"
             android:inputType="textPassword"
             android:fontFamily="@font/brandfont"
             android:textStyle="bold"
             android:textColorHint="#6A020202"
             android:textCursorDrawable="@drawable/edit_cursor"
             android:backgroundTint="@color/brand"
-            android:clipToOutline="false"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:clipToOutline="false"/>
+
+        <TextView
+            android:id="@+id/tv_alert_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_pass"
+            android:text="숫자,문자,특수문자 포함 8~12 자리로 작성해주세요"
+            android:fontFamily="@font/brandfont"
+            android:textColor="@color/edit_fail"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            />
 
         <EditText
             android:id="@+id/et_pass_certify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_pass"
+            android:layout_below="@id/tv_alert_password"
             android:hint="비밀번호 확인"
             android:inputType="textPassword"
             android:fontFamily="@font/brandfont"
@@ -97,6 +124,19 @@
             android:backgroundTint="@color/brand"
             android:clipToOutline="false"
             android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_alert_pass_certify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_pass_certify"
+            android:text="비밀번호가 동일하지 않습니다."
+            android:fontFamily="@font/brandfont"
+            android:textColor="@color/edit_fail"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <LinearLayout

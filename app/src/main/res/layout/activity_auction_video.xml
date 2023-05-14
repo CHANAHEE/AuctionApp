@@ -21,15 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <!-- 29_ 이제 캡처버튼을 만들자 -->
-<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fab"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:backgroundTint="@color/white"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:layout_marginBottom="10dp"/>-->
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -72,6 +72,9 @@ class CommunityFragment : Fragment() {
 
         searchItems = mutableListOf()
         setUpPopupMenu()
+
+        binding.refreshLayout.visibility = View.GONE
+        binding.shimmerRecyclerView.showShimmerAdapter()
     }
 
     override fun onResume() {
@@ -99,6 +102,9 @@ class CommunityFragment : Fragment() {
                     communityItems.sortByDescending { it.idx }
                     binding.recycler.adapter = CommunityAdapter(requireContext(),communityItems)
                     binding.refreshLayout.isRefreshing = false
+
+                    binding.refreshLayout.visibility = View.VISIBLE
+                    binding.shimmerRecyclerView.visibility = View.GONE
                 }
                 override fun onFailure(call: Call<MutableList<CommunityPostItem>>, t: Throwable) {
                     Log.i("test01","${t.message}")

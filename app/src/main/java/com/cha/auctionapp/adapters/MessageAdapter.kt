@@ -155,9 +155,11 @@ class MessageAdapter(var context: Context, var items: MutableList<MessageItem>) 
             val gridLayoutManager = GridLayoutManager(context,1)
 
             when(items[position].imageSize){
+                1->gridLayoutManager.spanCount = 1
                 2->gridLayoutManager.spanCount = 2
                 3->gridLayoutManager.spanCount = 2
                 4->gridLayoutManager.spanCount = 2
+                5->gridLayoutManager.spanCount = 2
             }
 
             holder.picture.layoutManager = gridLayoutManager

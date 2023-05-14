@@ -7,254 +7,461 @@
     android:layout_above="@android:id/navigationBarBackground"
     tools:context=".activities.HomeDetailActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
-        android:layout_height="280dp">
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/teal_700"/>
-
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_action_back"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="25dp"
-                />
-            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                android:id="@+id/dots_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:dotsColor="#248513"
-                app:selectedDotColor="@color/brand"
-                app:dotsCornerRadius="8dp"
-                app:dotsSize="8dp"
-                app:dotsSpacing="4dp"
-                app:dotsWidthFactor="2.5"
-                app:progressMode="true"
-                android:layout_gravity="center|bottom"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:padding="20dp"
-                />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/appbar"
-        android:layout_above="@id/relative"
-        app:layout_behavior ="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civ_profile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@mipmap/ic_launcher_round"
-                android:layout_margin="20dp"/>
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="280dp">
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="판매자 ID"
-                android:layout_toRightOf="@id/civ_profile"
-                android:layout_alignTop="@id/civ_profile"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/brandfont"
-                android:layout_marginTop="5dp"
-                />
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/pager_shimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#9C9C9C"/>
 
-            <TextView
-                android:id="@+id/tv_town_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="동네 이름"
-                android:layout_toRightOf="@id/civ_profile"
-                android:layout_below="@id/tv_id"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/brandfont"
-                android:layout_marginTop="5dp"
-                />
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar_shimmer"
+                android:layout_above="@id/relative_shimmer"
+                app:layout_behavior ="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/civ_profile_shimmer"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="#CDCDCD"
+                        android:layout_margin="20dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_id_shimmer"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:background="#CDCDCD"
+                        android:layout_toRightOf="@id/civ_profile_shimmer"
+                        android:layout_alignTop="@id/civ_profile_shimmer"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_town_info_shimmer"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:background="#CDCDCD"
+                        android:layout_toRightOf="@id/civ_profile_shimmer"
+                        android:layout_below="@id/tv_id_shimmer"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <View
+                        android:id="@+id/view1_shimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/tv_town_info_shimmer"
+                        android:background="#3C000000"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_item_name_shimmer"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:background="#CDCDCD"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:layout_below="@id/view1_shimmer"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_category_shimmer"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:background="#CDCDCD"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:layout_below="@id/tv_item_name_shimmer"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="20dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_description_shimmer"
+                        android:layout_width="300dp"
+                        android:layout_height="100dp"
+                        android:background="#CDCDCD"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/brandfont"
+                        android:layout_below="@id/tv_category_shimmer"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </RelativeLayout>
+            </androidx.core.widget.NestedScrollView>
 
             <View
-                android:id="@+id/view1"
+                android:id="@+id/view4_shimmer"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/tv_town_info"
+                android:layout_above="@id/relative_shimmer"
                 android:background="#3C000000"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 />
 
-            <TextView
-                android:id="@+id/tv_item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="상품명tkdvㅇㅇㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/brandfont"
-                android:layout_below="@id/view1"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"/>
-
-            <TextView
-                android:id="@+id/tv_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="카테고리"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/brandfont"
-                android:layout_below="@id/tv_item_name"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="20dp"/>
-
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="상품내용상품내용상품내"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/brandfont"
-                android:layout_below="@id/tv_category"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="20dp"/>
-
-
             <RelativeLayout
-                android:id="@+id/relative_location"
+                android:id="@+id/relative_shimmer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_description"
-                android:background="@drawable/bg_location_select"
-                android:layout_marginTop="10dp"
-                android:layout_alignLeft="@id/tv_description"
-                android:layout_alignRight="@id/view1"
-                android:padding="12dp"
-                android:visibility="gone">
+                android:layout_height="70dp"
+                android:layout_alignParentBottom="true"
+                android:padding="8dp">
 
-                <ImageView
-                    android:id="@+id/iv_location"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/map_location"
+
+
+                <View
+                    android:id="@+id/view3_shimmer"
+                    android:layout_width="1dp"
+                    android:layout_height="50dp"
+                    android:background="#3C000000"
+                    android:layout_toRightOf="@id/ib_fav_shimmer"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/ib_fav_shimmer"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edit"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    />
 
                 <TextView
-                    android:id="@+id/tv_location_name"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_price_shimmer"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="장소 이름"
-                    android:layout_toRightOf="@id/iv_location"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/brandfont"
+                    android:layout_toRightOf="@id/view3_shimmer"
+                    android:background="#CDCDCD"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"/>
+                    android:fontFamily="@font/brandfont"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="10dp"/>
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_chat_shimmer"
+                    android:layout_width="110dp"
+                    android:layout_height="35dp"
+                    android:background="#CDCDCD"
+                    android:fontFamily="@font/brandfont"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"/>
             </RelativeLayout>
-
         </RelativeLayout>
-    </androidx.core.widget.NestedScrollView>
 
 
-
-
-
-
-    <View
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/relative"
-        android:background="#3C000000"
-        />
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <RelativeLayout
-        android:id="@+id/relative"
+        android:id="@+id/relative_home_detail"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp">
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="280dp">
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/teal_700"/>
+
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_action_back"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    />
+                <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                    android:id="@+id/dots_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:dotsColor="#248513"
+                    app:selectedDotColor="@color/brand"
+                    app:dotsCornerRadius="8dp"
+                    app:dotsSize="8dp"
+                    app:dotsSpacing="4dp"
+                    app:dotsWidthFactor="2.5"
+                    app:progressMode="true"
+                    android:layout_gravity="center|bottom"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:padding="20dp"
+                    />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appbar"
+            android:layout_above="@id/relative"
+            app:layout_behavior ="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/civ_profile"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="#CDCDCD"
+                    android:layout_margin="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="판매자 ID"
+                    android:layout_toRightOf="@id/civ_profile"
+                    android:layout_alignTop="@id/civ_profile"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_town_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="동네 이름"
+                    android:layout_toRightOf="@id/civ_profile"
+                    android:layout_below="@id/tv_id"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/tv_town_info"
+                    android:background="#3C000000"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상품명tkdvㅇㅇㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_below="@id/view1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="카테고리"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_below="@id/tv_item_name"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상품내용상품내용상품내"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/brandfont"
+                    android:layout_below="@id/tv_category"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/relative_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_description"
+                    android:background="@drawable/bg_location_select"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignLeft="@id/tv_description"
+                    android:layout_alignRight="@id/view1"
+                    android:padding="12dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/map_location"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_location_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="장소 이름"
+                        android:layout_toRightOf="@id/iv_location"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/brandfont"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+
 
 
 
         <View
-            android:id="@+id/view3"
-            android:layout_width="1dp"
-            android:layout_height="50dp"
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/relative"
             android:background="#3C000000"
-            android:layout_toRightOf="@id/ib_fav"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
             />
 
-        <ImageButton
-            android:id="@+id/ib_fav"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/bg_fav"
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            />
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view3"
-            android:text="상품가격"
-            android:layout_alignParentBottom="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/brandfont"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_chat"
-            android:layout_width="110dp"
-            android:layout_height="35dp"
-            android:background="@drawable/bg_btn"
-            android:fontFamily="@font/brandfont"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:text="채 팅 하 기"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:textStyle="bold"/>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                android:background="#3C000000"
+                android:layout_toRightOf="@id/ib_fav"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <ImageButton
+                android:id="@+id/ib_fav"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_fav"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/view3"
+                android:text="상품가격"
+                android:layout_alignParentBottom="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/brandfont"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_chat"
+                android:layout_width="110dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_btn"
+                android:fontFamily="@font/brandfont"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="채 팅 하 기"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
 

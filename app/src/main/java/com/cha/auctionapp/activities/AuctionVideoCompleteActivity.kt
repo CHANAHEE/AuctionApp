@@ -4,15 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.VideoView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.exifinterface.media.ExifInterface
+import androidx.loader.content.CursorLoader
 import com.cha.auctionapp.R
 import com.cha.auctionapp.databinding.ActivityAuctionVideoCompleteBinding
 import com.google.android.exoplayer2.ExoPlayer
@@ -24,101 +27,57 @@ class AuctionVideoCompleteActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAuctionVideoCompleteBinding
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = com.cha.auctionapp.databinding.ActivityAuctionVideoCompleteBinding.inflate(layoutInflater)
+        binding = ActivityAuctionVideoCompleteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun init() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
-        var videoUri = Uri.parse(intent.getStringExtra("video"))
-        Log.i("test123scbv",videoUri.toString())
-        var videopath = getRealPathFromUri(videoUri)
-
-        binding.videoview.setVideoPath(videopath)
-        var rotation = getImageOrientation(videopath!!)
-        Log.i("rotateTest",rotation.toString())
-        binding.videoview.setOnPreparedListener {
-            binding.videoview.start()
-            val retriever = MediaMetadataRetriever()
-            retriever.setDataSource("$videopath")
-            val width =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
-            val height =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
-
-            retriever.release()
-            Log.i("videoTest3","$width : $height")
+        setVideoView()
+        val videoUri : Uri? = intent.getParcelableExtra("video",Uri::class.java)
+        binding.videoview.setOnPreparedListener { binding.videoview.start() }
+        binding.btnComplete.setOnClickListener {
+            startActivity(Intent(this,AuctionEditActivity::class.java)
+            .putExtra("video",videoUri))
         }
-
-        binding.videoview.setOnCompletionListener { binding.videoview.start() }
-
-        binding.btnComplete.setOnClickListener { startActivity(Intent(this,AuctionEditActivity::class.java).putExtra("video",videoUri.toString())) }
         binding.btnBack.setOnClickListener { finish() }
-
-    }
-
-//    private fun init() {
-//        var exoPlayer: ExoPlayer = ExoPlayer.Builder(this).build()
-//        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
-//        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-//
-//
-//        var videoUri = Uri.parse(intent.getStringExtra("video"))
-//        var mediaItem: MediaItem = MediaItem.fromUri(videoUri)
-//        binding.videoview.player = exoPlayer
-//        exoPlayer.prepare()
-//        exoPlayer.setMediaItem(mediaItem)
-//        exoPlayer.repeatMode = ExoPlayer.REPEAT_MODE_ALL
-//
-//
-//    }
-
-    fun getImageOrientation(path: String): Int {
-        var rotation = 0
-        try {
-            val exif = ExifInterface(path)
-            val rot: Int = exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
-            )
-            rotation = if (rot == ExifInterface.ORIENTATION_ROTATE_90) {
-                0
-            } else if (rot == ExifInterface.ORIENTATION_ROTATE_180) {
-                0
-            } else if (rot == ExifInterface.ORIENTATION_ROTATE_270) {
-                0
-            } else {
-                0
-            }
-        } catch (e: IOException) {
-            // TODO Auto-generated catch block
-            e.printStackTrace()
-        }
-        return rotation
-    }
-    fun getRealPathFromUri(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        if (cursor != null && cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            return cursor.getString(columnIndex)
-        }
-        return null
     }
 
 
-    inner class MotiveVideoView : VideoView {
-        constructor(context: Context?) : super(context)
-        constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-
-        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
-        }
+    /*
+    *
+    *       VideoView 세팅
+    *
+    * */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun setVideoView(){
+        var videoUri = Uri.parse(intent.getParcelableExtra("video",Uri::class.java).toString())
+        var videopath = getFilePathFromUri(videoUri)
+        binding.videoview.setVideoPath(videopath)
+    }
+    /*
+    *
+    *       Uri -> File 변환
+    *
+    * */
+    fun getFilePathFromUri(uri: Uri?): String? {
+        val proj = arrayOf(MediaStore.Video.Media.DATA)
+        val loader = CursorLoader(
+            this,
+            uri!!, proj, null, null, null
+        )
+        val cursor = loader.loadInBackground()
+        val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+        cursor.moveToFirst()
+        val result = cursor.getString(column_index)
+        cursor.close()
+        return result
     }
 }
