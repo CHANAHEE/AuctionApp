@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         searchItems = mutableListOf()
 
         HomeFragment()
@@ -109,12 +109,12 @@ class MainActivity : AppCompatActivity() {
             Log.i("15eeee","$p0")
             setNavigationDrawer()
         }.addOnFailureListener {
-            G.profileImg = getURLForResource(R.drawable.default_profile)
+            G.profileImg = getUriForResource(R.drawable.default_profile)
             setNavigationDrawer()
         }
     }
 
-    private fun getURLForResource(resId: Int): Uri {
+    private fun getUriForResource(resId: Int): Uri {
         return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 

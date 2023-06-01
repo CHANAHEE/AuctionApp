@@ -46,10 +46,7 @@ class HomeFragment : Fragment() {
         binding.shimmerRecyclerView.showShimmerAdapter()
     }
 
-    fun setData(items: MutableList<MainItem>){
-        binding.recycler.adapter = ProductAdapter(requireContext(),items)
 
-    }
     override fun onResume() {
         super.onResume()
         loadData()
@@ -95,4 +92,14 @@ class HomeFragment : Fragment() {
     *
     * */
     private fun clickRefresh() = loadData()
+
+
+    /*
+    *
+    *       MainActivity 에서 서버작업한 결과를 프래그먼트에 반영하기 위한 함수
+    *
+    * */
+    fun setData(items: MutableList<MainItem>){
+        binding.recycler.adapter = ProductAdapter(requireContext(),items)
+    }
 }

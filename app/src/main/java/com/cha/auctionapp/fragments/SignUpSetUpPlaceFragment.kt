@@ -46,7 +46,8 @@ class SignUpSetUpPlaceFragment : Fragment() {
         binding.btnBack.setOnClickListener { clickBackBtn() }
         binding.btnNext.setOnClickListener { clickNextBtn() }
 
-        if( activity?.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
+        if( activity?.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_DENIED){
             permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
@@ -91,7 +92,9 @@ class SignUpSetUpPlaceFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<KakaoSearchItemByAddress>, t: Throwable) {
-                    Log.i("errorRetrofit",t?.message ?: "")
+                    Snackbar.make(
+                        activity?.findViewById(android.R.id.content)!!,
+                        "서버 작업에 오류가 생겼습니다.", Snackbar.LENGTH_SHORT).show()
                 }
             })
     }
@@ -107,7 +110,8 @@ class SignUpSetUpPlaceFragment : Fragment() {
             if(event.action == KeyEvent.ACTION_DOWN
                 && keyCode == KeyEvent.KEYCODE_ENTER)
             {
-                val imm : InputMethodManager = context?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm : InputMethodManager = context
+                    ?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.etAddress.windowToken,0)
                 requestMyLocation()
                 true

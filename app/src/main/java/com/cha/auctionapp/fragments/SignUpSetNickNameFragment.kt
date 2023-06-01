@@ -134,8 +134,7 @@ class SignUpSetNickNameFragment : Fragment() {
                 binding.btnCertifyNickname.isEnabled = false
                 binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_fail,requireContext().theme))
                 binding.tvAlertNicknameLength.visibility = View.VISIBLE
-            }
-            else if(!Pattern.matches("^[a-zA-Z0-9가-힣]{3,}$",binding.etNickname.text.toString())) {
+            }else if(!Pattern.matches("^[a-zA-Z0-9가-힣]{3,}$",binding.etNickname.text.toString())) {
                 binding.btnCertifyNickname.isEnabled = false
                 binding.btnCertifyNickname.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_fail,requireContext().theme))
                 binding.tvAlertNicknameLength.visibility = View.GONE

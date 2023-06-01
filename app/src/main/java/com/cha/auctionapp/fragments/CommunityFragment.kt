@@ -49,12 +49,7 @@ class CommunityFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        try {
-            binding = FragmentCommunityBinding.inflate(LayoutInflater.from(context),container,false)
-            return binding.root
-        }catch (e: Exception){
-
-        }
+        binding = FragmentCommunityBinding.inflate(LayoutInflater.from(context),container,false)
         return binding.root
     }
 
@@ -114,6 +109,9 @@ class CommunityFragment : Fragment() {
             Toast.makeText(context, "커뮤니티 네트워크 작업 실패", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
     /*
     *
     *       팝업 메뉴 설정
@@ -128,13 +126,14 @@ class CommunityFragment : Fragment() {
             .getItem(POPUP_MENU_MY_FIRST_PLACE_ITEM_ID).toString()
     }
 
+
+
     /*
     *
     *       동네 설정 기능
     *
     * */
     private fun clickMyPlace(){
-
         activity?.menuInflater?.inflate(R.menu.popupmenu,popupMenu.menu)
         popupMenu.show()
 
@@ -164,6 +163,8 @@ class CommunityFragment : Fragment() {
             false
         }
     }
+
+
 
     /*
     *
@@ -210,6 +211,8 @@ class CommunityFragment : Fragment() {
         }
     }
 
+
+
     /*
     *
     *       검색 데이터 가져오기
@@ -238,6 +241,9 @@ class CommunityFragment : Fragment() {
         }
 
     }
+
+
+
     /*
     *
     *       SetUpMyPlaceListActivity Launcher : 새로운 동네 설정 시, MainActivity 종료
@@ -249,6 +255,7 @@ class CommunityFragment : Fragment() {
             AppCompatActivity.RESULT_OK -> (context as MainActivity).finish()
         }
     }
+
 
 
     /*
