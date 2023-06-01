@@ -45,7 +45,7 @@ class SNSLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -54,13 +54,16 @@ class SNSLoginActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         val keyHash:String = Utility.getKeyHash(this)
         Log.i("keyhash",keyHash)
         Log.i("kakaoLogin","릴리즈 모드 시작")
-        // 내 위치 정보 제공에 대한 동적 퍼미션 요청
+
+
+        /*
+        *        내 위치 정보 제공에 대한 동적 퍼미션 요청
+        * */
         if( checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
-            // 퍼미션 요청 대행사 이용 - 계약 체결
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
@@ -78,16 +81,15 @@ class SNSLoginActivity : AppCompatActivity() {
     *
     * */
     var permissionLauncher: ActivityResultLauncher<String> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission(), object : ActivityResultCallback<Boolean> {
-            override fun onActivityResult(result: Boolean?) {
-                if(!result!!) {
-                    Snackbar.make(
-                        findViewById(android.R.id.content)!!,
-                        "위치 정보 제공에 동의하지 않았습니다. 검색 기능이 제한됩니다.", Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        })
-
+        ActivityResultContracts.RequestPermission()
+    ) { result ->
+        if (!result!!) {
+            Snackbar.make(
+                findViewById(android.R.id.content)!!,
+                "위치 정보 제공에 동의하지 않았습니다. 검색 기능이 제한됩니다.", Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
 
 
     /*
@@ -100,12 +102,16 @@ class SNSLoginActivity : AppCompatActivity() {
         G.userAccount.id = "-1"
         G.location = "공릉1동"
         G.nickName = "no nickname"
-        G.profileImg = getURLForResource(R.drawable.default_profile)
+        G.profileImg = getUriForResource(R.drawable.default_profile)
         startActivity(Intent(this,MainActivity::class.java))
     }
-    private fun getURLForResource(resId: Int): Uri {
+    /*
+    *       Resource ID -> Uri
+    * */
+    private fun getUriForResource(resId: Int): Uri {
         return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
+
 
 
     /*
@@ -115,6 +121,10 @@ class SNSLoginActivity : AppCompatActivity() {
     * */
     private fun clickLogin() = startActivity(Intent(this,EmailLoginActivity::class.java))
 
+
+    /*
+    *       Login 기능을 위한 SharedPreference 변수
+    * */
 
 
     /*
@@ -126,9 +136,7 @@ class SNSLoginActivity : AppCompatActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
-
-        var client: GoogleSignInClient = GoogleSignIn.getClient(this,gso)
-
+        val client: GoogleSignInClient = GoogleSignIn.getClient(this,gso)
         val signInIntent: Intent = client.signInIntent
         launcher.launch(signInIntent)
     }
@@ -136,46 +144,21 @@ class SNSLoginActivity : AppCompatActivity() {
     val launcher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
         , ActivityResultCallback {
 
-
-            var intent: Intent? = it.data
+            val intent: Intent? = it.data
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
-
             if(!task.isSuccessful) return@ActivityResultCallback
-
             val account: GoogleSignInAccount = task.result
 
-
             val pref: SharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
-            var id: String = pref.getString("google","").toString()
-
+            val id: String = pref.getString("google","").toString()
             if(id.isBlank()){
-                id = account.id ?: ""
-                var email: String = account.email ?: ""
-                G.userAccount = UserAccount(id,email)
-
-                val editor: SharedPreferences.Editor = pref.edit()
-                editor.putString("google",id)
-                editor.apply()
-                launcherActivity.launch(
-                    Intent(this,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(
-                        Intent.FLAG_ACTIVITY_NO_HISTORY))
-            }else{
-                var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                var userRef: CollectionReference = firestore.collection("user")
-
-                userRef.document(id).get().addOnSuccessListener {
-                    G.userAccount.email = it.get("email").toString()
-                    G.userAccount.id = it.get("id").toString()
-                    G.nickName = it.get("nickname").toString()
-                    G.location = it.get("location").toString()
-
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-
-                    return@addOnSuccessListener
-                }
+                saveUserData(account.id ?: "",account.email ?: "","google")
+                launchingActivity()
             }
+            else getUserInfoFromFirebase(id)
         })
+
+
 
 
     /*
@@ -184,45 +167,18 @@ class SNSLoginActivity : AppCompatActivity() {
     *
     * */
     private fun kakaoLogin() {
-        Log.i("kakaoLogin","로그인 시작")
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            if (error != null) {
-                Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT)
-            } else if (token != null) {
-                Log.i("kakaoLogin","로그인 에러 없음")
+            if (error != null) Snackbar.make(binding.root,"카카오 로그인 실패",Snackbar.LENGTH_SHORT).show()
+            else if (token != null) {
                 UserApiClient.instance.me { user, error ->
                     if(user != null){
-                        val pref: SharedPreferences = getSharedPreferences("Data",
-                            Context.MODE_PRIVATE)
-                        var id: String = pref.getString("kakao","").toString()
-
+                        val pref: SharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
+                        val id: String = pref.getString("kakao","").toString()
                         if(id.isBlank()){
-                            id = user.id.toString()
-                            var email: String = user.kakaoAccount?.email ?: ""
-                            G.userAccount = UserAccount(id,email)
-                            val editor: SharedPreferences.Editor = pref.edit()
-                            editor.putString("kakao",id)
-                            editor.apply()
-
-                            launcherActivity.launch(
-                                Intent(this,MyProfileEditActivity::class.java).putExtra("Login","Login").addFlags(
-                                    Intent.FLAG_ACTIVITY_NO_HISTORY))
-                        }else{
-                            var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                            var userRef: CollectionReference = firestore.collection("user")
-
-                            userRef.document(id).get().addOnSuccessListener {
-                                G.userAccount.email = it.get("email").toString()
-                                G.userAccount.id = it.get("id").toString()
-                                G.nickName = it.get("nickname").toString()
-                                G.location = it.get("location").toString()
-
-                                startActivity(Intent(this, MainActivity::class.java))
-                                finish()
-
-                                return@addOnSuccessListener
-                            }
+                            saveUserData(user.id.toString(),user.kakaoAccount?.email ?: "","kakao")
+                            launchingActivity()
                         }
+                        else getUserInfoFromFirebase(id)
                     }
                 }
             }
@@ -230,18 +186,11 @@ class SNSLoginActivity : AppCompatActivity() {
 
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
             UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                if (error != null) {
-                    Log.i("kakaoLogin","1")
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
-                } else if (token != null) {
-                    Log.i("kakaoLogin","2")
-                    UserApiClient.instance.loginWithKakaoTalk(this,callback = callback)
-                }
+                if (error != null) UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+                else if (token != null) UserApiClient.instance.loginWithKakaoTalk(this,callback = callback)
             }
-        } else {
-            Log.i("kakaoLogin","3")
-            UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
         }
+        else UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
     }
 
 
@@ -251,8 +200,7 @@ class SNSLoginActivity : AppCompatActivity() {
     *
     * */
     private fun naverLogin() {
-        NaverIdLoginSDK.initialize(this, "6Sq_GSOmgCFqeqaJVNtm", "tTZx8fr_jR", "근방")
-
+        NaverIdLoginSDK.initialize(this, "6Sq_GSOmgCFqeqaJVNtm", "tTZx8fr_jR", "밍글")
         NaverIdLoginSDK.authenticate(this,object : OAuthLoginCallback {
             override fun onError(errorCode: Int, message: String) {
                 Snackbar.make(binding.root,"네이버 로그인 에러 : ${message}",Snackbar.LENGTH_SHORT).show()
@@ -263,55 +211,24 @@ class SNSLoginActivity : AppCompatActivity() {
             }
 
             override fun onSuccess() {
-
                 val pref: SharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
                 var id: String = pref.getString("naver","").toString()
-
-                if(!id.isBlank()) {
-                    var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-                    var userRef: CollectionReference = firestore.collection("user")
-
-                    userRef.document(id).get().addOnSuccessListener {
-                        G.userAccount.email = it.get("email").toString()
-                        G.userAccount.id = it.get("id").toString()
-                        G.nickName = it.get("nickname").toString()
-                        G.location = it.get("location").toString()
-
-                        startActivity(Intent(this@SNSLoginActivity, MainActivity::class.java))
-                        finish()
-
-                        return@addOnSuccessListener
-                    }
-                }
+                if(id.isNotBlank()) getUserInfoFromFirebase(id)
                 else {
                     val accessToken: String? = NaverIdLoginSDK.getAccessToken()
-
                     val retrofit = RetrofitHelper.getRetrofitInstance("https://openapi.naver.com")
-                    retrofit
-                        .create(RetrofitService::class.java)
-                        .getNaverUserInfo("Bearer ${accessToken}")
+                    retrofit.create(RetrofitService::class.java)
+                        .getNaverUserInfo("Bearer $accessToken")
                         .enqueue(object : Callback<NidUserInfoResponse> {
                             override fun onResponse(
                                 call: Call<NidUserInfoResponse>,
                                 response: Response<NidUserInfoResponse>
                             ) {
-                                val userInfoResponse = response.body()
-                                val id: String = userInfoResponse?.response?.id ?: ""
-                                val email: String = userInfoResponse?.response?.email ?: ""
-
-                                G.userAccount = UserAccount(id, email)
-
-                                val editor: SharedPreferences.Editor = pref.edit()
-                                editor.putString("naver", id)
-                                editor.apply()
-
-
-                                launcherActivity.launch(
-                                    Intent(
-                                        this@SNSLoginActivity,
-                                        MyProfileEditActivity::class.java
-                                    ).putExtra("Login", "Login").addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                                )
+                                val userInfo = response.body()?.response
+                                saveUserData(userInfo?.id ?: ""
+                                    ,userInfo?.email ?: ""
+                                    ,"naver")
+                                launchingActivity()
                             }
 
                             override fun onFailure(call: Call<NidUserInfoResponse>, t: Throwable) {
@@ -321,15 +238,64 @@ class SNSLoginActivity : AppCompatActivity() {
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                             }
-
                         })
                 }
             }
         })
     }
-
     val launcherActivity: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback {
             if(it.resultCode == AppCompatActivity.RESULT_OK) finish()
         })
+
+
+
+    /*
+    *
+    *       Firebase 에 저장된 유저 정보 가져와서 G 클래스 멤버변수에 담아두기
+    *
+    * */
+    private fun getUserInfoFromFirebase(id: String){
+        var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        var userRef: CollectionReference = firestore.collection("user")
+
+        userRef.document(id).get().addOnSuccessListener {
+            G.userAccount.email = it.get("email").toString()
+            G.userAccount.id = it.get("id").toString()
+            G.nickName = it.get("nickname").toString()
+            G.location = it.get("location").toString()
+
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+
+            return@addOnSuccessListener
+        }
+    }
+
+    /*
+    *
+    *       유저 정보 SharedPreference 에 저장
+    *
+    * */
+    private fun saveUserData(id: String, email: String, snsType: String){
+        val pref: SharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
+        G.userAccount = UserAccount(id,email)
+        val editor: SharedPreferences.Editor = pref.edit()
+        editor.putString(snsType,id)
+        editor.apply()
+    }
+
+
+    /*
+    *
+    *       MyProfileEditActivity 로 이동
+    *
+    * */
+    private fun launchingActivity(){
+        launcherActivity.launch(
+            Intent(this@SNSLoginActivity,MyProfileEditActivity::class.java)
+                .putExtra("Login","Login")
+                .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+    }
+
 }
