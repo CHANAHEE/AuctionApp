@@ -122,10 +122,6 @@ class SNSLoginActivity : AppCompatActivity() {
     private fun clickLogin() = startActivity(Intent(this,EmailLoginActivity::class.java))
 
 
-    /*
-    *       Login 기능을 위한 SharedPreference 변수
-    * */
-
 
     /*
     *

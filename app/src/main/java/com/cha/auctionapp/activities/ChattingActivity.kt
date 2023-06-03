@@ -87,6 +87,8 @@ class ChattingActivity : AppCompatActivity() {
         loadMessage()
     }
 
+
+
     /*
     *       상대방 정보
     * */
