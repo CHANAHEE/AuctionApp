@@ -48,7 +48,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
     
     
@@ -57,7 +57,7 @@ class CommunityDetailActivity : AppCompatActivity() {
     *       초기화 작업
     * 
     * */
-    private fun init() {
+    private fun initial() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

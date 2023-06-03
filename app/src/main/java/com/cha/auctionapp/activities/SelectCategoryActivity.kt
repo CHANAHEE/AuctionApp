@@ -15,10 +15,10 @@ class SelectCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
-    private fun init() {
+    private fun initial() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

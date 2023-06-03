@@ -48,10 +48,10 @@ class HomeDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
-    private fun init() {
+    private fun initial() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnChat.setOnClickListener { clickChatBtn() }

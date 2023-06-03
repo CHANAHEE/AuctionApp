@@ -48,7 +48,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectPositionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
     /*
@@ -56,7 +56,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

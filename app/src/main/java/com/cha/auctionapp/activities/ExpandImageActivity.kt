@@ -24,12 +24,31 @@ class ExpandImageActivity : AppCompatActivity() {
         initial()
     }
 
+
+
+    /*
+    *
+    *       초기화 작업
+    *
+    * */
     private fun initial(){
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
         setPagerImage()
     }
 
+
+
+    /*
+    *
+    *       이미지 처리 코드
+    *
+    * */
     private fun setPagerImage(){
 
         var image: List<String> = listOf()
@@ -42,5 +61,16 @@ class ExpandImageActivity : AppCompatActivity() {
         binding.pagerExpand.adapter = PagerAdapter(this,imageList)
         binding.pagerExpand.currentItem = position
         binding.dotsIndicatorExpand.attachTo(binding.pagerExpand)
+    }
+
+
+    /*
+    *
+    *       뒤로 가기 버튼
+    *
+    * */
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
     }
 }

@@ -27,7 +27,7 @@ class MyFavoriteListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyFavoriteListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
     /*
@@ -35,7 +35,7 @@ class MyFavoriteListActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
-    private fun init(){
+    private fun initial(){
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
