@@ -98,22 +98,6 @@ class LoginMainFragment : Fragment() {
                     binding.root,
                     "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", Snackbar.LENGTH_LONG).show()
             }
-//            .addSnapshotListener { value, error ->
-//                if (value != null) {
-//                    for (snapshot in value) {
-//                        G.nickName = snapshot.data["nickname"].toString()
-//                        G.location = snapshot.data["location"].toString()
-//                        G.userAccount.id = snapshot.data["id"].toString()
-//                        G.userAccount.email = snapshot.data["email"].toString()
-//                        var intent: Intent = Intent(context, MainActivity::class.java)
-//                        startActivity(intent)
-//                        (context as EmailLoginActivity).finish()
-//                    }
-//                    Snackbar.make(
-//                        binding.root,
-//                        "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", Snackbar.LENGTH_LONG).show()
-//                }
-//            }
     }
 
 

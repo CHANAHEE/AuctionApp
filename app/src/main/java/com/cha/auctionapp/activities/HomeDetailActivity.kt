@@ -48,10 +48,10 @@ class HomeDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
-    private fun init() {
+    private fun initial() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnChat.setOnClickListener { clickChatBtn() }
@@ -104,10 +104,12 @@ class HomeDetailActivity : AppCompatActivity() {
 
                 // 이미지 정보
                 imageListString = item.image.split(",")
+                Log.i("pagerTest",imageListString.toString())
                 var imageListUri: MutableList<PagerItem> = mutableListOf()
                 for(i in imageListString.indices){
-                    imageListUri.add(PagerItem(Uri.parse(imageListString[i])))
+                    imageListUri.add(PagerItem(Uri.parse("http://tjdrjs0803.dothome.co.kr/Server/" +imageListString[i])))
                 }
+                Log.i("pagerTest",imageListUri.toString())
                 binding.pager.adapter = PagerAdapter(this@HomeDetailActivity,imageListUri)
                 binding.dotsIndicator.attachTo(binding.pager)
 

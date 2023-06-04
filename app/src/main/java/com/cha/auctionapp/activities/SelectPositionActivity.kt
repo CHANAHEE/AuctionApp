@@ -48,7 +48,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectPositionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
     /*
@@ -56,7 +56,7 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -71,10 +71,11 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }else binding.ivMarker.bringToFront()
 
-        locationCheckPermission()
-        requestMyLocation()
+            locationCheckPermission()
+            requestMyLocation()
+
     }
-    private fun requestMyLocation() {
+    private fun requestMyLocation(){
 
         var request: LocationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000).build()
         Log.i("googleMapissue","requestMyLocation 실행")
@@ -100,8 +101,13 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.i("googleMapissue","로케이션 콜백받아오기 완료")
 
             providerClient.removeLocationUpdates(this)
-            // 구글 맵 준비 메소드
-            getReadyGoogleMap()
+            // 구글 맵 준비 메소드 : 취소할 경우 try-catch 로 예외 처리
+            try {
+                getReadyGoogleMap()
+            }catch (_: Exception){
+
+            }
+
         }
     }
 
@@ -217,10 +223,5 @@ class SelectPositionActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    /*
-    *
-    *           선택된 장소 정보 보여주기
-    *
-    * */
 
 }

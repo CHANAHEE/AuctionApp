@@ -18,9 +18,7 @@ class PagerAdapter(var context:Context,var items:MutableList<PagerItem>) : Adapt
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        var baseAddr = "http://tjdrjs0803.dothome.co.kr/Server/" + items[position].image
+        var baseAddr =  items[position].image
         Glide.with(context).load(baseAddr).into(holder.binding.pagerItem)
-
-
     }
 }

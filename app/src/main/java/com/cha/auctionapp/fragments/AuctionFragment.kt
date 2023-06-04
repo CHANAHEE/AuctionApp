@@ -39,14 +39,6 @@ class AuctionFragment : Fragment() {
     lateinit var binding: FragmentAuctionBinding
     lateinit var items: MutableList<AuctionPagerItem>
 
-    override fun onStart() {
-        super.onStart()
-        var activity = activity as MainActivity
-        activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
-        WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = false
-        activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#000000"))
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,22 +59,37 @@ class AuctionFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         loadDataFromServer()
+        changeUIColor(true)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        changeUIColor(false)
     }
 
 
     /*
     *
-    *       MainActivity 의 UI 흰색으로 변경
+    *       BottomNavigationView 와 StatusBar 색 변경
     *
     * */
-    override fun onDestroy() {
-        super.onDestroy()
-        var activity = activity as MainActivity
-        activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
-        WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = true
-        activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+    private fun changeUIColor(isAuction: Boolean){
+        when(isAuction){
+            true->{
+                var activity = activity as MainActivity
+                activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+                WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = false
+                activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
+            }
+            false->{
+                var activity = activity as MainActivity
+                activity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+                WindowInsetsControllerCompat(activity.window, activity.window.decorView).isAppearanceLightStatusBars = true
+                activity.binding.bnv.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+            }
+        }
     }
-
 
 
 

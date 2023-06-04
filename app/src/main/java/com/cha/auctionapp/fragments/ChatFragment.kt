@@ -22,15 +22,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import okhttp3.internal.notify
+import java.lang.IllegalStateException
 import java.lang.NumberFormatException
 
 class ChatFragment : Fragment() {
 
     lateinit var binding: FragmentChatBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,10 +38,6 @@ class ChatFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onResume() {
         super.onResume()
         getChattingInfoFromFirebase()
@@ -51,60 +45,60 @@ class ChatFragment : Fragment() {
 
 
     private fun getChattingInfoFromFirebase(){
-        var chatListItem: MutableList<ChatListItem> = mutableListOf()
-        var firestore = FirebaseFirestore.getInstance()
-        var chatListRef = firestore.collection("chat").get().addOnSuccessListener {
+        FirebaseFirestore.getInstance().collection("chat").get().addOnSuccessListener {
             var documentChange = it.documentChanges
             for(document in documentChange){
-                var snapshot = document.document
-                var map = snapshot.data
-                var productIndex = map.get("productIndex").toString()
-                var lastMessage = map.get("message").toString()
-                if(map.get("message").toString() == "" && map.get("imageSize").toString() != "0"){
-                    lastMessage = "사진을 보냈습니다"
-                }else if(map.get("message").toString() == "" && map.get("location").toString() != ""){
-                    lastMessage = "지도 : ${map.get("location").toString()}"
-                }
+                val map = document.document.data
 
-                var time = map.get("time").toString()
-                var chatRoomInfo = map.get("chatRoomInfo") as HashMap<*, *>
+                val chatRoomInfo = map["chatRoomInfo"] as HashMap<*, *>
+                val productIndex = map["productIndex"].toString()
+                val time = map["time"].toString()
+                var lastMessage = map["message"].toString()
+                val locationInfo = map["location"].toString()
+                val imageSize = map["imageSize"].toString()
 
-                if(G.userAccount.id == map.get("id").toString()){
+                if(lastMessage == "" && imageSize != "0") lastMessage = "사진을 보냈습니다"
+                else if(lastMessage == "" && locationInfo != "") lastMessage = "지도 : $locationInfo"
 
-                    var otherID = map.get("otherID").toString()
-                    var nickname = map.get("otherNickname").toString()
-                    var profileImage = map.get("otherProfileImage").toString()
+                if(G.userAccount.id == map["id"].toString()){
 
-                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
-                        ChatRoomInfo(
-                            chatRoomInfo["titleProductInfo"].toString(),
-                            chatRoomInfo["locationProductInfo"].toString(),
-                            chatRoomInfo["priceProductInfo"].toString(),
-                            chatRoomInfo["imageProductInfo"].toString()
-                        )
-                    ))
-                    //binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
-                    binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+                    val otherID = map["otherID"].toString()
+                    val nickname = map["otherNickname"].toString()
+                    val profileImage = map["otherProfileImage"].toString()
+                    addChatListItem(chatRoomInfo,productIndex,nickname, profileImage, lastMessage, time, otherID)
 
-                }else if(G.userAccount.id == map.get("otherID").toString()){
+                }else if(G.userAccount.id == map["otherID"].toString()){
 
-                    var otherID = map.get("id").toString()
-                    var nickname = map.get("nickname").toString()
-                    var profileImage = map.get("profileImage").toString()
-
-                    chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
-                        ChatRoomInfo(
-                            chatRoomInfo["titleProductInfo"].toString(),
-                            chatRoomInfo["locationProductInfo"].toString(),
-                            chatRoomInfo["priceProductInfo"].toString(),
-                            chatRoomInfo["imageProductInfo"].toString()
-                        )))
-                    //binding.recycler.adapter?.notifyItemInserted(chatListItem.size)
-                    binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
-
+                    val otherID = map["id"].toString()
+                    val nickname = map["nickname"].toString()
+                    val profileImage = map["profileImage"].toString()
+                    addChatListItem(chatRoomInfo,productIndex,nickname, profileImage, lastMessage, time, otherID)
                 }
             }
         }
+    }
+
+    private fun addChatListItem(chatRoomInfo: HashMap<*,*>
+                                ,productIndex: String
+                                ,nickname: String
+                                ,profileImage: String
+                                ,lastMessage: String
+                                ,time: String
+                                ,otherID: String){
+        val chatListItem: MutableList<ChatListItem> = mutableListOf()
+        chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
+            ChatRoomInfo(
+                chatRoomInfo["titleProductInfo"].toString(),
+                chatRoomInfo["locationProductInfo"].toString(),
+                chatRoomInfo["priceProductInfo"].toString(),
+                chatRoomInfo["imageProductInfo"].toString()
+            )))
+        try {
+            binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+        }catch (e: IllegalStateException){
+
+        }
+
     }
 }
 

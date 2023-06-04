@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -65,12 +65,15 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         getProfileURLFromFirestore(G.userAccount.id)
     }
+
+
+
     /*
     *
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         searchItems = mutableListOf()
 
         HomeFragment()
@@ -109,12 +112,12 @@ class MainActivity : AppCompatActivity() {
             Log.i("15eeee","$p0")
             setNavigationDrawer()
         }.addOnFailureListener {
-            G.profileImg = getURLForResource(R.drawable.default_profile)
+            G.profileImg = getUriForResource(R.drawable.default_profile)
             setNavigationDrawer()
         }
     }
 
-    private fun getURLForResource(resId: Int): Uri {
+    private fun getUriForResource(resId: Int): Uri {
         return Uri.parse("android.resource://" + (R::class.java.getPackage()?.getName()) + "/" + resId)
     }
 
@@ -222,7 +225,6 @@ class MainActivity : AppCompatActivity() {
     private fun searchItemFromServer(){
          val retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
          val retrofitService = retrofit.create(RetrofitService::class.java)
-         Log.i("test1234444",binding.etSearch.text.toString())
          val call: Call<MutableList<MainItem>> = retrofitService.getSearchDataFromServerForHomeFragment(binding.etSearch.text.toString())
          call.enqueue(object : Callback<MutableList<MainItem>> {
              override fun onResponse(
@@ -230,8 +232,6 @@ class MainActivity : AppCompatActivity() {
                  response: Response<MutableList<MainItem>>
              ) {
                  searchItems = response.body()!!
-                 Log.i("test1234444",searchItems.size.toString())
-
                  (supportFragmentManager.findFragmentById(R.id.container_fragment) as HomeFragment).setData(searchItems)
              }
              override fun onFailure(call: Call<MutableList<MainItem>>, t: Throwable) {

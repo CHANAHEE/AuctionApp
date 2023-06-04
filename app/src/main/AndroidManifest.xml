@@ -10,9 +10,10 @@
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 5_ 레코드오디오 관련 퍼미션 -->
     <!-- 6_ 레코드 오디오 퍼미션은 동적 퍼미션 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
     <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY" />
@@ -29,8 +30,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ActionApp"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31"
-        >
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.ExpandImageActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.EmailLoginActivity"
             android:exported="false" />
@@ -39,8 +42,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.AuctionVideoActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AuctionEditActivity"
             android:exported="false" />
@@ -123,14 +126,15 @@
         </activity>
 
         <provider
-            android:authorities="com.cha.auctionapp.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.cha.auctionapp.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA8qcHzueKSBPYsZ-t5Fo7sEeUA7BlseRE" />

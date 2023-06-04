@@ -86,7 +86,6 @@ class SignUpEmailInputFragment : Fragment() {
     private val watcherEmail: TextWatcher = object : TextWatcher{
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        @RequiresApi(Build.VERSION_CODES.Q)
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             if(!Pattern.matches("^[a-zA-z0-9]+@[a-zA-z]+\\.[a-zA-z]+$",binding.etEmail.text.toString())){
@@ -139,8 +138,7 @@ class SignUpEmailInputFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(binding.etPass.text.toString()
-                != s.toString()){
+            if(binding.etPass.text.toString() != s.toString()){
                 binding.etPassCertify.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.edit_fail,activity?.theme))
                 binding.tvAlertPassCertify.visibility = View.VISIBLE
             }

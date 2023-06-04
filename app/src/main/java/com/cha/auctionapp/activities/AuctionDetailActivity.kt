@@ -56,7 +56,7 @@ class AuctionDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -65,7 +65,7 @@ class AuctionDetailActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
-    private fun init() {
+    private fun initial() {
         binding.btnBack.setOnClickListener { finish() }
         binding.ibFav.setOnClickListener { clickFavoriteBtn() }
         binding.btnBid.setOnClickListener { clickBidBtn() }
