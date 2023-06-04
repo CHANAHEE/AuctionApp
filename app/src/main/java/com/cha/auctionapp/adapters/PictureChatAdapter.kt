@@ -28,7 +28,6 @@ class PictureChatAdapter(var context: Context, var items: MutableList<PictureIte
     override fun onBindViewHolder(holder: VH, position: Int) {
         Glide.with(context).load(items[position].uri).into(holder.binding.ivPicture)
 
-
         holder.binding.btnCancel.setOnClickListener {
             items.removeAt(position)
             if(items.size == 0) {

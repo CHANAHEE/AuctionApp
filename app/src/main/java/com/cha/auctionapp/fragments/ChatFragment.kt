@@ -22,12 +22,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import okhttp3.internal.notify
+import java.lang.IllegalStateException
 import java.lang.NumberFormatException
 
 class ChatFragment : Fragment() {
 
     lateinit var binding: FragmentChatBinding
-    private val chatListItem: MutableList<ChatListItem> = mutableListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,6 +85,7 @@ class ChatFragment : Fragment() {
                                 ,lastMessage: String
                                 ,time: String
                                 ,otherID: String){
+        val chatListItem: MutableList<ChatListItem> = mutableListOf()
         chatListItem.add(ChatListItem(productIndex,nickname, profileImage, lastMessage, time,otherID,
             ChatRoomInfo(
                 chatRoomInfo["titleProductInfo"].toString(),
@@ -91,7 +93,12 @@ class ChatFragment : Fragment() {
                 chatRoomInfo["priceProductInfo"].toString(),
                 chatRoomInfo["imageProductInfo"].toString()
             )))
-        binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+        try {
+            binding.recycler.adapter = ChatListAdapter(requireContext(),chatListItem)
+        }catch (e: IllegalStateException){
+
+        }
+
     }
 }
 

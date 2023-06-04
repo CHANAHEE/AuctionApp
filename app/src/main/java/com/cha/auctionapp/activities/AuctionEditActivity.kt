@@ -64,7 +64,7 @@ class AuctionEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuctionEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -74,7 +74,7 @@ class AuctionEditActivity : AppCompatActivity() {
     *
     * */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun init() {
+    private fun initial() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -164,13 +164,11 @@ class AuctionEditActivity : AppCompatActivity() {
                     uploadVideoToStorage(videoUri)
 
                     dataPart.put("video", videoUri.toString())
-                    //dataPart.put("video","https://www.shutterstock.com/shutterstock/videos/1073719175/preview/stock-footage-adorable-white-cat-in-sunglasses-and-an-shirt-lies-on-a-fabric-hammock-on-a-yellow-background.webm")
                     var retrofit = RetrofitHelper.getRetrofitInstance("http://tjdrjs0803.dothome.co.kr")
                     var retrofitService = retrofit.create(RetrofitService::class.java)
                     var call: Call<String> = retrofitService.postDataToServerForAuctionFragment(dataPart)
                     call.enqueue(object : Callback<String> {
                         override fun onResponse(call: Call<String>, response: Response<String>) {
-                            Log.i("aoirjbqoierb",response.body().toString())
                             startActivity(Intent(this@AuctionEditActivity,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("AuctionDetail","AuctionDetail"))
                             dialog.dismiss()
                             finish()
@@ -209,12 +207,7 @@ class AuctionEditActivity : AppCompatActivity() {
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
         val imgRef: StorageReference =
             firebaseStorage.getReference("video/AVI_${System.currentTimeMillis()}.mp4")
-        imgRef.putFile(source).addOnSuccessListener(OnSuccessListener<Any?> {
-            imgRef.downloadUrl.addOnSuccessListener {
-
-            }
-        }).addOnFailureListener(OnFailureListener {
-            Log.i("testtest",it.message.toString())
+        imgRef.putFile(source).addOnFailureListener(OnFailureListener {
             Snackbar.make(binding.root,"비디오 업로드 실패", Snackbar.LENGTH_SHORT).show()
         })
     }

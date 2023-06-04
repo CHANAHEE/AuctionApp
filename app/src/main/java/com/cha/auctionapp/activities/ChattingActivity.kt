@@ -58,7 +58,6 @@ class ChattingActivity : AppCompatActivity() {
     lateinit var messageItem: MutableList<MessageItem>
     lateinit var pictureSelectedItem: MutableList<Uri>
     lateinit var pictureItem: MutableList<Uri>
-    lateinit var chatRoomNameRef: DocumentReference
     lateinit var baseAddr: String
 
 
@@ -67,7 +66,7 @@ class ChattingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initial()
     }
 
 
@@ -77,13 +76,13 @@ class ChattingActivity : AppCompatActivity() {
     *       초기화 작업
     *
     * */
-    private fun init(){
+    private fun initial(){
         setOtherInfo()
         setActionBarConfig()
         initItems()
         messageConfig()
         setProductConfig()
-        setChatRoomName()
+        createFirebaseCollectionName()
         loadMessage()
     }
 
@@ -147,14 +146,6 @@ class ChattingActivity : AppCompatActivity() {
         Glide.with(this).load(baseAddr).into(binding.ivMainImgProductInfo)
     }
 
-    /*
-    *       채팅방 이름 설정
-    * */
-    private fun setChatRoomName(){
-        createFirebaseCollectionName()
-        chatRoomNameRef = firestore.collection("chat").document(collectionName!!)
-    }
-
 
 
 
@@ -215,7 +206,8 @@ class ChattingActivity : AppCompatActivity() {
                 latitude,
                 longitude
             ))
-            chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(MessageItem(
+
+            chatRef.document(collectionName!!).collection(collectionName!!).document("MSG_$documentName").set(MessageItem(
                 productIndex,
                 nickname,
                 id,
@@ -237,7 +229,8 @@ class ChattingActivity : AppCompatActivity() {
                     intent.getStringExtra("image") ?: ""
                 ),
                 latitude,
-                longitude))
+                longitude
+            ))
         }
         resetAfterSendMessage()
     }
@@ -289,6 +282,7 @@ class ChattingActivity : AppCompatActivity() {
                                          productIndex: String){
 
         val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+
         var fileName = "$collectionName/${G.userAccount.id}$time/"
 
         for(i in 0 until pictureSelectedItem.size){
@@ -318,11 +312,11 @@ class ChattingActivity : AppCompatActivity() {
                                 binding.tvTitleProductInfo.text.toString(),
                                 binding.tvLocationNameProductInfo.text.toString(),
                                 binding.tvPriceProductInfo.text.toString(),
-                                baseAddr
+                                intent.getStringExtra("image") ?: ""
                             ),
                             latitude,
                             longitude))
-                        chatRoomNameRef.collection(collectionName!!).document("MSG_$documentName").set(
+                        chatRef.document(collectionName!!).collection(collectionName!!).document("MSG_$documentName").set(
                             MessageItem(
                                 productIndex,
                                 nickname,
@@ -339,7 +333,7 @@ class ChattingActivity : AppCompatActivity() {
                                     binding.tvTitleProductInfo.text.toString(),
                                     binding.tvLocationNameProductInfo.text.toString(),
                                     binding.tvPriceProductInfo.text.toString(),
-                                    baseAddr
+                                    intent.getStringExtra("image") ?: ""
                                 ),
                                 latitude,
                                 longitude
@@ -477,6 +471,10 @@ class ChattingActivity : AppCompatActivity() {
         binding.relativeLocation.setOnClickListener { clickLocationBtn() }
         binding.btnOptionCancel.setOnClickListener { clickOptionCancelBtn() }
     }
+
+    /*
+    *       취소 버튼 클릭 이벤트
+    * */
     private fun clickOptionCancelBtn() {
         binding.relativeOption.visibility = View.GONE
         binding.btnOption.visibility = View.VISIBLE
@@ -487,6 +485,9 @@ class ChattingActivity : AppCompatActivity() {
         imm.showSoftInput(binding.etMsg,InputMethodManager.SHOW_IMPLICIT)
     }
 
+    /*
+    *       사진 버튼 클릭 이벤트
+    * */
     private fun clickImageBtn() {
         var intent: Intent = Intent(MediaStore.ACTION_PICK_IMAGES)
             .apply {
@@ -522,12 +523,8 @@ class ChattingActivity : AppCompatActivity() {
                 }
             }
         })
-
-
     /*
-    *
     *       Uri -> File 변환
-    *
     * */
     fun getFilePathFromUri(uri: Uri?): String? {
         val proj = arrayOf(MediaStore.Images.Media.DATA)
@@ -543,7 +540,9 @@ class ChattingActivity : AppCompatActivity() {
         return result
     }
 
-
+    /*
+    *       장소 버튼 클릭 이벤트
+    * */
     @SuppressLint("SuspiciousIndentation")
     private fun clickLocationBtn(){
         var intent = Intent(this,SelectPositionActivity::class.java)
@@ -567,6 +566,8 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 
     /*
